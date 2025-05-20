@@ -1,162 +1,163 @@
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Orissa | Fragrance Personality Quiz</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lora&family=Inter&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Lora', 'Inter', sans-serif;
-      background-color: #FFFFF0;
-      color: #333;
-      padding: 20px;
-      max-width: 960px;
-      margin: auto;
-    }
-    h1, h2 {
-      font-family: 'Playfair Display', serif;
-      color: #40E0D0;
-      text-align: center;
-    }
-    .question {
-      margin-bottom: 25px;
-      padding: 15px;
-      background: #fff;
-      border-left: 5px solid #40E0D0;
-      border-radius: 6px;
-    }
-    label {
-      display: block;
-      margin: 5px 0;
-    }
-    button {
-      padding: 12px 24px;
-      background-color: #40E0D0;
-      color: white;
-      border: none;
-      font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-      display: block;
-      margin: 20px auto;
-    }
-    #result {
-      background: white;
-      margin-top: 40px;
-      padding: 20px;
-      border-radius: 10px;
-      border-left: 6px solid #40E0D0;
-    }
-    .lang-toggle {
-      text-align: right;
-      margin-bottom: 20px;
-    }
-    .lang-toggle button {
-      background: transparent;
-      color: #40E0D0;
-      border: 2px solid #40E0D0;
-      border-radius: 4px;
-      padding: 6px 12px;
-    }
-    .logo {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .logo img {
-      max-width: 150px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Orissa • Fragrance Personality Quiz</title>
+
+<!-- Brand fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Lora&family=Inter&display=swap" rel="stylesheet" />
+
+<style>
+/* ===== Brand styling ===== */
+:root{
+  --turquoise:#40E0D0;
+  --ivory:#FFFFF0;
+  --charcoal:#333333;
+}
+html{box-sizing:border-box}
+*,*:before,*:after{box-sizing:inherit;margin:0;padding:0}
+
+body{
+  font-family:'Lora','Inter',sans-serif;
+  background:var(--ivory);
+  color:var(--charcoal);
+  max-width:960px;
+  margin:0 auto;
+  padding:24px;
+}
+
+h1,h2{
+  font-family:'Playfair Display',serif;
+  color:var(--turquoise);
+  text-align:center;
+}
+
+.logo{text-align:center;margin:0 0 32px}
+.logo img{max-width:160px}
+
+.lang-btn{
+  border:2px solid var(--turquoise);
+  background:transparent;
+  color:var(--turquoise);
+  padding:6px 14px;
+  font-weight:bold;
+  border-radius:4px;
+  cursor:pointer;
+  float:right;
+  margin-top:-10px;
+}
+
+.question{
+  background:#fff;
+  border-left:6px solid var(--turquoise);
+  padding:16px;
+  margin-bottom:24px;
+  border-radius:6px;
+}
+
+.question p{font-weight:bold;margin-bottom:8px}
+
+button.generate{
+  display:block;
+  margin:24px auto;
+  background:var(--turquoise);
+  color:#fff;
+  border:0;
+  padding:12px 28px;
+  font-weight:bold;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+#result{
+  background:#fff;
+  border-left:6px solid var(--turquoise);
+  margin-top:36px;
+  padding:24px;
+  border-radius:8px;
+}
+/* RTL flip */
+.rtl{direction:rtl;text-align:right}
+</style>
 </head>
 <body>
 
-<div class="lang-toggle">
-  <button onclick="toggleLang()">AR / EN</button>
-</div>
+<!-- language toggle -->
+<button class="lang-btn" id="langToggle">AR / EN</button>
 
-<div class="logo">
-  <img src="logo.png" alt="Orissa Logo">
-</div>
+<!-- logo -->
+<div class="logo"><img src="logo.png" alt="Orissa logo" /></div>
 
-<h1 id="title">Discover Your Signature Fragrance<br><span style="font-size: 0.6em;">اكتشف عطرك الشخصي</span></h1>
+<h1 id="title">Discover Your Signature Fragrance<br /><span style="font-size:.6em">اكتشف عطرك الشخصي</span></h1>
 
 <form id="quizForm">
   <div id="questions"></div>
-  <button type="button" onclick="generateResult()">Generate Result | توليد النتيجة</button>
+  <button type="button" class="generate" id="genBtn">Generate Result | توليد النتيجة</button>
 </form>
 
 <div id="result"></div>
 
 <script>
-const lang = { current: "en" };
+/* === data + helpers === */
+let lang="en";             // current language (en|ar)
 
-const questionsData = Array.from({ length: 20 }).map((_, i) => ({
-  en: `Sample Question ${i + 1}: What resonates with you most?`,
-  ar: `السؤال ${i + 1}: ما الذي يلامسك أكثر؟`,
-  options: [
-    ["Peaceful reflection", "تأمل هادئ", ["elegant", "serenity", "woody", "nature"]],
-    ["Bold action", "عمل جريء", ["bold", "power", "spicy", "celebration"]],
-    ["Mystical solitude", "عزلة غامضة", ["mysterious", "intrigue", "oriental", "reflection"]],
-    ["Loving warmth", "دفء المحبة", ["sensual", "joy", "gourmand", "childhood"]],
-    ["Playful adventure", "مغامرة مرحة", ["refreshing", "confidence", "citrus", "celebration"]],
-    ["Exotic escape", "هروب غريب", ["exotic", "serenity", "woody", "travel"]]
+/* 20 placeholder Qs – replace text as you like.
+   Each [ optionEN , optionAR , [style,emotion,family,memory] ]             */
+const questionsData=[...Array(20)].map((_,i)=>({
+  en:`Question ${i+1} (English)`,
+  ar:`السؤال ${i+1} (عربي)`,
+  options:[
+    ["Peaceful",  "سلام",      ["elegant","serenity","woody","nature"]],
+    ["Bold",      "جرأة",      ["bold","power","spicy","celebration"]],
+    ["Mystery",   "غموض",      ["mysterious","intrigue","oriental","reflection"]],
+    ["Warm",      "دفء",       ["sensual","joy","gourmand","childhood"]],
+    ["Playful",   "مرح",       ["refreshing","confidence","citrus","celebration"]],
+    ["Exotic",    "غريب",      ["exotic","serenity","woody","travel"]]
   ]
 }));
 
-const categories = {
-  style: ["elegant", "bold", "sensual", "exotic", "mysterious", "refreshing"],
-  emotion: ["confidence", "serenity", "passion", "joy", "power", "intrigue"],
-  family: ["floral", "woody", "spicy", "oriental", "citrus", "gourmand"],
-  memory: ["romance", "travel", "childhood", "nature", "reflection", "celebration"]
+const cats={
+  style:["elegant","bold","sensual","exotic","mysterious","refreshing"],
+  emotion:["confidence","serenity","passion","joy","power","intrigue"],
+  family:["floral","woody","spicy","oriental","citrus","gourmand"],
+  memory:["romance","travel","childhood","nature","reflection","celebration"]
 };
 
-const score = {
-  style: {}, emotion: {}, family: {}, memory: {}
-};
+const score={style:{},emotion:{},family:{},memory:{}};
+for(const c in cats)cats[c].forEach(v=>score[c][v]=0);
 
-function resetScore() {
-  for (let cat in score) {
-    categories[cat].forEach(trait => score[cat][trait] = 0);
-  }
-}
-
-function renderQuestions() {
-  const container = document.getElementById("questions");
-  container.innerHTML = "";
-  questionsData.forEach((q, idx) => {
-    const div = document.createElement("div");
-    div.className = "question";
-    const qText = lang.current === "ar" ? q.ar : q.en;
-    div.innerHTML = `<p><strong>${idx + 1}. ${qText}</strong></p>`;
-    q.options.forEach((opt, i) => {
-      const label = lang.current === "ar" ? opt[1] : opt[0];
-      div.innerHTML += \`
-        <label>
-          <input type="radio" name="q\${idx}" value="\${i}">
-          \${label}
-        </label>
-      \`;
+/* render */
+function renderQuestions(){
+  const wrap=document.getElementById("questions");
+  wrap.innerHTML="";
+  questionsData.forEach((q,idx)=>{
+    const div=document.createElement("div");
+    div.className="question"+(lang==="ar"?" rtl":"");
+    div.innerHTML=`<p>${idx+1}. ${(lang==="ar"?q.ar:q.en)}</p>`;
+    q.options.forEach((opt,i)=>{
+      const label=lang==="ar"?opt[1]:opt[0];
+      div.insertAdjacentHTML("beforeend",
+        `<label><input type="radio" name="q${idx}" value="${i}"> ${label}</label>`);
     });
-    container.appendChild(div);
+    wrap.appendChild(div);
   });
+  document.body.classList.toggle("rtl",lang==="ar");
+  document.getElementById("title").innerHTML=
+    lang==="ar"
+      ?"اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
+      :"Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
 }
 
-function toggleLang() {
-  lang.current = lang.current === "en" ? "ar" : "en";
-  document.body.dir = lang.current === "ar" ? "rtl" : "ltr";
-  document.getElementById("title").innerHTML = lang.current === "ar"
-    ? "اكتشف عطرك الشخصي<br><span style='font-size: 0.6em;'>Discover Your Signature Fragrance</span>"
-    : "Discover Your Signature Fragrance<br><span style='font-size: 0.6em;'>اكتشف عطرك الشخصي</span>";
-  renderQuestions();
-}
+/* result */
+function generateResult(){
+  /* zero scores */
+  for(const c in score)for(const k in score[c])score[c][k]=0;
 
-function generateResult() {
-  resetScore();
-  const form = document.forms['quizForm'];
-  questionsData.forEach((q, i) => {
-    const selected = form["q" + i].value;
-    if (selected !== undefined) {
-      const traits = q.options[selected][2];
+  /* accumulate */
+  questionsData.forEach((q,idx)=>{
+    const sel=document.querySelector(`input[name="q${idx}"]:checked`);
+    if(sel){
+      const traits=q.options[+sel.value][2];
       score.style[traits[0]]++;
       score.emotion[traits[1]]++;
       score.family[traits[2]]++;
@@ -164,38 +165,51 @@ function generateResult() {
     }
   });
 
-  const result = {};
-  for (let cat in score) {
-    result[cat] = Object.entries(score[cat]).sort((a, b) => b[1] - a[1])[0][0];
-  }
+  const pick=cat=>Object.entries(score[cat]).sort((a,b)=>b[1]-a[1])[0][0];
 
-  const pyramid = {
-    citrus: ["Bergamot", "Neroli", "Musk"],
-    floral: ["Jasmine", "Rose", "Musk"],
-    woody: ["Cedarwood", "Sandalwood", "Vetiver"],
-    gourmand: ["Vanilla", "Coffee", "Tonka Bean"],
-    oriental: ["Amber", "Myrrh", "Benzoin"],
-    spicy: ["Cardamom", "Cinnamon", "Oud"]
+  const result={
+    style:pick("style"),
+    emotion:pick("emotion"),
+    family:pick("family"),
+    memory:pick("memory")
   };
 
-  const [top, heart, base] = pyramid[result.family] || ["Citrus", "Floral", "Woody"];
+  const pyramid={
+    citrus:["Bergamot","Neroli","Musk"],
+    floral:["Jasmine","Rose","Musk"],
+    woody:["Cedarwood","Sandalwood","Vetiver"],
+    gourmand:["Vanilla","Coffee","Tonka Bean"],
+    oriental:["Amber","Myrrh","Benzoin"],
+    spicy:["Cardamom","Cinnamon","Oud"]
+  };
 
-  document.getElementById("result").innerHTML = `
-    <h2>${lang.current === "ar" ? "نتيجتك العطرية" : "Your Fragrance Profile"}</h2>
-    <p><strong>${lang.current === "ar" ? "الأسلوب" : "Style"}:</strong> ${result.style}</p>
-    <p><strong>${lang.current === "ar" ? "العاطفة" : "Emotion"}:</strong> ${result.emotion}</p>
-    <p><strong>${lang.current === "ar" ? "عائلة العطر" : "Fragrance Family"}:</strong> ${result.family}</p>
-    <p><strong>${lang.current === "ar" ? "الذاكرة" : "Memory Theme"}:</strong> ${result.memory}</p>
-    <h3>${lang.current === "ar" ? "هرم العطر" : "Fragrance Pyramid"}</h3>
-    <ul>
-      <li><strong>${lang.current === "ar" ? "المقدمة" : "Top Note"}:</strong> ${top}</li>
-      <li><strong>${lang.current === "ar" ? "القلب" : "Heart Note"}:</strong> ${heart}</li>
-      <li><strong>${lang.current === "ar" ? "القاعدة" : "Base Note"}:</strong> ${base}</li>
-    </ul>
-  `;
+  const [top,heart,base]=pyramid[result.family];
+
+  document.getElementById("result").innerHTML=
+    `<h2>${lang==="ar"?"نتيجتك العطرية":"Your Fragrance Profile"}</h2>
+     <p><strong>${lang==="ar"?"الأسلوب":"Style"}:</strong> ${result.style}</p>
+     <p><strong>${lang==="ar"?"العاطفة":"Emotion"}:</strong> ${result.emotion}</p>
+     <p><strong>${lang==="ar"?"العائلة":"Family"}:</strong> ${result.family}</p>
+     <p><strong>${lang==="ar"?"الذاكرة":"Memory"}:</strong> ${result.memory}</p>
+     <h3>${lang==="ar"?"هرم العطر":"Fragrance Pyramid"}</h3>
+     <ul>
+       <li><strong>${lang==="ar"?"المقدمة":"Top"}:</strong> ${top}</li>
+       <li><strong>${lang==="ar"?"القلب":"Heart"}:</strong> ${heart}</li>
+       <li><strong>${lang==="ar"?"القاعدة":"Base"}:</strong> ${base}</li>
+     </ul>`;
 }
 
-renderQuestions();
+/* language toggle */
+document.getElementById("langToggle").onclick=()=>{
+  lang=lang==="en"?"ar":"en";
+  renderQuestions();
+};
+/* generate button */
+document.getElementById("genBtn").onclick=generateResult;
+
+/* first paint after DOM ready */
+document.addEventListener("DOMContentLoaded",renderQuestions);
 </script>
 </body>
 </html>
+
