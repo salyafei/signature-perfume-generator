@@ -1,215 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8" />
-<title>Orissa • Fragrance Personality Quiz</title>
-
-<!-- Brand fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Lora&family=Inter&display=swap" rel="stylesheet" />
-
-<style>
-/* ===== Brand styling ===== */
-:root{
-  --turquoise:#40E0D0;
-  --ivory:#FFFFF0;
-  --charcoal:#333333;
-}
-html{box-sizing:border-box}
-*,*:before,*:after{box-sizing:inherit;margin:0;padding:0}
-
-body{
-  font-family:'Lora','Inter',sans-serif;
-  background:var(--ivory);
-  color:var(--charcoal);
-  max-width:960px;
-  margin:0 auto;
-  padding:24px;
-}
-
-h1,h2{
-  font-family:'Playfair Display',serif;
-  color:var(--turquoise);
-  text-align:center;
-}
-
-.logo{text-align:center;margin:0 0 32px}
-.logo img{max-width:160px}
-
-.lang-btn{
-  border:2px solid var(--turquoise);
-  background:transparent;
-  color:var(--turquoise);
-  padding:6px 14px;
-  font-weight:bold;
-  border-radius:4px;
-  cursor:pointer;
-  float:right;
-  margin-top:-10px;
-}
-
-.question{
-  background:#fff;
-  border-left:6px solid var(--turquoise);
-  padding:16px;
-  margin-bottom:24px;
-  border-radius:6px;
-}
-
-.question p{font-weight:bold;margin-bottom:8px}
-
-button.generate{
-  display:block;
-  margin:24px auto;
-  background:var(--turquoise);
-  color:#fff;
-  border:0;
-  padding:12px 28px;
-  font-weight:bold;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-#result{
-  background:#fff;
-  border-left:6px solid var(--turquoise);
-  margin-top:36px;
-  padding:24px;
-  border-radius:8px;
-}
-/* RTL flip */
-.rtl{direction:rtl;text-align:right}
-</style>
+  <meta charset="UTF-8" />
+  <title>Orissa • Fragrance Personality Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Lora&family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --turquoise: #40E0D0;
+      --ivory: #FFFFF0;
+      --charcoal: #333333;
+    }
+    html { box-sizing: border-box; }
+    *, *:before, *:after { box-sizing: inherit; margin: 0; padding: 0; }
+    body {
+      font-family: 'Lora','Inter',sans-serif;
+      background: var(--ivory);
+      color: var(--charcoal);
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1, h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--turquoise);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo img { max-width: 150px; }
+    .lang-btn {
+      border: 2px solid var(--turquoise);
+      background: transparent;
+      color: var(--turquoise);
+      padding: 6px 14px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      float: right;
+      margin-top: -16px;
+    }
+    .question {
+      background: #fff;
+      border-left: 6px solid var(--turquoise);
+      padding: 16px;
+      margin-bottom: 24px;
+      border-radius: 6px;
+    }
+    .question p { font-weight: bold; margin-bottom: 8px; }
+    label { display: block; margin: 6px 0; cursor: pointer; }
+    input[type="radio"] { margin-right: 8px; }
+    button.generate {
+      display: block;
+      margin: 24px auto;
+      background: var(--turquoise);
+      color: #fff;
+      border: 0;
+      padding: 12px 28px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      background: #fff;
+      border-left: 6px solid var(--turquoise);
+      margin-top: 36px;
+      padding: 24px;
+      border-radius: 8px;
+    }
+    .rtl { direction: rtl; text-align: right; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+  </style>
 </head>
 <body>
 
-<!-- language toggle -->
-<button class="lang-btn" id="langToggle">AR / EN</button>
+  <button class="lang-btn" id="langToggle">AR / EN</button>
+  <div class="clearfix"></div>
 
-<!-- logo -->
-<div class="logo"><img src="logo.png" alt="Orissa logo" /></div>
+  <div class="logo">
+    <img src="logo.png" alt="Orissa Logo" />
+  </div>
 
-<h1 id="title">Discover Your Signature Fragrance<br /><span style="font-size:.6em">اكتشف عطرك الشخصي</span></h1>
+  <h1 id="title">
+    Discover Your Signature Fragrance<br />
+    <span style="font-size:.6em">اكتشف عطرك الشخصي</span>
+  </h1>
 
-<form id="quizForm">
-  <div id="questions"></div>
-  <button type="button" class="generate" id="genBtn">Generate Result | توليد النتيجة</button>
-</form>
+  <form id="quizForm">
+    <div id="questions"></div>
+    <button type="button" class="generate" id="genBtn">
+      Generate Result<br /><span style="font-size:.8em">توليد النتيجة</span>
+    </button>
+  </form>
 
-<div id="result"></div>
+  <div id="result"></div>
 
-<script>
-/* === data + helpers === */
-let lang="en";             // current language (en|ar)
+  <script>
+    let lang = "en";
 
-/* 20 placeholder Qs – replace text as you like.
-   Each [ optionEN , optionAR , [style,emotion,family,memory] ]             */
-const questionsData=[...Array(20)].map((_,i)=>({
-  en:`Question ${i+1} (English)`,
-  ar:`السؤال ${i+1} (عربي)`,
-  options:[
-    ["Peaceful",  "سلام",      ["elegant","serenity","woody","nature"]],
-    ["Bold",      "جرأة",      ["bold","power","spicy","celebration"]],
-    ["Mystery",   "غموض",      ["mysterious","intrigue","oriental","reflection"]],
-    ["Warm",      "دفء",       ["sensual","joy","gourmand","childhood"]],
-    ["Playful",   "مرح",       ["refreshing","confidence","citrus","celebration"]],
-    ["Exotic",    "غريب",      ["exotic","serenity","woody","travel"]]
-  ]
-}));
+    const questionsData = [
+      {
+        en: "How do you typically respond to stress?",
+        ar: "كيف تتعامل عادةً مع التوتر؟",
+        options: [
+          ["Remain calm and prefer peace", "أبقى هادئًا وأفضل السلام", ["elegant","serenity","woody","nature"]],
+          ["Take action immediately", "أتصرف فورًا", ["bold","power","spicy","celebration"]],
+          ["Withdraw and reflect", "أنسحب وأتأمل", ["mysterious","intrigue","oriental","reflection"]],
+          ["Seek comfort from close ones", "أبحث عن الراحة مع أحبتي", ["sensual","joy","gourmand","childhood"]],
+          ["Distract myself with fun activities", "أشغل نفسي بأنشطة ممتعة", ["refreshing","confidence","citrus","celebration"]],
+          ["Go for a walk or connect with nature", "أخرج للمشي أو أذهب للطبيعة", ["exotic","serenity","woody","nature"]]
+        ]
+      },
+      {
+        en: "Which scene feels most like 'home' to you?",
+        ar: "أي من هذه المشاهد تشعر وكأنها \"المنزل\" بالنسبة لك؟",
+        options: [
+          ["A candlelit dinner", "عشاء على ضوء الشموع", ["sensual","passion","oriental","romance"]],
+          ["A forest retreat", "ملاذ في الغابة", ["elegant","serenity","woody","nature"]],
+          ["A bustling market abroad", "سوق مزدحم في الخارج", ["exotic","confidence","spicy","travel"]],
+          ["A seaside morning walk", "نزهة صباحية على الشاطئ", ["refreshing","joy","citrus","nature"]],
+          ["A cozy café in the city", "مقهى مريح في المدينة", ["mysterious","intrigue","gourmand","reflection"]],
+          ["A garden filled with blooms", "حديقة مليئة بالأزهار", ["elegant","joy","floral","romance"]]
+        ]
+      },
+      {
+        en: "Choose the quote that resonates most with you:",
+        ar: "اختر الاقتباس الذي يلامسك أكثر:",
+        options: [
+          ["Still waters run deep.", "المياه الهادئة عميقة.", ["mysterious","serenity","oriental","reflection"]],
+          ["Live boldly, love deeply.", "عش بجرأة، أحب بعمق.", ["bold","passion","spicy","celebration"]],
+          ["Simplicity is the ultimate sophistication.", "البساطة هي قمة الرقي.", ["elegant","confidence","woody","reflection"]],
+          ["Let life surprise you.", "دع الحياة تفاجئك.", ["refreshing","joy","citrus","childhood"]],
+          ["You were born to rule.", "وُلدت لتحكم.", ["power","confidence","woody","celebration"]],
+          ["Follow the scent of memories.", "اتبع عبق الذكريات.", ["sensual","reflection","gourmand","childhood"]]
+        ]
+      },
+      {
+        en: "What’s your favorite type of gift?",
+        ar: "ما هو نوع الهدية المفضل لديك؟",
+        options: [
+          ["Handwritten letter or journal", "رسالة مكتوبة بخط اليد أو مجلة", ["elegant","reflection","oriental","reflection"]],
+          ["Gourmet treat or dessert", "حلويات فاخرة أو حلوى", ["joy","gourmand","celebration","childhood"]],
+          ["Curated skincare or perfume set", "مجموعة عناية بالبشرة أو عطر", ["sensual","romance","floral","celebration"]],
+          ["Adventure experience", "تجربة مغامرة", ["exotic","confidence","spicy","travel"]],
+          ["A potted plant or bonsai", "نبتة مزروعة أو بونساي", ["serenity","woody","nature","reflection"]],
+          ["Jewelry or designer item", "مجوهرات أو قطعة مصممة", ["power","bold","oriental","celebration"]]
+        ]
+      },
+      {
+        en: "Choose your favorite element:",
+        ar: "اختر العنصر المفضل لديك:",
+        options: [
+          ["Fire", "النار", ["bold","passion","spicy","celebration"]],
+          ["Water", "الماء", ["elegant","serenity","woody","reflection"]],
+          ["Earth", "الأرض", ["confidence","woody","nature","childhood"]],
+          ["Air", "الهواء", ["refreshing","joy","citrus","travel"]],
+          ["Ether (mystical/spacey)", "الإثير (غامض)", ["mysterious","intrigue","oriental","reflection"]],
+          ["Flower", "الزهرة", ["sensual","romance","floral","romance"]]
+        ]
+      },
+      {
+        en: "How do you usually spend your weekends?",
+        ar: "كيف تقضي عطلة نهاية الأسبوع عادةً؟",
+        options: [
+          ["Relaxing with books or films", "الاسترخاء مع الكتب أو الأفلام", ["mysterious","reflection","oriental","reflection"]],
+          ["Going out with friends", "الخروج مع الأصدقاء", ["joy","citrus","celebration","childhood"]],
+          ["Spa or self-care day", "يوم في السبا أو العناية بالنفس", ["sensual","floral","romance","reflection"]],
+          ["Nature hike or beach walk", "التنزه في الطبيعة أو المشي على الشاطئ", ["serenity","woody","nature","travel"]],
+          ["Exploring new restaurants", "اكتشاف مطاعم جديدة", ["gourmand","passion","spicy","celebration"]],
+          ["Volunteering or creative projects", "التطوع أو المشاريع الإبداعية", ["confidence","elegant","woody","reflection"]]
+        ]
+      },
+      {
+        en: "Which scent appeals to you most?",
+        ar: "أي رائحة تجذبك أكثر؟",
+        options: [
+          ["Fresh citrus peel", "قشور الحمضيات الطازجة", ["refreshing","joy","citrus","childhood"]],
+          ["Sandalwood or cedar", "صندل أو أرز", ["elegant","woody","reflection","nature"]],
+          ["Rose or jasmine", "الورد أو الياسمين", ["sensual","floral","romance","celebration"]],
+          ["Vanilla or coffee", "الفانيليا أو القهوة", ["gourmand","joy","childhood","celebration"]],
+          ["Spices like cardamom or pepper", "توابل مثل الهيل أو الفلفل", ["bold","spicy","passion","travel"]],
+          ["Incense or myrrh", "اللبان أو المر", ["mysterious","oriental","reflection","romance"]]
+        ]
+      },
+      {
+        en: "What’s your favorite type of art?",
+        ar: "ما هو نوع الفن المفضل لديك؟",
+        options: [
+          ["Abstract minimalism", "التجريدية البسيطة", ["elegant","confidence","woody","reflection"]],
+          ["Bold modern expressionism", "التعبيرية الحديثة الجريئة", ["bold","power","spicy","celebration"]],
+          ["Romantic realism", "الواقعية الرومانسية", ["sensual","romance","floral","romance"]],
+          ["Surrealism and fantasy", "الغرائبية والخيال", ["mysterious","intrigue","oriental","reflection"]],
+          ["Classic portraits", "اللوحات الكلاسيكية", ["elegant","serenity","woody","reflection"]],
+          ["Nature photography", "تصوير الطبيعة", ["refreshing","joy","citrus","nature"]]
+        ]
+      },
+      {
+        en: "Which quote inspires you most?",
+        ar: "أي اقتباس يلهمك أكثر؟",
+        options: [
+          ["“Art enables us to find ourselves.”", "“الفن يمكننا من إيجاد أنفسنا.”", ["elegant","serenity","woody","reflection"]],
+          ["“Life is either daring or nothing.”", "“الحياة إما مغامرة جريئة أو لا شيء.”", ["bold","passion","spicy","celebration"]],
+          ["“Love all, trust a few.”", "“احبب الجميع، وثق بالقليل.”", ["mysterious","intrigue","oriental","reflection"]],
+          ["“Joy is not in things.”", "“الفرح ليس في الأشياء.”", ["refreshing","joy","citrus","childhood"]],
+          ["“Dream big, act bold.”", "“احلم كبيرًا، وتصرف بجرأة.”", ["confidence","power","spicy","celebration"]],
+          ["“Memories warm you up.”", "“الذكريات تدفئك.”", ["sensual","reflection","gourmand","childhood"]]
+        ]
+      },
+      {
+        en: "Which location feels most inspiring?",
+        ar: "أي موقع يشعر بالإلهام أكثر؟",
+        options: [
+          ["Japanese zen garden", "حديقة زن يابانية", ["elegant","serenity","woody","nature"]],
+          ["Ancient city ruins", "آثار مدينة قديمة", ["mysterious","intrigue","oriental","reflection"]],
+          ["Tropical beach", "شاطئ استوائي", ["refreshing","joy","citrus","travel"]],
+          ["Colorful spice bazaar", "سوق توابل ملون", ["exotic","passion","spicy","celebration"]],
+          ["Lavender field in Provence", "حقل الخزامى في بروفانس", ["sensual","floral","romance","romance"]],
+          ["Rooftop in a busy city", "سطح في مدينة مزدحمة", ["confidence","bold","oriental","reflection"]]
+        ]
+      },
+      {
+        en: "How would friends describe you?",
+        ar: "كيف يصفك الأصدقاء؟",
+        options: [
+          ["Grounded and wise", "متزن وحكيم", ["elegant","serenity","woody","reflection"]],
+          ["Fiery and dynamic", "نشيط وحماسي", ["bold","power","spicy","celebration"]],
+          ["Mystical and creative", "غامض ومبدع", ["mysterious","intrigue","oriental","reflection"]],
+          ["Gentle and nurturing", "لطيف وراعٍ", ["sensual","joy","gourmand","romance"]],
+          ["Energetic and fun", "نشيط وممتع", ["refreshing","joy","citrus","celebration"]],
+          ["Calm and focused", "هادئ ومتأمل", ["serenity","elegant","woody","reflection"]]
+        ]
+      },
+      {
+        en: "Which childhood memory warms you?",
+        ar: "أي ذكرى طفولية تدفئك؟",
+        options: [
+          ["Picking fruits with family", "قطف الفواكه مع العائلة", ["nature","joy","floral","childhood"]],
+          ["Playing with cousins", "اللعب مع الأطفال", ["joy","playful","gourmand","childhood"]],
+          ["Baking with a loved one", "الخبز مع شخص تحبه", ["sensual","gourmand","romance","celebration"]],
+          ["Smelling flowers in a garden", "شم الأزهار في الحديقة", ["elegant","floral","serenity","nature"]],
+          ["Watching rain from the window", "مشاهدة المطر من النافذة", ["refreshing","reflection","citrus","reflection"]],
+          ["Getting dressed for an event", "الاستعداد لحدث", ["bold","confidence","oriental","celebration"]]
+        ]
+      }
+    ];
 
-const cats={
-  style:["elegant","bold","sensual","exotic","mysterious","refreshing"],
-  emotion:["confidence","serenity","passion","joy","power","intrigue"],
-  family:["floral","woody","spicy","oriental","citrus","gourmand"],
-  memory:["romance","travel","childhood","nature","reflection","celebration"]
-};
+    const categories = {
+      style: ["elegant","bold","sensual","exotic","mysterious","refreshing"],
+      emotion: ["confidence","serenity","passion","joy","power","intrigue"],
+      family: ["floral","woody","spicy","oriental","citrus","gourmand"],
+      memory: ["romance","travel","childhood","nature","reflection","celebration"]
+    };
 
-const score={style:{},emotion:{},family:{},memory:{}};
-for(const c in cats)cats[c].forEach(v=>score[c][v]=0);
+    const score = { style: {}, emotion: {}, family: {}, memory: {} };
+    for (let c in categories) categories[c].forEach(k => score[c][k] = 0);
 
-/* render */
-function renderQuestions(){
-  const wrap=document.getElementById("questions");
-  wrap.innerHTML="";
-  questionsData.forEach((q,idx)=>{
-    const div=document.createElement("div");
-    div.className="question"+(lang==="ar"?" rtl":"");
-    div.innerHTML=`<p>${idx+1}. ${(lang==="ar"?q.ar:q.en)}</p>`;
-    q.options.forEach((opt,i)=>{
-      const label=lang==="ar"?opt[1]:opt[0];
-      div.insertAdjacentHTML("beforeend",
-        `<label><input type="radio" name="q${idx}" value="${i}"> ${label}</label>`);
-    });
-    wrap.appendChild(div);
-  });
-  document.body.classList.toggle("rtl",lang==="ar");
-  document.getElementById("title").innerHTML=
-    lang==="ar"
-      ?"اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
-      :"Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
-}
-
-/* result */
-function generateResult(){
-  /* zero scores */
-  for(const c in score)for(const k in score[c])score[c][k]=0;
-
-  /* accumulate */
-  questionsData.forEach((q,idx)=>{
-    const sel=document.querySelector(`input[name="q${idx}"]:checked`);
-    if(sel){
-      const traits=q.options[+sel.value][2];
-      score.style[traits[0]]++;
-      score.emotion[traits[1]]++;
-      score.family[traits[2]]++;
-      score.memory[traits[3]]++;
+    function renderQuestions() {
+      const container = document.getElementById("questions");
+      container.innerHTML = "";
+      document.body.classList.toggle("rtl", lang === "ar");
+      document.getElementById("title").innerHTML = lang === "ar"
+        ? "اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
+        : "Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
+      questionsData.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<p><strong>${i+1}. ${lang==="ar"?q.ar:q.en}</strong></p>`;
+        q.options.forEach((opt, idx) => {
+          const text = lang==="ar"?opt[1]:opt[0];
+          div.insertAdjacentHTML("beforeend",
+            `<label><input type="radio" name="q${i}" value="${idx}"> ${text}</label>`);
+        });
+        container.appendChild(div);
+      });
     }
-  });
 
-  const pick=cat=>Object.entries(score[cat]).sort((a,b)=>b[1]-a[1])[0][0];
+    function generateResult() {
+      for (let c in score) for (let k in score[c]) score[c][k] = 0;
+      questionsData.forEach((q, i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        if (sel) {
+          const t = q.options[+sel.value][2];
+          score.style[t[0]]++;
+          score.emotion[t[1]]++;
+          score.family[t[2]]++;
+          score.memory[t[3]]++;
+        }
+      });
+      const pick = cat => Object.entries(score[cat]).sort((a,b)=>b[1]-a[1])[0][0];
+      const res = {
+        style: pick("style"),
+        emotion: pick("emotion"),
+        family: pick("family"),
+        memory: pick("memory")
+      };
+      const pyramid = {
+        citrus:["Bergamot","Neroli","Musk"],
+        floral:["Jasmine","Rose","Musk"],
+        woody:["Cedarwood","Sandalwood","Vetiver"],
+        gourmand:["Vanilla","Coffee","Tonka Bean"],
+        oriental:["Amber","Myrrh","Benzoin"],
+        spicy:["Cardamom","Cinnamon","Oud"]
+      };
+      const [top, heart, base] = pyramid[res.family];
+      document.getElementById("result").innerHTML =
+        `<h2>${lang==="ar"?"نتيجتك العطرية":"Your Fragrance Profile"}</h2>
+         <p><strong>${lang==="ar"?"الأسلوب":"Style"}:</strong> ${res.style}</p>
+         <p><strong>${lang==="ar"?"العاطفة":"Emotion"}:</strong> ${res.emotion}</p>
+         <p><strong>${lang==="ar"?"عائلة العطر":"Family"}:</strong> ${res.family}</p>
+         <p><strong>${lang==="ar"?"الذاكرة":"Memory"}:</strong> ${res.memory}</p>
+         <h3>${lang==="ar"?"هرم العطر":"Fragrance Pyramid"}</h3>
+         <ul>
+           <li><strong>${lang==="ar"?"المقدمة":"Top"}:</strong> ${top}</li>
+           <li><strong>${lang==="ar"?"القلب":"Heart"}:</strong> ${heart}</li>
+           <li><strong>${lang==="ار"?"القاعدة":"Base"}:</strong> ${base}</li>
+         </ul>`;
+    }
 
-  const result={
-    style:pick("style"),
-    emotion:pick("emotion"),
-    family:pick("family"),
-    memory:pick("memory")
-  };
+    document.getElementById("langToggle").onclick = () => {
+      lang = lang==="en"?"ar":"en";
+      renderQuestions();
+    };
+    document.getElementById("genBtn").onclick = generateResult;
+    document.addEventListener("DOMContentLoaded", renderQuestions);
+  </script>
 
-  const pyramid={
-    citrus:["Bergamot","Neroli","Musk"],
-    floral:["Jasmine","Rose","Musk"],
-    woody:["Cedarwood","Sandalwood","Vetiver"],
-    gourmand:["Vanilla","Coffee","Tonka Bean"],
-    oriental:["Amber","Myrrh","Benzoin"],
-    spicy:["Cardamom","Cinnamon","Oud"]
-  };
-
-  const [top,heart,base]=pyramid[result.family];
-
-  document.getElementById("result").innerHTML=
-    `<h2>${lang==="ar"?"نتيجتك العطرية":"Your Fragrance Profile"}</h2>
-     <p><strong>${lang==="ar"?"الأسلوب":"Style"}:</strong> ${result.style}</p>
-     <p><strong>${lang==="ar"?"العاطفة":"Emotion"}:</strong> ${result.emotion}</p>
-     <p><strong>${lang==="ar"?"العائلة":"Family"}:</strong> ${result.family}</p>
-     <p><strong>${lang==="ar"?"الذاكرة":"Memory"}:</strong> ${result.memory}</p>
-     <h3>${lang==="ar"?"هرم العطر":"Fragrance Pyramid"}</h3>
-     <ul>
-       <li><strong>${lang==="ar"?"المقدمة":"Top"}:</strong> ${top}</li>
-       <li><strong>${lang==="ar"?"القلب":"Heart"}:</strong> ${heart}</li>
-       <li><strong>${lang==="ar"?"القاعدة":"Base"}:</strong> ${base}</li>
-     </ul>`;
-}
-
-/* language toggle */
-document.getElementById("langToggle").onclick=()=>{
-  lang=lang==="en"?"ar":"en";
-  renderQuestions();
-};
-/* generate button */
-document.getElementById("genBtn").onclick=generateResult;
-
-/* first paint after DOM ready */
-document.addEventListener("DOMContentLoaded",renderQuestions);
-</script>
 </body>
 </html>
-
