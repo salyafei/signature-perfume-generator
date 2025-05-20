@@ -69,6 +69,8 @@
       border-radius: 8px;
     }
     .rtl { direction: rtl; text-align: right; }
+    .blend-list { list-style:none; padding-left:0; }
+    .blend-list li { margin-bottom:4px; }
   </style>
 </head>
 <body>
@@ -90,22 +92,18 @@
     let lang = "en";
 
     const questionsData = [
-      {
-        en: "1. If you were to host a gathering, which atmosphere would you create?",
-        ar: "1. إذا كنت ستستضيف تجمعًا، فما الأجواء التي ستنشئها؟",
-        options: [
+      { en:"If you were to host a gathering, which atmosphere would you create?", ar:"إذا كنت ستستضيف تجمعًا، فما الأجواء التي ستنشئها؟",
+        options:[
           ["Candlelit salon with soft music","صالون مضاء بالشموع وموسيقى هادئة",["elegant","serenity","oriental","romance"]],
           ["Bold pop-art gallery with bright lights","معرض فن بوب جريء وأضواء ساطعة",["bold","joy","citrus","celebration"]],
-          ["Secluded reading nook by the fireplace","ركن قراءة معزول بجانب الموقد",["elegant","reflection","woody","reflection"]],
+          ["Secluded reading nook by the fireplace","ركن قراءة معزول بجانب الموقد",["playful","reflection","woody","reflection"]],
           ["Sunset beach bonfire with close friends","موقد شاطئي عند الغروب مع الأصدقاء",["exotic","joy","citrus","childhood"]],
           ["Vibrant rooftop dance floor under stars","حلبة رقص نابضة على السطح تحت النجوم",["bold","passion","spicy","celebration"]],
-          ["Lush garden brunch at sunrise","غداء في حديقة مورقة عند شروق الشمس",["elegant","nature","floral","nature"]]
+          ["Lush garden brunch at sunrise","غداء في حديقة مورقة عند شروق الشمس",["elegant","serenity","floral","nature"]]
         ]
       },
-      {
-        en: "2. When you look out your window in the morning, you feel drawn to…",
-        ar: "2. عندما تنظر من نافذتك في الصباح، ما الذي يجذبك؟",
-        options: [
+      { en:"When you look out your window in the morning, you feel drawn to…", ar:"عندما تنظر من نافذتك في الصباح، ما الذي يجذبك؟",
+        options:[
           ["Misty dew on rose petals","ندى ضبابي على بتلات الورود",["sensual","reflection","floral","nature"]],
           ["Sunbeams dancing on wooden floors","أشعة الشمس ترقص على الأرضيات الخشبية",["elegant","joy","woody","reflection"]],
           ["Hush of empty city streets","صمت شوارع المدينة الفارغة",["mysterious","serenity","oriental","reflection"]],
@@ -114,22 +112,18 @@
           ["Glow of lanterns in an alley","توّهج الفوانيس في زقاق",["mysterious","intrigue","oriental","travel"]]
         ]
       },
-      {
-        en: "3. Which childhood memory makes you smile most vividly?",
-        ar: "3. أي ذكرى من طفولتك تجعلك تبتسم أكثر؟",
-        options: [
+      { en:"Which childhood memory makes you smile most vividly?", ar:"أي ذكرى من طفولتك تجعلك تبتسم أكثر؟",
+        options:[
           ["Baking cookies with family","خبز البسكويت مع العائلة",["sensual","joy","gourmand","childhood"]],
           ["Building forts outdoors","بناء الحصون في الهواء الطلق",["playful","confidence","spicy","childhood"]],
           ["Bedtime stories by lamplight","قصص قبل النوم بضوء المصباح",["elegant","serenity","oriental","reflection"]],
           ["Running barefoot on wet grass","الجري حافي القدمين على العشب المبلل",["refreshing","joy","citrus","nature"]],
           ["Blowing bubbles in the park","نفخ الفقاعات في الحديقة",["playful","joy","floral","childhood"]],
-          ["Riding a carousel at a fair","ركوب الدوّامة في المهرجان",["playful","joy","gourmand","celebration"]]
+          ["Riding a carousel at a fair","ركوب الدوّامة في المهرجان",["whimsical","joy","gourmand","celebration"]]
         ]
       },
-      {
-        en: "4. If you could step into any painting, which scene appeals?",
-        ar: "4. إذا استطعت الدخول في أي لوحة، أي مشهد يجذبك؟",
-        options: [
+      { en:"If you could step into any painting, which scene appeals?", ar:"إذا استطعت الدخول في أي لوحة، أي مشهد يجذبك؟",
+        options:[
           ["Moonlit forest with silvery mist","غابة مضيئة بضوء القمر وضباب فضي",["mysterious","serenity","woody","nature"]],
           ["Blazing sunset over desert dunes","غروب مشع فوق كثبان الصحراء",["bold","passion","spicy","travel"]],
           ["Stately manor’s rose garden","حديقة الورود في قصر فخم",["elegant","romance","floral","romance"]],
@@ -138,10 +132,8 @@
           ["Quiet temple courtyard","فناء معبد هادئ",["elegant","reflection","oriental","reflection"]]
         ]
       },
-      {
-        en: "5. Your ideal weekend morning involves…",
-        ar: "5. صباح عطلة نهاية الأسبوع المثالي لديك يتضمن…",
-        options: [
+      { en:"Your ideal weekend morning involves…", ar:"صباح عطلة نهاية الأسبوع المثالي لديك يتضمن…",
+        options:[
           ["Journaling by a window","تدوين اليوميات بجانب النافذة",["elegant","serenity","woody","reflection"]],
           ["High-intensity workout","تمرين عالي الشدة",["bold","power","spicy","celebration"]],
           ["Long forest hike","نزهة طويلة في الغابة",["exotic","serenity","woody","nature"]],
@@ -150,184 +142,154 @@
           ["Calligraphy in cozy studio","ممارسة الخط في استوديو مريح",["elegant","reflection","oriental","reflection"]]
         ]
       },
-      {
-        en: "6. Which book genre do you gravitate toward?",
-        ar: "6. أي نوع من الكتب تميل إليه؟",
-        options: [
+      { en:"Which book genre do you gravitate toward?", ar:"أي نوع من الكتب تميل إليه؟",
+        options:[
           ["Classic romance","الرومانسية الكلاسيكية",["sensual","romance","floral","romance"]],
           ["Adventure thrillers","روايات التشويق والمغامرة",["bold","passion","spicy","travel"]],
           ["Mysteries & gothic","قصص الغموض والقوطية",["mysterious","intrigue","oriental","reflection"]],
           ["Travel memoirs","مذكرات السفر",["exotic","confidence","woody","travel"]],
           ["Light comedies","كوميديا خفيفة",["playful","joy","citrus","celebration"]],
-          ["Philosophical poetry","شعر فلسفي",["elegant","serenity","oriental","reflection"]]        
+          ["Philosophical poetry","شعر فلسفي",["elegant","serenity","oriental","reflection"]]
         ]
       },
-      {
-        en: "7. In a movie, you most enjoy scenes that are…",
-        ar: "7. في فيلم، تستمتع بالمشاهد التي تكون…",
-        options: [
+      { en:"In a movie, you most enjoy scenes that are…", ar:"في فيلم، تستمتع بالمشاهد التي تكون…",
+        options:[
           ["Intimate by candlelight","حوارات حميمة بضوء الشموع",["sensual","romance","oriental","romance"]],
           ["Explosive action abroad","مشاهد حركة انفجارية في الخارج",["bold","passion","spicy","travel"]],
           ["Haunting close-ups","لقطات جوية مقربة مخيفة",["mysterious","intrigue","oriental","reflection"]],
-          ["Reflective nature montages","مونتاجات طبيعية تأملية",["elegant","serenity","woody","nature"]],
+          ["Reflective nature montages","몬تاجات طبيعية تأملية",["elegant","serenity","woody","nature"]],
           ["Joyful musicals","مقاطع موسيقية مرحة",["playful","joy","citrus","celebration"]],
-          ["Surreal dreamscapes","مناظر أحلام سريالية",["exotic","intrigue","oriental","reflection"]]        
+          ["Surreal dreamscapes","مناظر أحلام سريالية",["exotic","intrigue","oriental","reflection"]]
         ]
       },
-      {
-        en: "8. Your signature jewelry piece would be…",
-        ar: "8. قطعة المجوهرات المميزة لديك ستكون…",
-        options: [
+      { en:"Your signature jewelry piece would be…", ar:"قطعة المجوهرات المميزة لديك ستكون…",
+        options:[
           ["Rose-gold locket","قلادة من الوردي الذهبي",["elegant","romance","floral","romance"]],
           ["Statement cuff","سوار بارز",["bold","power","oriental","celebration"]],
           ["Oxidized pendant","قلادة مؤكسدة",["mysterious","intrigue","woody","reflection"]],
           ["Wooden bead bracelet","سوار خرز خشبي",["exotic","nature","woody","nature"]],
           ["Turquoise ring","خاتم تركواز",["playful","joy","citrus","celebration"]],
-          ["Silver band","خاتم فضي",["elegant","serenity","woody","reflection"]]        
+          ["Silver band","خاتم فضي",["elegant","serenity","woody","reflection"]]
         ]
       },
-      {
-        en: "9. Which light feels most comforting?",
-        ar: "9. أي ضوء تشعر أنه أكثر راحة؟",
-        options: [
+      { en:"Which light feels most comforting?", ar:"أي ضوء تشعر أنه أكثر راحة؟",
+        options:[
           ["Soft candle glow","توهج الشموع الناعم",["sensual","serenity","oriental","romance"]],
           ["Neon club strobes","أضواء نيون نادي",["bold","excitement","spicy","celebration"]],
           ["Moody lamps","مصابيح درامية",["mysterious","intrigue","woody","reflection"]],
           ["Cool daylight","ضوء النهار البارد",["refreshing","serenity","citrus","nature"]],
           ["Warm Edison bulbs","مصابيح إديسون الدافئة",["elegant","joy","woody","romance"]],
-          ["Lantern at twilight","مصباح في الغسق",["exotic","intrigue","oriental","reflection"]]        
+          ["Lantern at twilight","مصباح في الغسق",["exotic","intrigue","oriental","reflection"]]
         ]
       },
-      {
-        en: "10. Your ideal invite would mention…",
-        ar: "10. دعوتك المثالية ستذكر…",
-        options: [
+      { en:"Your ideal invite would mention…", ar:"دعوتك المثالية ستذكر…",
+        options:[
           ["Dusk gathering","تجمع عند الغسق",["sensual","romance","oriental","romance"]],
           ["All-night party","حفلة طوال الليل",["bold","celebration","spicy","celebration"]],
           ["Secret lounge","صالون سري",["mysterious","intrigue","woody","reflection"]],
-          ["Beachside picnic","نزهة على الشاطئ",["exotic","serenity","woody","nature"]],
+          ["Beachside picnic","نزهة على الشاطئ",["exotic","serenity","woody","nature"]], 
           ["Rooftop dance","رقص على السطح",["playful","joy","citrus","celebration"]],
-          ["Garden poetry","شعر في الحديقة",["elegant","reflection","floral","nature"]]        
+          ["Garden poetry","شعر في الحديقة",["elegant","reflection","floral","nature"]]
         ]
       },
-      {
-        en: "11. If you could bottle one emotion, it would be…",
-        ar: "11. إذا استطعت تعبئة عاطفة واحدة، فستكون…",
-        options: [
+      { en:"If you could bottle one emotion, it would be…", ar:"إذا استطعت تعبئة عاطفة واحدة، فستكون…",
+        options:[
           ["Serene contentment","راحة هادئة",["elegant","serenity","woody","reflection"]],
           ["Fierce confidence","ثقة قوية",["bold","confidence","spicy","celebration"]],
           ["Deep intrigue","فضول عميق",["mysterious","intrigue","oriental","reflection"]],
           ["Pure joy","فرح خالص",["playful","joy","citrus","childhood"]],
           ["Adventurous zeal","حماس مغامر",["exotic","passion","spicy","travel"]],
-          ["Romantic nostalgia","حنين رومانسي",["sensual","romance","floral","romance"]]        
+          ["Romantic nostalgia","حنين رومانسي",["sensual","romance","floral","romance"]]
         ]
       },
-      {
-        en: "12. When choosing a meal, you’re most drawn to…",
-        ar: "12. عند اختيار وجبة، ما الذي يجذبك؟",
-        options: [
+      { en:"When choosing a meal, you’re most drawn to…", ar:"عند اختيار وجبة، ما الذي يجذبك؟",
+        options:[
           ["Artful plating","تقديم فني",["elegant","serenity","oriental","reflection"]],
           ["Spicy bold flavors","نكهات حارة وجريئة",["bold","passion","spicy","celebration"]],
           ["Rich slow-cooked stews","أطباق مطبوخة ببطء وغنية",["sensual","gourmand","woody","childhood"]],
           ["Fresh farm-to-table","طازج من المزرعة",["refreshing","joy","citrus","nature"]],
           ["Sweet playful desserts","حلويات حلوة ومرحة",["playful","joy","floral","celebration"]],
-          ["Comfort classics","أطباق الراحة التقليدية",["elegant","joy","woody","reflection"]]        
+          ["Comfort classics","أطباق الراحة التقليدية",["elegant","joy","woody","reflection"]]
         ]
       },
-      {
-        en: "13. In conversation, you prefer topics that are…",
-        ar: "13. في الحديث، تفضل المواضيع التي تكون…",
-        options: [
+      { en:"In conversation, you prefer topics that are…", ar:"في الحديث، تفضل المواضيع التي تكون…",
+        options:[
           ["Philosophical & reflective","فلسفية وتأملية",["elegant","reflection","woody","reflection"]],
           ["Challenging & ambitious","تحدي وطموح",["bold","confidence","spicy","celebration"]],
           ["Mysterious & speculative","غامضة ومتنبئة",["mysterious","intrigue","oriental","reflection"]],
           ["Heartwarming & sincere","دافئة وصادقة",["sensual","joy","floral","romance"]],
           ["Energetic & fun","نشيطة وممتعة",["playful","joy","citrus","celebration"]],
-          ["Cultural & worldly","ثقافية وعالمية",["exotic","excitement","woody","travel"]]        
+          ["Cultural & worldly","ثقافية وعالمية",["exotic","excitement","woody","travel"]]
         ]
       },
-      {
-        en: "14. Which piece of music stirs you most?",
-        ar: "14. أي قطعة موسيقية تحركك أكثر؟",
-        options: [
+      { en:"Which piece of music stirs you most?", ar:"أي قطعة موسيقية تحركك أكثر؟",
+        options:[
           ["Soft piano nocturne","مقطوعة بيانو هادئة",["elegant","serenity","woody","reflection"]],
           ["Driving rock anthem","أنشودة روك قوية",["bold","passion","spicy","celebration"]],
           ["Eerie ambient track","مقطوعة بيئية غامضة",["mysterious","intrigue","oriental","reflection"]],
           ["Gentle acoustic ballad","أغنية بلادي هادئة",["sensual","romance","floral","romance"]],
           ["Lively dance beat","إيقاع رقص حيوي",["playful","joy","citrus","celebration"]],
-          ["Haunting world chant","ترنيمة عالمية مقيمة",["exotic","intrigue","oriental","travel"]]        
+          ["Haunting world chant","ترنيمة عالمية مخيفة",["exotic","intrigue","oriental","travel"]]
         ]
       },
-      {
-        en: "15. If you gifted someone a place to stay, it would be…",
-        ar: "15. إذا أهديت مكان إقامة، فسيكون…",
-        options: [
+      { en:"If you gifted someone a place to stay, it would be…", ar:"إذا أهديت مكان إقامة، فسيكون…",
+        options:[
           ["Serene mountain cabin","كوخ جبلي هادئ",["mysterious","serenity","woody","nature"]],
           ["Chic urban loft","شقة حضرية أنيقة",["bold","confidence","citrus","celebration"]],
           ["Hidden historic villa","فيلا تاريخية مخفية",["mysterious","intrigue","oriental","reflection"]],
           ["Beachside bungalow","بنغل على الشاطئ",["refreshing","joy","aquatic","nature"]],
           ["Trendy boutique hostel","نزل بوتيكي عصري",["playful","joy","floral","celebration"]],
-          ["Luxurious spa resort","منتجع سبا فاخر",["elegant","romance","oriental","romance"]]        
+          ["Luxurious spa resort","منتجع سبا فاخر",["elegant","romance","oriental","romance"]]
         ]
       },
-      {
-        en: "16. Which pastime speaks to your soul?",
-        ar: "16. أي هواية تنادي روحك؟",
-        options: [
+      { en:"Which pastime speaks to your soul?", ar:"أي هواية تنادي روحك؟",
+        options:[
           ["Painting or sketching","الرسم أو التخطيط",["elegant","reflection","floral","reflection"]],
           ["Competitive sports","رياضات تنافسية",["bold","power","spicy","celebration"]],
           ["Creative writing","الكتابة الإبداعية",["mysterious","intrigue","oriental","reflection"]],
           ["Gardening or birdwatching","البستنة أو مراقبة الطيور",["sensual","serenity","woody","nature"]],
           ["Party-hosting & socializing","استضافة الحفلات والتواصل الاجتماعي",["playful","joy","citrus","celebration"]],
-          ["Meditation & yoga","التأمل واليوغا",["elegant","serenity","woody","reflection"]]        
+          ["Meditation & yoga","التأمل واليوغا",["elegant","serenity","woody","reflection"]]
         ]
       },
-      {
-        en: "17. At a party, you’re most often found…",
-        ar: "17. في الحفلة، أجحف غالبًا…",
-        options: [
+      { en:"At a party, you’re most often found…", ar:"في الحفلة، تجد نفسك غالبًا…",
+        options:[
           ["In a quiet corner chatting","في زاوية هادئة تتحدث",["elegant","reflection","oriental","reflection"]],
-          ["Leading the dance floor","تقود حلبة الرقص",["bold","passion","spicy","celebration"]],
+          ["Leading the dance floor","تقود حلبة الرقص",["bold","passion","sp spicy","celebration"]],
           ["Observing from shadows","ترصد من الظلال",["mysterious","intrigue","woody","reflection"]],
           ["Helping the host","مساعدة المضيف",["sensual","joy","floral","romance"]],
           ["Capturing candid photos","التقاط صور عفوية",["playful","joy","citrus","childhood"]],
-          ["Mingling across groups","التواصل مع الجميع",["exotic","confidence","woody","travel"]]        
+          ["Mingling across groups","التواصل مع الجميع",["exotic","confidence","woody","travel"]]
         ]
       },
-      {
-        en: "18. Your perfect getaway includes…",
-        ar: "18. عطلتك المثالية تتضمن…",
-        options: [
+      { en:"Your perfect getaway includes…", ar:"عطلتك المثالية تتضمن…",
+        options:[
           ["A silent retreat","منتجع صامت",["mysterious","serenity","woody","reflection"]],
           ["Multi-city tour","جولة متعددة المدن",["bold","confidence","citrus","travel"]],
           ["Stay in ancient citadel","إقامة في قلعة قديمة",["mysterious","intrigue","oriental","reflection"]],
           ["Nature lodge by a lake","منتجع طبيعي بجانب البحيرة",["refreshing","joy","aquatic","nature"]],
           ["Beachside festival","مهرجان على الشاطئ",["playful","joy","citrus","celebration"]],
-          ["Historic mansion stay","إقامة في قصر تاريخي",["elegant","romance","floral","romance"]]        
+          ["Historic mansion stay","إقامة في قصر تاريخي",["elegant","romance","floral","romance"]]
         ]
       },
-      {
-        en: "19. Which fabric texture feels most luxurious?",
-        ar: "19. أي نسيج يبدو الأكثر فخامة؟",
-        options: [
+      { en:"Which fabric texture feels most luxurious?", ar:"أي نسيج يبدو الأكثر فخامة؟",
+        options:[
           ["Silky satin","ساتان حريري",["sensual","romance","oriental","romance"]],
           ["Embossed leather","جلد منقوش",["bold","power","spicy","celebration"]],
           ["Raw velvet","مخمل خام",["mysterious","intrigue","woody","reflection"]],
           ["Crisp linen","كتان مقرمش",["refreshing","serenity","citrus","nature"]],
           ["Breathable cotton","قطن تنفسي",["playful","joy","floral","childhood"]],
-          ["Cashmere wool","صوف الكشمير",["elegant","serenity","woody","reflection"]]        
+          ["Cashmere wool","صوف الكشمير",["elegant","serenity","woody","reflection"]]
         ]
       },
-      {
-        en: "20. When you reminisce, you recall…",
-        ar: "20. عندما تسترجع الذكريات، تتذكر…",
-        options: [
+      { en:"When you reminisce, you recall…", ar:"عندما تسترجع الذكريات، تتذكر…",
+        options:[
           ["First meaningful conversation","أولى محادثة ذات مغزى",["elegant","romance","oriental","reflection"]],
           ["A triumphant achievement","إنجاز انتصاري",["bold","confidence","spicy","celebration"]],
-          ["A secret you've never shared","سر لم تشاركه",["mysterious","intrigue","woody","reflection"]],
+          ["A secret you never shared","سر لم تشاركه",["mysterious","intrigue","woody","reflection"]],
           ["A peaceful childhood afternoon","عصر طفولي هادئ",["refreshing","joy","citrus","childhood"]],
           ["A spontaneous road trip","رحلة طريق عفوية",["exotic","joy","citrus","travel"]],
-          ["A milestone celebration","احتفال بإنجاز",["sensual","celebration","floral","celebration"]]        
+          ["A milestone celebration","احتفال بإنجاز",["sensual","celebration","floral","celebration"]]
         ]
       }
     ];
@@ -385,14 +347,19 @@
       const result = {};
       for (let cat in score) {
         const entries = Object.entries(score[cat]).sort((a,b)=>b[1]-a[1]);
-        const [[t1,n1],[t2,n2]] = entries;
-        const total = n1 + n2 || 1;
-        const p1 = Math.round(100 * n1 / total);
-        const p2 = 100 - p1;
-        result[cat] = `${t1} (${p1}%) & ${t2} (${p2}%) — ratio ${n1}:${n2}`;
+        const [[t1,n1],[t2,n2],[t3,n3]] = entries;
+        const sum3 = n1 + n2 + n3 || 1;
+        const p1 = Math.round(100*n1/sum3),
+              p2 = Math.round(100*n2/sum3),
+              p3 = 100 - p1 - p2;
+        result[cat] = [
+          { trait: t1, percent: p1 },
+          { trait: t2, percent: p2 },
+          { trait: t3, percent: p3 }
+        ];
       }
 
-      const pyramid = {
+      const pyramidNotes = {
         oriental:["Amber","Myrrh","Benzoin"],
         citrus:  ["Bergamot","Neroli","Musk"],
         woody:   ["Cedarwood","Sandalwood","Vetiver"],
@@ -401,25 +368,43 @@
         gourmand:["Vanilla","Coffee","Tonka Bean"],
         aquatic: ["Sea Salt","Marine Accord","Musk"]
       };
-      const famKey = result.family.split(" ")[0];
-      const [top,heart,base] = pyramid[famKey] || ["Bergamot","Rose","Vetiver"];
+
+      // Build blends
+      let blendsHTML = "";
+      ["style","emotion","family","memory"].forEach(cat=>{
+        const arr = result[cat];
+        blendsHTML += `<h3>${lang==="ar"
+          ? {"style":"أسلوب","emotion":"العاطفة","family":"عائلة العطر","memory":"الذاكرة"}[cat]
+          : cat.charAt(0).toUpperCase()+cat.slice(1)}</h3><ul class="blend-list">`;
+        arr.forEach(({trait,percent})=>{
+          blendsHTML += `<li>${trait} — ${percent}%</li>`;
+        });
+        blendsHTML += `</ul>`;
+      });
+
+      // Pyramid layer blends using top 3 families
+      const famBlend = result.family;
+      const layers = ["Top Note","Heart Note","Base Note"];
+      blendsHTML += `<h3>${lang==="ar"?"هرم العطر":"Fragrance Pyramid"}</h3>`;
+      layers.forEach((layer,i)=>{
+        blendsHTML += `<p><strong>${lang==="ar"
+          ? ["المقدمة","القلب","القاعدة"][i]
+          : layer}:</strong> `;
+        // join each family note proportionally
+        blendsHTML += famBlend.map(({trait,percent})=>{
+          const note = pyramidNotes[trait][i];
+          return `${note} (${percent}%)`;
+        }).join(" • ");
+        blendsHTML += `</p>`;
+      });
 
       document.getElementById("result").innerHTML =
-        `<h2>${lang==="ar"?"نتائج عطرك":"Your Fragrance Profile"}</h2>
-         <p><strong>${lang==="ar"?"أسلوبك":"Style"}:</strong> ${result.style}</p>
-         <p><strong>${lang==="ar"?"العاطفة":"Emotion"}:</strong> ${result.emotion}</p>
-         <p><strong>${lang==="ar"?"عائلة العطر":"Fragrance Family"}:</strong> ${result.family}</p>
-         <p><strong>${lang==="ar"?"الذاكرة":"Memory"}:</strong> ${result.memory}</p>
-         <h3>${lang==="ar"?"هرم العطر":"Fragrance Pyramid"}</h3>
-         <ul>
-           <li><strong>${lang==="ar"?"المقدمة":"Top Note"}:</strong> ${top}</li>
-           <li><strong>${lang==="ar"?"القلب":"Heart Note"}:</strong> ${heart}</li>
-           <li><strong>${lang==="ar"?"القاعدة":"Base Note"}:</strong> ${base}</li>
-         </ul>`;
+        `<h2>${lang==="ar"?"نتيجة العطر الخاص بك":"Your Fragrance Profile"}</h2>${blendsHTML}`;
     }
 
     document.getElementById("langToggle").onclick = () => {
-      lang = (lang==="en") ? "ar" : "en"; renderQuestions();
+      lang = lang==="en" ? "ar" : "en";
+      renderQuestions();
     };
     document.getElementById("genBtn").onclick = generateResult;
     document.addEventListener("DOMContentLoaded", renderQuestions);
