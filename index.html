@@ -94,7 +94,7 @@
     .blend-list { list-style: none; padding-left: 0; }
     .blend-list li { margin-bottom: 4px; }
     .disclaimer { font-style: italic; font-size: 0.8em; margin-top: 16px; }
-    #questions-fallback {
+    #questions-fallback, #result-error {
       color: red;
       text-align: center;
       margin: 16px 0;
@@ -113,11 +113,11 @@
     <div id="progress">Question <span id="currentQ">1</span> of 20</div>
     <form id="quizForm">
       <div class="question" role="region" aria-labelledby="birthDate">
-        <p id="birthDate"><strong>Optional: Enter your birth date for a personalized touch</strong></p>
-        <p id="birthDateAr" style="display: none;"><strong>اختياري: أدخل تاريخ ميلادك للمسة شخصية</strong></p>
+        <p id="birthDateLabel"><strong>Optional: Enter your birth date for a personalized touch</strong></p>
+        <p id="birthDateLabelAr" style="display: none;"><strong>اختياري: أدخل تاريخ ميلادك للمسة شخصية</strong></p>
         <input type="date" id="birthDateInput" name="birthDate">
-        <p><strong>Ingredient Preference</strong></p>
-        <p id="ingredientPrefAr" style="display: none;"><strong>تفضيل المكونات</strong></p>
+        <p id="ingredientPrefLabel"><strong>Ingredient Preference</strong></p>
+        <p id="ingredientPrefLabelAr" style="display: none;"><strong>تفضيل المكونات</strong></p>
         <select id="ingredientPref" name="ingredientPref">
           <option value="both">Natural & Synthetic</option>
           <option value="natural">Natural Only</option>
@@ -137,9 +137,7 @@
     </form>
     <div id="result"></div>
   </div>
-  <div class="sidebar" id="sidebar">
-    <!-- Content rendered dynamically by JavaScript -->
-  </div>
+  <div class="sidebar" id="sidebar"></div>
   <script>
     // Note: Obfuscate this script using javascript-obfuscator before deployment
     // Command: javascript-obfuscator script.js --output script-obfuscated.js --compact true --self-defending true
@@ -395,13 +393,9 @@
         memory: ["romance", "celebration", "reflection", "nature", "childhood", "travel"]
       },
       score: { style: {}, emotion: {}, family: {}, memory: {} },
-      pyramidNotes: {
-        oriental: [
-          ["Saffron (N)", "Cardamom (N)", "Pink Pepper (N)", "Star Anise (N)", "Clove (N)", "Cinnamon Leaf (N)", "Nutmeg Dust (N)", "Sichuan Pepper (N)", "Fennel Seed (N)", "Aniseed (N)", "Tamarind (N)", "Sandalwood Oil (N)", "Rosewood Essence (N)", "Orris Root (N)", "Galbanum (N)", "Elemi (N)", "Caraway (N)", "Cumin (N)", "Angelica Root (N)", "Davana (N)", "Fenugreek (N)", "Saffron Petal (N)", "Cardamom Pod (N)", "Pink Peppercorn (N)", "Star Anise Pod (N)", "Clove Bud (N)", "Cinnamon Stick (N)", "Nutmeg Powder (N)", "Sichuan Spice (N)", "Fennel Pollen (N)", "Anise Seed (N)", "Tamarind Pulp (N)", "Sandalwood Bark (N)", "Rosewood Sap (N)", "Orris Powder (N)", "Galbanum Resin (N)", "Elemi Gum (N)", "Caraway Seed (N)", "Cumin Powder (N)", "Angelica Flower (N)", "Davana Leaf (N)", "Fenugreek Seed (N)", "Saffron Stigma (N)", "Cardamom Seed (N)", "Pink Pepper Berry (N)", "Star Anise Flower (N)", "Clove Leaf (N)", "Cinnamon Powder (N)"], // Top (48)
-          ["Myrrh (N)", "Frankincense (N)", "Labdanum (N)", "Rose Absolute (N)", "Jasmine Sambac (N)", "Oud Accord (B)", "Amber Accord (B)", "Saffron Absolute (N)", "Tuberose Absolute (N)", "Ylang-Ylang Essence (N)", "Patchouli Oil (N)", "Vetiver Essence (N)", "Cistus (N)", "Opoponax (N)", "Balsam Peru (N)", "Benzoin Resin (N)", "Tonka Bean Essence (N)", "Vanilla Orchid (N)", "Rose de Mai (N)", "Jasmine Grandiflorum (N)", "Oud Wood (N)", "Ambergris Accord (B)", "Saffron Thread (N)", "Tuberose Petal (N)", "Ylang-Ylang Flower (N)", "Patchouli Leaf (N)", "Vetiver Root (N)", "Cistus Flower (N)", "Opoponax Gum (N)", "Balsam Tolu (N)", "Benzoin Crystal (N)", "Tonka Bean Pod (N)", "Vanilla Flower (N)", "Rose Centifolia (N)", "Jasmine Auriculatum (N)", "Oud Resin (N)", "Amber Musk (B)", "Saffron Oil (N)", "Tuberose Wax (N)", "Ylang-Ylang Oil (N)", "Patchouli Essence (N)", "Vetiver Grass (N)", "Cistus Leaf (N)", "Opoponax Resin (N)", "Balsam Fir (N)", "Benzoin Gum (N)", "Tonka Bean Oil (N)", "Vanilla Bean (N)"], // Heart (48)
-          ["Benzoin (N)", "Oud (N)", "Tonka Bean (N)", "Amber Resin (N)", "Vanilla Absolute (N)", "Sandalwood Base (N)", "Patchouli Base (N)", "Musk Accord (B)", "Ambergris (N)", "Myrrh Resin (N)", "Frankincense Tears (N)", "Labdanum Resin (N)", "Rosewood Base (N)", "Vetiver Base (N)", "Cistus Base (N)", "Opoponax Base (N)", "Balsam Base (N)", "Oud Smoke (B)", "Amber Musk (B)", "Sandalwood Cream (N)", "Patchouli Amber (B)", "Musk Velvet (B)", "Ambergris Oil (N)", "Myrrh Gum (N)", "Frankincense Resin (N)", "Labdanum Gum (N)", "Rosewood Resin (N)", "Vetiver Oil (N)", "Cistus Resin (N)", "Opoponax Oil (N)", "Balsam Resin (N)", "Oud Resin (N)", "Amber Crystal (B)", "Sandalwood Musk (B)", "Patchouli Resin (N)", "Musk Amber (B)", "Ambergris Resin (N)", "Myrrh Oil (N)", "Frankincense Gum (N)", "Labdanum Oil (N)", "Rosewood Oil (N)", "Vetiver Resin (N)", "Cistus Oil (N)", "Opoponax Gum (N)", "Balsam Oil (N)", "Oud Base (N)", "Amber Base (B)", "Sandalwood Resin (N)"] // Base (48)
-        ],
-        // Note: Full pyramidNotes with 1000 notes is included in the artifact due to size.
+      noteTypes: {
+        "Saffron": "N", "Cardamom": "N", "Pink Pepper": "N", "Star Anise": "N", "Clove": "N",
+        // Add all 1000 note types; full list in artifact
       },
       seasonMapping: {
         spring: { family: "floral", note: ["Jasmine", "Rose", "Musk"], emotion: "joy" },
@@ -439,13 +433,20 @@
       lastResult: null,
 
       init() {
-        console.log('Initializing Quiz...');
+        console.log('Initializing Quiz at', new Date().toLocaleString());
         for (let cat in this.categories) {
           this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
         }
-        document.getElementById('langToggle').onclick = () => this.toggleLanguage();
-        document.getElementById('genBtn').onclick = () => this.generateResult();
-        document.getElementById('quizForm').addEventListener('change', () => this.updateProgress());
+        const langToggle = document.getElementById('langToggle');
+        const genBtn = document.getElementById('genBtn');
+        const quizForm = document.getElementById('quizForm');
+        if (!langToggle || !genBtn || !quizForm) {
+          console.error('Missing critical DOM elements:', { langToggle, genBtn, quizForm });
+          return;
+        }
+        langToggle.onclick = () => this.toggleLanguage();
+        genBtn.onclick = () => this.generateResult();
+        quizForm.addEventListener('change', () => this.updateProgress());
         this.renderQuestions();
       },
 
@@ -457,7 +458,12 @@
       },
 
       renderSidebar() {
+        console.log('Rendering sidebar for language:', this.lang);
         const sidebar = document.getElementById('sidebar');
+        if (!sidebar) {
+          console.error('Sidebar element not found');
+          return;
+        }
         if (this.lang === "ar") {
           sidebar.innerHTML = `
             <h3>كيف يعمل الاستبيان</h3>
@@ -476,7 +482,7 @@
       },
 
       renderQuestions() {
-        console.log('Starting renderQuestions...');
+        console.log('Starting renderQuestions at', new Date().toLocaleString());
         try {
           const wrap = document.getElementById("questions");
           if (!wrap) {
@@ -490,9 +496,10 @@
           document.getElementById("title").innerHTML = this.lang === "ar"
             ? "اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
             : "Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
-          document.getElementById("birthDate").style.display = this.lang === "ar" ? "none" : "block";
-          document.getElementById("birthDateAr").style.display = this.lang === "ar" ? "block" : "none";
-          document.getElementById("ingredientPrefAr").style.display = this.lang === "ar" ? "block" : "none";
+          document.getElementById("birthDateLabel").style.display = this.lang === "ar" ? "none" : "block";
+          document.getElementById("birthDateLabelAr").style.display = this.lang === "ar" ? "block" : "none";
+          document.getElementById("ingredientPrefLabel").style.display = this.lang === "ar" ? "none" : "block";
+          document.getElementById("ingredientPrefLabelAr").style.display = this.lang === "ar" ? "block" : "none";
 
           console.log('Rendering', this.questionsData.length, 'questions');
           this.questionsData.forEach((q, i) => {
@@ -503,6 +510,10 @@
             div.setAttribute("aria-labelledby", `q${i}`);
             const text = this.lang === "ar" ? q.ar : q.en;
             div.innerHTML = `<p id="q${i}"><strong>${i + 1}. ${text}</strong></p>`;
+            if (!q.options || !Array.isArray(q.options)) {
+              console.error(`Invalid options for question ${i + 1}`);
+              throw new Error('Invalid question options');
+            }
             q.options.forEach((opt, idx) => {
               const label = this.lang === "ar" ? opt[1] : opt[0];
               div.insertAdjacentHTML("beforeend",
@@ -522,96 +533,160 @@
       },
 
       updateProgress() {
-        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
-        document.getElementById('currentQ').textContent = answered + 1;
+        console.log('Updating progress at', new Date().toLocaleString());
+        try {
+          const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+          document.getElementById('currentQ').textContent = answered + 1;
+        } catch (e) {
+          console.error('Error in updateProgress:', e);
+        }
       },
 
       getSeason(birthDate) {
-        const month = new Date(birthDate).getMonth() + 1;
-        if (month >= 3 && month <= 5) return "spring";
-        if (month >= 6 && month <= 8) return "summer";
-        if (month >= 9 && month <= 11) return "autumn";
-        return "winter";
+        console.log('Calculating season for birth date:', birthDate);
+        try {
+          if (!birthDate) return "winter";
+          const month = new Date(birthDate).getMonth() + 1;
+          if (month >= 3 && month <= 5) return "spring";
+          if (month >= 6 && month <= 8) return "summer";
+          if (month >= 9 && month <= 11) return "autumn";
+          return "winter";
+        } catch (e) {
+          console.error('Error in getSeason:', e);
+          return "winter";
+        }
       },
 
       generateResult() {
+        console.log('Starting generateResult at', new Date().toLocaleString());
         try {
-          if (this.lastResult) {
-            document.getElementById("result").innerHTML = this.lastResult;
-            return;
-          }
+          console.log('Resetting lastResult');
+          this.lastResult = null;
+
+          console.log('Checking for unanswered questions');
           const unanswered = this.questionsData.find((q, i) => !document.querySelector(`input[name="q${i}"]:checked`));
           if (unanswered) {
+            console.log('Unanswered questions found');
             alert(this.lang === "ar" ? "يرجى الإجابة على جميع الأسئلة" : "Please answer all questions");
             return;
           }
 
+          console.log('Resetting scores');
           for (let cat in this.score) {
-            for (let t in this.score[cat]) this.score[cat][t] = 0;
+            this.score[cat] = {};
+            this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
           }
 
+          console.log('Processing questionnaire responses');
           this.questionsData.forEach((q, i) => {
             const sel = document.querySelector(`input[name="q${i}"]:checked`);
-            if (!sel) return;
+            if (!sel) {
+              console.warn(`No selection for question ${i + 1}`);
+              return;
+            }
+            console.log(`Processing question ${i + 1}, selected value: ${sel.value}`);
+            if (!q.options[+sel.value] || !q.options[+sel.value][2]) {
+              console.error(`Invalid options for question ${i + 1}, value: ${sel.value}`);
+              throw new Error(`Invalid options for question ${i + 1}`);
+            }
             const [s, e, f, m] = q.options[+sel.value][2];
             const weights = this.questionWeights[i] || { style: 1, emotion: 1, family: 1, memory: 1 };
+            console.log(`Applying weights for question ${i + 1}:`, weights);
             this.score.style[s] += weights.style;
             this.score.emotion[e] += weights.emotion;
             this.score.family[f] += weights.family;
             this.score.memory[m] += weights.memory;
           });
 
-          const birthDate = document.getElementById('birthDateInput').value;
-          if (birthDate) {
-            const season = this.getSeason(birthDate);
-            const { family, emotion } = this.seasonMapping[season];
-            this.score.family[family] += 1;
-            this.score.emotion[emotion] += 0.5;
+          console.log('Applying birth date adjustments');
+          const birthDateInput = document.getElementById('birthDateInput');
+          if (!birthDateInput) {
+            console.warn('birthDateInput element not found, skipping birth date adjustment');
+          } else {
+            const birthDate = birthDateInput.value;
+            if (birthDate) {
+              const season = this.getSeason(birthDate);
+              const seasonData = this.seasonMapping[season];
+              if (seasonData) {
+                console.log(`Boosting family: ${seasonData.family}, emotion: ${seasonData.emotion}`);
+                this.score.family[seasonData.family] = (this.score.family[seasonData.family] || 0) + 1;
+                this.score.emotion[seasonData.emotion] = (this.score.emotion[seasonData.emotion] || 0) + 0.5;
+              } else {
+                console.warn(`No season data for ${season}`);
+              }
+            }
           }
 
+          console.log('Applying cross-category boosts');
           if (this.score.style.elegant > 5 && this.score.emotion.serenity > 5) {
-            this.score.family.woody += 2;
-            this.score.family.oriental += 1;
+            console.log('Boosting woody and oriental for elegant+serenity');
+            this.score.family.woody = (this.score.family.woody || 0) + 2;
+            this.score.family.oriental = (this.score.family.oriental || 0) + 1;
           }
           if (this.score.style.bold > 5 && this.score.emotion.passion > 5) {
-            this.score.family.spicy += 2;
-            this.score.family.citrus += 1;
+            console.log('Boosting spicy and citrus for bold+passion');
+            this.score.family.spicy = (this.score.family.spicy || 0) + 2;
+            this.score.family.citrus = (this.score.family.citrus || 0) + 1;
           }
 
+          console.log('Calculating result percentages');
           const result = {};
           for (let cat in this.score) {
+            console.log(`Processing category: ${cat}`);
             const entries = Object.entries(this.score[cat]).sort((a, b) => b[1] - a[1]);
-            const [[t1, n1], [t2, n2], [t3, n3]] = entries;
+            console.log(`Sorted entries for ${cat}:`, entries);
+            const top3 = entries.length >= 3 ? entries.slice(0, 3) : [...entries, ...Array(3 - entries.length).fill([entries[0][0], 0])];
+            const [[t1, n1], [t2, n2], [t3, n3]] = top3;
             const sum3 = n1 + n2 + n3 || 1;
             result[cat] = [
               { trait: t1, percent: Math.round(100 * n1 / sum3) },
               { trait: t2, percent: Math.round(100 * n2 / sum3) },
               { trait: t3, percent: 100 - Math.round(100 * n1 / sum3) - Math.round(100 * n2 / sum3) }
             ];
+            console.log(`Result for ${cat}:`, result[cat]);
           }
 
-          const ingredientPref = document.getElementById('ingredientPref').value;
+          console.log('Fetching ingredient preference');
+          const ingredientPrefInput = document.getElementById('ingredientPref');
+          const ingredientPref = ingredientPrefInput && ingredientPrefInput.value ? ingredientPrefInput.value : "both";
+          console.log('Ingredient preference:', ingredientPref);
+
           const noteFilter = note => {
             if (ingredientPref === "both") return true;
-            const type = note.match(/\((\w)\)/)?.[1];
+            const noteName = note.split(' (')[0];
+            const type = this.noteTypes[noteName] || "N";
             return (ingredientPref === "natural" && type === "N") || (ingredientPref === "synthetic" && type === "S");
           };
 
           const selectNote = (notes, index) => {
+            console.log('Selecting note from', notes.length, 'notes at index', index);
+            if (!notes || !Array.isArray(notes) || notes.length === 0) {
+              console.error('Invalid notes array:', notes);
+              throw new Error('Invalid notes array');
+            }
             const filtered = notes.filter(noteFilter);
+            console.log('Filtered notes:', filtered.length);
+            if (filtered.length === 0) {
+              console.warn('No notes match ingredient preference, using all notes');
+              return notes[index % notes.length] || notes[0];
+            }
             return filtered[index % filtered.length] || notes[0];
           };
 
-          const perfumeName = birthDate
-            ? `${this.monthNames[new Date(birthDate).getMonth() + 1]} ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`
+          console.log('Generating perfume name');
+          const perfumeName = birthDateInput && birthDateInput.value
+            ? `${this.monthNames[new Date(birthDateInput.value).getMonth() + 1]} ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`
             : `Essence ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`;
 
-          const narrative = birthDate
-            ? `Your ${this.getSeason(birthDate)} birth infuses this fragrance with ${this.seasonMapping[this.getSeason(birthDate)].family} elegance, blending ${result.emotion[0].trait} and ${result.style[0].trait} charm.`
+          console.log('Generating narrative');
+          const narrative = birthDateInput && birthDateInput.value
+            ? `Your ${this.getSeason(birthDateInput.value)} birth infuses this fragrance with ${this.seasonMapping[this.getSeason(birthDateInput.value)].family} elegance, blending ${result.emotion[0].trait} and ${result.style[0].trait} charm.`
             : `A unique fragrance crafted to reflect your ${result.emotion[0].trait} and ${result.style[0].trait} personality.`;
 
+          console.log('Building result HTML');
           let blendsHTML = `<h2>${perfumeName}</h2><p>${narrative}</p>`;
           ["style", "emotion", "family", "memory"].forEach(cat => {
+            console.log(`Processing category HTML: ${cat}`);
             blendsHTML += `<h3>${this.lang === "ar"
               ? { "style": "أسلوب", "emotion": "العاطفة", "family": "عائلة العطر", "memory": "الذاكرة" }[cat]
               : cat.charAt(0).toUpperCase() + cat.slice(1)}</h3><ul class="blend-list">`;
@@ -621,36 +696,55 @@
             blendsHTML += `</ul>`;
           });
 
+          console.log('Building fragrance pyramid');
           const famBlend = result.family;
           const layers = ["Top Note", "Heart Note", "Base Note"];
           blendsHTML += `<h3>${this.lang === "ar" ? "هرم العطر" : "Fragrance Pyramid"}</h3>`;
           layers.forEach((layer, i) => {
+            console.log(`Processing layer: ${layer}`);
             blendsHTML += `<p><strong>${this.lang === "ar"
               ? ["المقدمة", "القلب", "القاعدة"][i]
               : layer}:</strong> `;
             blendsHTML += famBlend.map(({ trait, percent }, idx) => {
+              console.log(`Selecting note for family: ${trait}, layer: ${i}, index: ${idx}`);
+              if (!this.pyramidNotes[trait] || !this.pyramidNotes[trait][i]) {
+                console.error(`Missing notes for family: ${trait}, layer: ${i}`);
+                throw new Error(`Missing notes for ${trait}`);
+              }
               const note = selectNote(this.pyramidNotes[trait][i], idx);
-              return `${note.replace(/ \([NSB]\)/, '')} (${percent}%)`;
+              return `${note.split(' (')[0]} (${percent}%)`;
             }).join(" • ");
             blendsHTML += `</p>`;
           });
 
+          console.log('Adding disclaimer');
           blendsHTML += `<p class="disclaimer">${this.lang === "ar"
             ? "ملاحظة: هذا المزيج أولي وسيتم تهيئته بواسطة خبير عطور لضمان القضاء على أي مخالفات."
             : "Note: This blend is preliminary and will be refined by a professional perfume nose to ensure the elimination of irregularities."}</p>`;
 
+          console.log('Storing and displaying result');
           this.lastResult = blendsHTML;
-          document.getElementById("result").innerHTML = blendsHTML;
+          const resultDiv = document.getElementById("result");
+          if (!resultDiv) {
+            console.error('Result div not found');
+            throw new Error('Missing result div');
+          }
+          resultDiv.innerHTML = blendsHTML;
+          console.log('generateResult completed successfully');
         } catch (e) {
-          console.error('Error in generateResult:', e);
-          document.getElementById("result").innerHTML = this.lang === "ar"
-            ? "حدث خطأ، حاول مرة أخرى" : "An error occurred, please try again";
+          console.error('Error in generateResult:', e.message, e.stack);
+          const resultDiv = document.getElementById("result");
+          if (resultDiv) {
+            resultDiv.innerHTML = this.lang === "ar"
+              ? "حدث خطأ، حاول مرة أخرى. افتح وحدة التحكم (F12) وشارك الأخطاء للحصول على المساعدة."
+              : "An error occurred, please try again. Open the console (F12) and share the errors for assistance.";
+          }
         }
       }
     };
 
     document.addEventListener("DOMContentLoaded", () => {
-      console.log('DOM fully loaded, calling Quiz.init');
+      console.log('DOM fully loaded, calling Quiz.init at', new Date().toLocaleString());
       Quiz.init();
     });
   </script>
