@@ -476,33 +476,40 @@
 
       init() {
         console.log('Initializing Quiz at', new Date().toLocaleString());
-        for (let cat in this.categories) {
-          this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
+        try {
+          for (let cat in this.categories) {
+            this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
+          }
+          const langToggle = document.getElementById('langToggle');
+          const genBtn = document.getElementById('genBtn');
+          const quizForm = document.getElementById('quizForm');
+          if (!langToggle || !genBtn || !quizForm) {
+            console.error('Missing critical DOM elements:', { langToggle, genBtn, quizForm });
+            return;
+          }
+          langToggle.onclick = () => this.toggleLanguage();
+          genBtn.onclick = () => this.generateResult();
+          quizForm.addEventListener('change', () => this.updateProgress());
+          this.renderQuestions();
+        } catch (e) {
+          console.error('Error in init:', e.message, e.stack);
         }
-        const langToggle = document.getElementById('langToggle');
-        const genBtn = document.getElementById('genBtn');
-        const quizForm = document.getElementById('quizForm');
-        if (!langToggle || !genBtn || !quizForm) {
-          console.error('Missing critical DOM elements:', { langToggle, genBtn, quizForm });
-          return;
-        }
-        langToggle.onclick = () => this.toggleLanguage();
-        genBtn.onclick = () => this.generateResult();
-        quizForm.addEventListener('change', () => this.updateProgress());
-        this.renderQuestions();
       },
 
       toggleLanguage() {
         console.log('Toggling language to:', this.lang === "en" ? "ar" : "en");
-        this.lang = this.lang === "en" ? "ar" : "en";
-        this.renderQuestions();
-        this.renderSidebar();
+        try {
+          this.lang = this.lang === "en" ? "ar" : "en";
+          this.renderQuestions();
+          this.renderSidebar();
+        } catch (e) {
+          console.error('Error in toggleLanguage:', e.message, e.stack);
+        }
       },
 
-      <script>
-  // Continuing from renderSidebar
-  renderSidebar() {
-    console.log('Rendering sidebar for language:', this.lang);
+renderSidebar() {
+  console.log('Rendering sidebar for language:', this.lang);
+  try {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) {
       console.error('Sidebar element not found');
@@ -523,268 +530,271 @@
         <p>Your birth date and ingredient preference (natural, synthetic, or both) add a personalized touch, aligning the blend with your seasonal vibe and values. The result is a preliminary fragrance profile, which will be refined by a professional perfume nose to perfect the harmony of the blend.</p>
       `;
     }
-  },
+  } catch (e) {
+    console.error('Error in renderSidebar:', e.message, e.stack);
+  }
+},
 
-  renderQuestions() {
-    console.log('Starting renderQuestions at', new Date().toLocaleString());
-    try {
-      const wrap = document.getElementById("questions");
-      if (!wrap) {
-        console.error('Error: #questions div not found in DOM');
-        document.getElementById('questions-fallback').style.display = 'block';
-        return;
-      }
-      console.log('Found #questions div, clearing content');
-      wrap.innerHTML = "";
-      document.body.className = this.lang === "ar" ? "rtl" : "";
-      document.getElementById("title").innerHTML = this.lang === "ar"
-        ? "اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
-        : "Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
-      document.getElementById("birthDateLabel").style.display = this.lang === "ar" ? "none" : "block";
-      document.getElementById("birthDateLabelAr").style.display = this.lang === "ar" ? "block" : "none";
-      document.getElementById("ingredientPrefLabel").style.display = this.lang === "ar" ? "none" : "block";
-      document.getElementById("ingredientPrefLabelAr").style.display = this.lang === "ar" ? "block" : "none";
-
-      console.log('Rendering', this.questionsData.length, 'questions');
-      this.questionsData.forEach((q, i) => {
-        console.log('Processing question', i + 1);
-        const div = document.createElement("div");
-        div.className = "question";
-        div.setAttribute("role", "region");
-        div.setAttribute("aria-labelledby", `q${i}`);
-        const text = this.lang === "ar" ? q.ar : q.en;
-        div.innerHTML = `<p id="q${i}"><strong>${i + 1}. ${text}</strong></p>`;
-        if (!q.options || !Array.isArray(q.options)) {
-          console.error(`Invalid options for question ${i + 1}`);
-          throw new Error('Invalid question options');
-        }
-        q.options.forEach((opt, idx) => {
-          const label = this.lang === "ar" ? opt[1] : opt[0];
-          div.insertAdjacentHTML("beforeend",
-            `<label><input type="radio" name="q${i}" value="${idx}" aria-label="${label}"> ${label}</label>`
-          );
-        });
-        wrap.appendChild(div);
-      });
-      console.log('Questions rendered successfully');
-      document.getElementById('questions-fallback').style.display = 'none';
-      this.updateProgress();
-      this.renderSidebar();
-    } catch (e) {
-      console.error('Error in renderQuestions:', e);
+renderQuestions() {
+  console.log('Starting renderQuestions at', new Date().toLocaleString());
+  try {
+    const wrap = document.getElementById("questions");
+    if (!wrap) {
+      console.error('Error: #questions div not found in DOM');
       document.getElementById('questions-fallback').style.display = 'block';
+      return;
     }
-  },
+    console.log('Found #questions div, clearing content');
+    wrap.innerHTML = "";
+    document.body.className = this.lang === "ar" ? "rtl" : "";
+    document.getElementById("title").innerHTML = this.lang === "ar"
+      ? "اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
+      : "Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
+    document.getElementById("birthDateLabel").style.display = this.lang === "ar" ? "none" : "block";
+    document.getElementById("birthDateLabelAr").style.display = this.lang === "ar" ? "block" : "none";
+    document.getElementById("ingredientPrefLabel").style.display = this.lang === "ar" ? "none" : "block";
+    document.getElementById("ingredientPrefLabelAr").style.display = this.lang === "ar" ? "block" : "none";
 
-  updateProgress() {
-    console.log('Updating progress at', new Date().toLocaleString());
-    try {
-      const answered = document.querySelectorAll('input[type="radio"]:checked').length;
-      document.getElementById('currentQ').textContent = answered + 1;
-    } catch (e) {
-      console.error('Error in updateProgress:', e);
+    console.log('Rendering', this.questionsData.length, 'questions');
+    this.questionsData.forEach((q, i) => {
+      console.log('Processing question', i + 1);
+      const div = document.createElement("div");
+      div.className = "question";
+      div.setAttribute("role", "region");
+      div.setAttribute("aria-labelledby", `q${i}`);
+      const text = this.lang === "ar" ? q.ar : q.en;
+      div.innerHTML = `<p id="q${i}"><strong>${i + 1}. ${text}</strong></p>`;
+      if (!q.options || !Array.isArray(q.options)) {
+        console.error(`Invalid options for question ${i + 1}`);
+        throw new Error('Invalid question options');
+      }
+      q.options.forEach((opt, idx) => {
+        const label = this.lang === "ar" ? opt[1] : opt[0];
+        div.insertAdjacentHTML("beforeend",
+          `<label><input type="radio" name="q${i}" value="${idx}" aria-label="${label}"> ${label}</label>`
+        );
+      });
+      wrap.appendChild(div);
+    });
+    console.log('Questions rendered successfully');
+    document.getElementById('questions-fallback').style.display = 'none';
+    this.updateProgress();
+    this.renderSidebar();
+  } catch (e) {
+    console.error('Error in renderQuestions:', e.message, e.stack);
+    document.getElementById('questions-fallback').style.display = 'block';
+  }
+},
+
+updateProgress() {
+  console.log('Updating progress at', new Date().toLocaleString());
+  try {
+    const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+    document.getElementById('currentQ').textContent = answered + 1;
+  } catch (e) {
+    console.error('Error in updateProgress:', e.message, e.stack);
+  }
+},
+
+getSeason(birthDate) {
+  console.log('Calculating season for birth date:', birthDate);
+  try {
+    if (!birthDate) return "winter";
+    const month = new Date(birthDate).getMonth() + 1;
+    if (month >= 3 && month <= 5) return "spring";
+    if (month >= 6 && month <= 8) return "summer";
+    if (month >= 9 && month <= 11) return "autumn";
+    return "winter";
+  } catch (e) {
+    console.error('Error in getSeason:', e.message, e.stack);
+    return "winter";
+  }
+},
+
+generateResult() {
+  console.log('Starting generateResult at', new Date().toLocaleString());
+  try {
+    console.log('Resetting lastResult');
+    this.lastResult = null;
+
+    console.log('Checking for unanswered questions');
+    const unanswered = this.questionsData.find((q, i) => !document.querySelector(`input[name="q${i}"]:checked`));
+    if (unanswered) {
+      console.log('Unanswered questions found');
+      alert(this.lang === "ar" ? "يرجى الإجابة على جميع الأسئلة" : "Please answer all questions");
+      return;
     }
-  },
 
-  getSeason(birthDate) {
-    console.log('Calculating season for birth date:', birthDate);
-    try {
-      if (!birthDate) return "winter";
-      const month = new Date(birthDate).getMonth() + 1;
-      if (month >= 3 && month <= 5) return "spring";
-      if (month >= 6 && month <= 8) return "summer";
-      if (month >= 9 && month <= 11) return "autumn";
-      return "winter";
-    } catch (e) {
-      console.error('Error in getSeason:', e);
-      return "winter";
+    console.log('Resetting scores');
+    for (let cat in this.score) {
+      this.score[cat] = {};
+      this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
     }
-  },
 
-  generateResult() {
-    console.log('Starting generateResult at', new Date().toLocaleString());
-    try {
-      console.log('Resetting lastResult');
-      this.lastResult = null;
-
-      console.log('Checking for unanswered questions');
-      const unanswered = this.questionsData.find((q, i) => !document.querySelector(`input[name="q${i}"]:checked`));
-      if (unanswered) {
-        console.log('Unanswered questions found');
-        alert(this.lang === "ar" ? "يرجى الإجابة على جميع الأسئلة" : "Please answer all questions");
+    console.log('Processing questionnaire responses');
+    this.questionsData.forEach((q, i) => {
+      const sel = document.querySelector(`input[name="q${i}"]:checked`);
+      if (!sel) {
+        console.warn(`No selection for question ${i + 1}`);
         return;
       }
-
-      console.log('Resetting scores');
-      for (let cat in this.score) {
-        this.score[cat] = {};
-        this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
+      console.log(`Processing question ${i + 1}, selected value: ${sel.value}`);
+      if (!q.options[+sel.value] || !q.options[+sel.value][2]) {
+        console.error(`Invalid options for question ${i + 1}, value: ${sel.value}`);
+        throw new Error(`Invalid options for question ${i + 1}`);
       }
+      const [s, e, f, m] = q.options[+sel.value][2];
+      const weights = this.questionWeights[i] || { style: 1, emotion: 1, family: 1, memory: 1 };
+      console.log(`Applying weights for question ${i + 1}:`, weights);
+      this.score.style[s] += weights.style;
+      this.score.emotion[e] += weights.emotion;
+      this.score.family[f] += weights.family;
+      this.score.memory[m] += weights.memory;
+    });
 
-      console.log('Processing questionnaire responses');
-      this.questionsData.forEach((q, i) => {
-        const sel = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!sel) {
-          console.warn(`No selection for question ${i + 1}`);
-          return;
+    console.log('Applying birth date adjustments');
+    const birthDateInput = document.getElementById('birthDateInput');
+    if (!birthDateInput) {
+      console.warn('birthDateInput element not found, skipping birth date adjustment');
+    } else {
+      const birthDate = birthDateInput.value;
+      if (birthDate) {
+        const season = this.getSeason(birthDate);
+        const seasonData = this.seasonMapping[season];
+        if (seasonData) {
+          console.log(`Boosting family: ${seasonData.family}, emotion: ${seasonData.emotion}`);
+          this.score.family[seasonData.family] = (this.score.family[seasonData.family] || 0) + 1;
+          this.score.emotion[seasonData.emotion] = (this.score.emotion[seasonData.emotion] || 0) + 0.5;
+        } else {
+          console.warn(`No season data for ${season}`);
         }
-        console.log(`Processing question ${i + 1}, selected value: ${sel.value}`);
-        if (!q.options[+sel.value] || !q.options[+sel.value][2]) {
-          console.error(`Invalid options for question ${i + 1}, value: ${sel.value}`);
-          throw new Error(`Invalid options for question ${i + 1}`);
-        }
-        const [s, e, f, m] = q.options[+sel.value][2];
-        const weights = this.questionWeights[i] || { style: 1, emotion: 1, family: 1, memory: 1 };
-        console.log(`Applying weights for question ${i + 1}:`, weights);
-        this.score.style[s] += weights.style;
-        this.score.emotion[e] += weights.emotion;
-        this.score.family[f] += weights.family;
-        this.score.memory[m] += weights.memory;
+      }
+    }
+
+    console.log('Applying cross-category boosts');
+    if (this.score.style.elegant > 5 && this.score.emotion.serenity > 5) {
+      console.log('Boosting woody and oriental for elegant+serenity');
+      this.score.family.woody = (this.score.family.woody || 0) + 2;
+      this.score.family.oriental = (this.score.family.oriental || 0) + 1;
+    }
+    if (this.score.style.bold > 5 && this.score.emotion.passion > 5) {
+      console.log('Boosting spicy and citrus for bold+passion');
+      this.score.family.spicy = (this.score.family.spicy || 0) + 2;
+      this.score.family.citrus = (this.score.family.citrus || 0) + 1;
+    }
+
+    console.log('Calculating result percentages');
+    const result = {};
+    for (let cat in this.score) {
+      console.log(`Processing category: ${cat}`);
+      const entries = Object.entries(this.score[cat]).sort((a, b) => b[1] - a[1]);
+      console.log(`Sorted entries for ${cat}:`, entries);
+      const top3 = entries.length >= 3 ? entries.slice(0, 3) : [...entries, ...Array(3 - entries.length).fill([entries[0][0], 0])];
+      const [[t1, n1], [t2, n2], [t3, n3]] = top3;
+      const sum3 = n1 + n2 + n3 || 1;
+      result[cat] = [
+        { trait: t1, percent: Math.round(100 * n1 / sum3) },
+        { trait: t2, percent: Math.round(100 * n2 / sum3) },
+        { trait: t3, percent: 100 - Math.round(100 * n1 / sum3) - Math.round(100 * n2 / sum3) }
+      ];
+      console.log(`Result for ${cat}:`, result[cat]);
+    }
+
+    console.log('Fetching ingredient preference');
+    const ingredientPrefInput = document.getElementById('ingredientPref');
+    const ingredientPref = ingredientPrefInput && ingredientPrefInput.value ? ingredientPrefInput.value : "both";
+    console.log('Ingredient preference:', ingredientPref);
+
+    const noteFilter = note => {
+      if (ingredientPref === "both") return true;
+      const noteName = note.split(' (')[0];
+      const type = this.noteTypes[noteName] || "N";
+      return (ingredientPref === "natural" && type === "N") || (ingredientPref === "synthetic" && type === "S");
+    };
+
+    const selectNote = (notes, index) => {
+      console.log('Selecting note from', notes.length, 'notes at index', index);
+      if (!notes || !Array.isArray(notes) || notes.length === 0) {
+        console.error('Invalid notes array:', notes);
+        return "Unknown Note (N)"; // Fallback note
+      }
+      const filtered = notes.filter(noteFilter);
+      console.log('Filtered notes:', filtered.length);
+      if (filtered.length === 0) {
+        console.warn('No notes match ingredient preference, using all notes');
+        return notes[index % notes.length] || notes[0];
+      }
+      return filtered[index % filtered.length] || notes[0];
+    };
+
+    console.log('Generating perfume name');
+    const perfumeName = birthDateInput && birthDateInput.value
+      ? `${this.monthNames[new Date(birthDateInput.value).getMonth() + 1]} ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`
+      : `Essence ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`;
+
+    console.log('Generating narrative');
+    const narrative = birthDateInput && birthDateInput.value
+      ? `Your ${this.getSeason(birthDateInput.value)} birth infuses this fragrance with ${this.seasonMapping[this.getSeason(birthDateInput.value)].family} elegance, blending ${result.emotion[0].trait} and ${result.style[0].trait} charm.`
+      : `A unique fragrance crafted to reflect your ${result.emotion[0].trait} and ${result.style[0].trait} personality.`;
+
+    console.log('Building result HTML');
+    let blendsHTML = `<h2>${perfumeName}</h2><p>${narrative}</p>`;
+    ["style", "emotion", "family", "memory"].forEach(cat => {
+      console.log(`Processing category HTML: ${cat}`);
+      blendsHTML += `<h3>${this.lang === "ar"
+        ? { "style": "أسلوب", "emotion": "العاطفة", "family": "عائلة العطر", "memory": "الذاكرة" }[cat]
+        : cat.charAt(0).toUpperCase() + cat.slice(1)}</h3><ul class="blend-list">`;
+      result[cat].forEach(({ trait, percent }) => {
+        blendsHTML += `<li>${trait} — ${percent}%</li>`;
       });
+      blendsHTML += `</ul>`;
+    });
 
-      console.log('Applying birth date adjustments');
-      const birthDateInput = document.getElementById('birthDateInput');
-      if (!birthDateInput) {
-        console.warn('birthDateInput element not found, skipping birth date adjustment');
-      } else {
-        const birthDate = birthDateInput.value;
-        if (birthDate) {
-          const season = this.getSeason(birthDate);
-          const seasonData = this.seasonMapping[season];
-          if (seasonData) {
-            console.log(`Boosting family: ${seasonData.family}, emotion: ${seasonData.emotion}`);
-            this.score.family[seasonData.family] = (this.score.family[seasonData.family] || 0) + 1;
-            this.score.emotion[seasonData.emotion] = (this.score.emotion[seasonData.emotion] || 0) + 0.5;
-          } else {
-            console.warn(`No season data for ${season}`);
-          }
+    console.log('Building fragrance pyramid');
+    const famBlend = result.family;
+    const layers = ["Top Note", "Heart Note", "Base Note"];
+    blendsHTML += `<h3>${this.lang === "ar" ? "هرم العطر" : "Fragrance Pyramid"}</h3>`;
+    layers.forEach((layer, i) => {
+      console.log(`Processing layer: ${layer}`);
+      blendsHTML += `<p><strong>${this.lang === "ar"
+        ? ["المقدمة", "القلب", "القاعدة"][i]
+        : layer}:</strong> `;
+      blendsHTML += famBlend.map(({ trait, percent }, idx) => {
+        console.log(`Selecting note for family: ${trait}, layer: ${i}, index: ${idx}`);
+        if (!this.pyramidNotes[trait] || !this.pyramidNotes[trait][i]) {
+          console.error(`Missing notes for family: ${trait}, layer: ${i}`);
+          return `Unknown Note (${percent}%)`; // Fallback note
         }
-      }
+        const note = selectNote(this.pyramidNotes[trait][i], idx);
+        return `${note.split(' (')[0]} (${percent}%)`;
+      }).join(" • ");
+      blendsHTML += `</p>`;
+    });
 
-      console.log('Applying cross-category boosts');
-      if (this.score.style.elegant > 5 && this.score.emotion.serenity > 5) {
-        console.log('Boosting woody and oriental for elegant+serenity');
-        this.score.family.woody = (this.score.family.woody || 0) + 2;
-        this.score.family.oriental = (this.score.family.oriental || 0) + 1;
-      }
-      if (this.score.style.bold > 5 && this.score.emotion.passion > 5) {
-        console.log('Boosting spicy and citrus for bold+passion');
-        this.score.family.spicy = (this.score.family.spicy || 0) + 2;
-        this.score.family.citrus = (this.score.family.citrus || 0) + 1;
-      }
+    console.log('Adding disclaimer');
+    blendsHTML += `<p class="disclaimer">${this.lang === "ar"
+      ? "ملاحظة: هذا المزيج أولي وسيتم تهيئته بواسطة خبير عطور لضمان القضاء على أي مخالفات."
+      : "Note: This blend is preliminary and will be refined by a professional perfume nose to ensure the elimination of irregularities."}</p>`;
 
-      console.log('Calculating result percentages');
-      const result = {};
-      for (let cat in this.score) {
-        console.log(`Processing category: ${cat}`);
-        const entries = Object.entries(this.score[cat]).sort((a, b) => b[1] - a[1]);
-        console.log(`Sorted entries for ${cat}:`, entries);
-        const top3 = entries.length >= 3 ? entries.slice(0, 3) : [...entries, ...Array(3 - entries.length).fill([entries[0][0], 0])];
-        const [[t1, n1], [t2, n2], [t3, n3]] = top3;
-        const sum3 = n1 + n2 + n3 || 1;
-        result[cat] = [
-          { trait: t1, percent: Math.round(100 * n1 / sum3) },
-          { trait: t2, percent: Math.round(100 * n2 / sum3) },
-          { trait: t3, percent: 100 - Math.round(100 * n1 / sum3) - Math.round(100 * n2 / sum3) }
-        ];
-        console.log(`Result for ${cat}:`, result[cat]);
-      }
-
-      console.log('Fetching ingredient preference');
-      const ingredientPrefInput = document.getElementById('ingredientPref');
-      const ingredientPref = ingredientPrefInput && ingredientPrefInput.value ? ingredientPrefInput.value : "both";
-      console.log('Ingredient preference:', ingredientPref);
-
-      const noteFilter = note => {
-        if (ingredientPref === "both") return true;
-        const noteName = note.split(' (')[0];
-        const type = this.noteTypes[noteName] || "N";
-        return (ingredientPref === "natural" && type === "N") || (ingredientPref === "synthetic" && type === "S");
-      };
-
-      const selectNote = (notes, index) => {
-        console.log('Selecting note from', notes.length, 'notes at index', index);
-        if (!notes || !Array.isArray(notes) || notes.length === 0) {
-          console.error('Invalid notes array:', notes);
-          return "Unknown Note (N)"; // Fallback note
-        }
-        const filtered = notes.filter(noteFilter);
-        console.log('Filtered notes:', filtered.length);
-        if (filtered.length === 0) {
-          console.warn('No notes match ingredient preference, using all notes');
-          return notes[index % notes.length] || notes[0];
-        }
-        return filtered[index % filtered.length] || notes[0];
-      };
-
-      console.log('Generating perfume name');
-      const perfumeName = birthDateInput && birthDateInput.value
-        ? `${this.monthNames[new Date(birthDateInput.value).getMonth() + 1]} ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`
-        : `Essence ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`;
-
-      console.log('Generating narrative');
-      const narrative = birthDateInput && birthDateInput.value
-        ? `Your ${this.getSeason(birthDateInput.value)} birth infuses this fragrance with ${this.seasonMapping[this.getSeason(birthDateInput.value)].family} elegance, blending ${result.emotion[0].trait} and ${result.style[0].trait} charm.`
-        : `A unique fragrance crafted to reflect your ${result.emotion[0].trait} and ${result.style[0].trait} personality.`;
-
-      console.log('Building result HTML');
-      let blendsHTML = `<h2>${perfumeName}</h2><p>${narrative}</p>`;
-      ["style", "emotion", "family", "memory"].forEach(cat => {
-        console.log(`Processing category HTML: ${cat}`);
-        blendsHTML += `<h3>${this.lang === "ar"
-          ? { "style": "أسلوب", "emotion": "العاطفة", "family": "عائلة العطر", "memory": "الذاكرة" }[cat]
-          : cat.charAt(0).toUpperCase() + cat.slice(1)}</h3><ul class="blend-list">`;
-        result[cat].forEach(({ trait, percent }) => {
-          blendsHTML += `<li>${trait} — ${percent}%</li>`;
-        });
-        blendsHTML += `</ul>`;
-      });
-
-      console.log('Building fragrance pyramid');
-      const famBlend = result.family;
-      const layers = ["Top Note", "Heart Note", "Base Note"];
-      blendsHTML += `<h3>${this.lang === "ar" ? "هرم العطر" : "Fragrance Pyramid"}</h3>`;
-      layers.forEach((layer, i) => {
-        console.log(`Processing layer: ${layer}`);
-        blendsHTML += `<p><strong>${this.lang === "ar"
-          ? ["المقدمة", "القلب", "القاعدة"][i]
-          : layer}:</strong> `;
-        blendsHTML += famBlend.map(({ trait, percent }, idx) => {
-          console.log(`Selecting note for family: ${trait}, layer: ${i}, index: ${idx}`);
-          if (!this.pyramidNotes[trait] || !this.pyramidNotes[trait][i]) {
-            console.error(`Missing notes for family: ${trait}, layer: ${i}`);
-            return `Unknown Note (${percent}%)`; // Fallback note
-          }
-          const note = selectNote(this.pyramidNotes[trait][i], idx);
-          return `${note.split(' (')[0]} (${percent}%)`;
-        }).join(" • ");
-        blendsHTML += `</p>`;
-      });
-
-      console.log('Adding disclaimer');
-      blendsHTML += `<p class="disclaimer">${this.lang === "ar"
-        ? "ملاحظة: هذا المزيج أولي وسيتم تهيئته بواسطة خبير عطور لضمان القضاء على أي مخالفات."
-        : "Note: This blend is preliminary and will be refined by a professional perfume nose to ensure the elimination of irregularities."}</p>`;
-
-      console.log('Storing and displaying result');
-      this.lastResult = blendsHTML;
-      const resultDiv = document.getElementById("result");
-      if (!resultDiv) {
-        console.error('Result div not found');
-        throw new Error('Missing result div');
-      }
-      resultDiv.innerHTML = blendsHTML;
-      console.log('generateResult completed successfully');
-    } catch (e) {
-      console.error('Error in generateResult:', e.message, e.stack);
-      const resultDiv = document.getElementById("result");
-      if (resultDiv) {
-        resultDiv.innerHTML = this.lang === "ar"
-          ? `حدث خطأ: ${e.message}. افتح وحدة التحكم (F12) وشارك الأخطاء للحصول على المساعدة.`
-          : `An error occurred: ${e.message}. Open the console (F12) and share the errors for assistance.`;
-      }
+    console.log('Storing and displaying result');
+    this.lastResult = blendsHTML;
+    const resultDiv = document.getElementById("result");
+    if (!resultDiv) {
+      console.error('Result div not found');
+      throw new Error('Missing result div');
+    }
+    resultDiv.innerHTML = blendsHTML;
+    console.log('generateResult completed successfully');
+  } catch (e) {
+    console.error('Error in generateResult:', e.message, e.stack);
+    const resultDiv = document.getElementById("result");
+    if (resultDiv) {
+      resultDiv.innerHTML = this.lang === "ar"
+        ? `حدث خطأ: ${e.message}. افتح وحدة التحكم (F12) وشارك الأخطاء للحصول على المساعدة.`
+        : `An error occurred: ${e.message}. Open the console (F12) and share the errors for assistance.`;
     }
   }
+}
 };
 
 document.addEventListener("DOMContentLoaded", () => {
