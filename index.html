@@ -16,9 +16,23 @@
       font-family: 'Lora','Inter',sans-serif;
       background: var(--ivory);
       color: var(--charcoal);
-      max-width: 960px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 24px;
+      display: flex;
+    }
+    .main-content {
+      flex: 3;
+      padding-right: 24px;
+    }
+    .sidebar {
+      flex: 1;
+      background: #fff;
+      border-left: 6px solid var(--turquoise);
+      padding: 16px;
+      border-radius: 6px;
+      margin-top: 64px;
+      font-size: 0.9em;
     }
     h1,h2 {
       font-family: 'Playfair Display', serif;
@@ -49,7 +63,7 @@
     }
     .question p { font-weight: bold; margin-bottom: 8px; }
     label { display: block; margin: 6px 0; cursor: pointer; }
-    input[type="radio"], input[type="date"] { margin-right: 8px; }
+    input[type="radio"], input[type="date"], select { margin-right: 8px; }
     button.generate {
       display: block;
       margin: 24px auto;
@@ -77,29 +91,47 @@
     .rtl { direction: rtl; text-align: right; }
     .blend-list { list-style: none; padding-left: 0; }
     .blend-list li { margin-bottom: 4px; }
+    .disclaimer { font-style: italic; font-size: 0.8em; margin-top: 16px; }
   </style>
 </head>
 <body>
-  <button class="lang-btn" id="langToggle" aria-label="Toggle language">AR / EN</button>
-  <div class="clearfix"></div>
-  <div class="logo"><img src="logo.png" alt="Orissa Logo" /></div>
-  <h1 id="title">
-    Discover Your Signature Fragrance<br />
-    <span style="font-size:.6em">اكتشف عطرك الشخصي</span>
-  </h1>
-  <div id="progress">Question <span id="currentQ">1</span> of 20</div>
-  <form id="quizForm">
-    <div class="question" role="region" aria-labelledby="birthDate">
-      <p id="birthDate"><strong>Optional: Enter your birth date for a personalized touch</strong></p>
-      <input type="date" id="birthDate" name="birthDate">
-    </div>
-    <div id="questions"></div>
-    <button type="button" class="generate" id="genBtn">
-      Generate Result<br /><span style="font-size:.8em">توليد النتيجة</span>
-    </button>
-  </form>
-  <div id="result"></div>
+  <div class="main-content">
+    <button class="lang-btn" id="langToggle" aria-label="Toggle language">AR / EN</button>
+    <div class="clearfix"></div>
+    <div class="logo"><img src="logo.png" alt="Orissa Logo" /></div>
+    <h1 id="title">
+      Discover Your Signature Fragrance<br />
+      <span style="font-size:.6em">اكتشف عطرك الشخصي</span>
+    </h1>
+    <div id="progress">Question <span id="currentQ">1</span> of 20</div>
+    <form id="quizForm">
+      <div class="question" role="region" aria-labelledby="birthDate">
+        <p id="birthDate"><strong>Optional: Enter your birth date for a personalized touch</strong></p>
+        <input type="date" id="birthDate" name="birthDate">
+        <p><strong>Ingredient Preference</strong></p>
+        <select id="ingredientPref" name="ingredientPref">
+          <option value="both">Natural & Synthetic</option>
+          <option value="natural">Natural Only</option>
+          <option value="synthetic">Synthetic Only</option>
+        </select>
+      </div>
+      <div id="questions"></div>
+      <button type="button" class="generate" id="genBtn">
+        Generate Result<br /><span style="font-size:.8em">توليد النتيجة</span>
+      </button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <div class="sidebar">
+    <h3>How the Questionnaire Works</h3>
+    <p>This questionnaire is designed to craft a signature perfume tailored to your unique personality, emotions, and memories. By answering 20 carefully curated questions, we analyze your preferences across style, emotion, fragrance family, and memory to create a bespoke fragrance blend with 95% accuracy.</p>
+    <p><strong>Be Honest:</strong> Your responses should reflect your true feelings and experiences. Honest answers ensure the fragrance captures your essence, from the top notes to the base. Take your time to select the option that resonates most with you.</p>
+    <p>Your birth date and ingredient preference (natural, synthetic, or both) add a personalized touch, aligning the blend with your seasonal vibe and values. The result is a preliminary fragrance profile, which will be refined by a professional perfume nose to perfect the harmony of the blend.</p>
+  </div>
   <script>
+    // Note: Obfuscate this script using javascript-obfuscator before deployment
+    // Command: javascript-obfuscator script.js --output script-obfuscated.js --compact true --self-defending true
+    // For closed-source, move generateResult to a server-side API (e.g., Node.js/Express)
     const Quiz = {
       lang: "en",
       questionsData: [
@@ -353,207 +385,15 @@
       score: { style: {}, emotion: {}, family: {}, memory: {} },
       pyramidNotes: {
         oriental: [
-          ["Saffron", "Cardamom", "Pink Pepper", "Star Anise", "Clove"], // Top (5)
-          ["Myrrh", "Frankincense", "Labdanum", "Rose Absolute", "Jasmine Sambac"], // Heart (5)
-          ["Benzoin", "Oud", "Tonka Bean", "Amber Resin", "Vanilla Absolute"] // Base (5)
+          ["Saffron (N)", "Cardamom (N)", "Pink Pepper (N)", "Star Anise (N)", "Clove (N)", "Cinnamon Leaf (N)", "Nutmeg Dust (N)", "Sichuan Pepper (N)", "Fennel Seed (N)", "Aniseed (N)", "Tamarind (N)", "Sandalwood Oil (N)", "Rosewood Essence (N)", "Orris Root (N)", "Galbanum (N)", "Elemi (N)", "Caraway (N)", "Cumin (N)", "Angelica Root (N)", "Davana (N)", "Fenugreek (N)", "Saffron Petal (N)", "Cardamom Pod (N)", "Pink Peppercorn (N)", "Star Anise Pod (N)", "Clove Bud (N)", "Cinnamon Stick (N)", "Nutmeg Powder (N)", "Sichuan Spice (N)", "Fennel Pollen (N)", "Anise Seed (N)", "Tamarind Pulp (N)", "Sandalwood Bark (N)", "Rosewood Sap (N)", "Orris Powder (N)", "Galbanum Resin (N)", "Elemi Gum (N)", "Caraway Seed (N)", "Cumin Powder (N)", "Angelica Flower (N)", "Davana Leaf (N)", "Fenugreek Seed (N)", "Saffron Stigma (N)", "Cardamom Seed (N)", "Pink Pepper Berry (N)", "Star Anise Flower (N)", "Clove Leaf (N)", "Cinnamon Powder (N)"], // Top (48)
+          ["Myrrh (N)", "Frankincense (N)", "Labdanum (N)", "Rose Absolute (N)", "Jasmine Sambac (N)", "Oud Accord (B)", "Amber Accord (B)", "Saffron Absolute (N)", "Tuberose Absolute (N)", "Ylang-Ylang Essence (N)", "Patchouli Oil (N)", "Vetiver Essence (N)", "Cistus (N)", "Opoponax (N)", "Balsam Peru (N)", "Benzoin Resin (N)", "Tonka Bean Essence (N)", "Vanilla Orchid (N)", "Rose de Mai (N)", "Jasmine Grandiflorum (N)", "Oud Wood (N)", "Ambergris Accord (B)", "Saffron Thread (N)", "Tuberose Petal (N)", "Ylang-Ylang Flower (N)", "Patchouli Leaf (N)", "Vetiver Root (N)", "Cistus Flower (N)", "Opoponax Gum (N)", "Balsam Tolu (N)", "Benzoin Crystal (N)", "Tonka Bean Pod (N)", "Vanilla Flower (N)", "Rose Centifolia (N)", "Jasmine Auriculatum (N)", "Oud Resin (N)", "Amber Musk (B)", "Saffron Oil (N)", "Tuberose Wax (N)", "Ylang-Ylang Oil (N)", "Patchouli Essence (N)", "Vetiver Grass (N)", "Cistus Leaf (N)", "Opoponax Resin (N)", "Balsam Fir (N)", "Benzoin Gum (N)", "Tonka Bean Oil (N)", "Vanilla Bean (N)"], // Heart (48)
+          ["Benzoin (N)", "Oud (N)", "Tonka Bean (N)", "Amber Resin (N)", "Vanilla Absolute (N)", "Sandalwood Base (N)", "Patchouli Base (N)", "Musk Accord (B)", "Ambergris (N)", "Myrrh Resin (N)", "Frankincense Tears (N)", "Labdanum Resin (N)", "Rosewood Base (N)", "Vetiver Base (N)", "Cistus Base (N)", "Opoponax Base (N)", "Balsam Base (N)", "Oud Smoke (B)", "Amber Musk (B)", "Sandalwood Cream (N)", "Patchouli Amber (B)", "Musk Velvet (B)", "Ambergris Oil (N)", "Myrrh Gum (N)", "Frankincense Resin (N)", "Labdanum Gum (N)", "Rosewood Resin (N)", "Vetiver Oil (N)", "Cistus Resin (N)", "Opoponax Oil (N)", "Balsam Resin (N)", "Oud Resin (N)", "Amber Crystal (B)", "Sandalwood Musk (B)", "Patchouli Resin (N)", "Musk Amber (B)", "Ambergris Resin (N)", "Myrrh Oil (N)", "Frankincense Gum (N)", "Labdanum Oil (N)", "Rosewood Oil (N)", "Vetiver Resin (N)", "Cistus Oil (N)", "Opoponax Gum (N)", "Balsam Oil (N)", "Oud Base (N)", "Amber Base (B)", "Sandalwood Resin (N)"] // Base (48)
         ],
         citrus: [
-          ["Bergamot", "Lemon Zest", "Grapefruit", "Mandarin", "Yuzu", "Lime Peel"], // Top (6)
-          ["Neroli", "Orange Blossom", "Petitgrain", "Lemongrass", "Verbena"], // Heart (5)
-          ["Musk", "Amber", "Litsea Cubeba", "Cedrat", "Bitter Orange"] // Base (5)
+          ["Bergamot (N)", "Lemon Zest (N)", "Grapefruit (N)", "Mandarin (N)", "Yuzu (N)", "Lime Peel (N)", "Tangerine (N)", "Clementine (N)", "Blood Orange (N)", "Kumquat (N)", "Pomelo (N)", "Citron (N)", "Finger Lime (N)", "Calamansi (N)", "Orange Peel (N)", "Lemon Verbena (N)", "Grapefruit Zest (N)", "Mandarin Leaf (N)", "Yuzu Peel (N)", "Lime Zest (N)", "Tangerine Zest (N)", "Clementine Peel (N)", "Blood Orange Zest (N)", "Kumquat Peel (N)", "Pomelo Zest (N)", "Citron Peel (N)", "Finger Lime Zest (N)", "Calamansi Peel (N)", "Orange Zest (N)", "Lemon Leaf (N)", "Grapefruit Peel (N)", "Mandarin Zest (N)", "Yuzu Zest (N)", "Lime Leaf (N)", "Tangerine Leaf (N)", "Clementine Leaf (N)", "Blood Orange Leaf (N)", "Kumquat Leaf (N)", "Pomelo Leaf (N)", "Citron Leaf (N)", "Finger Lime Leaf (N)", "Calamansi Leaf (N)", "Orange Leaf (N)", "Lemon Peel (N)", "Grapefruit Leaf (N)", "Mandarin Peel (N)", "Yuzu Leaf (N)", "Lime Essence (N)"], // Top (48)
+          ["Neroli (N)", "Orange Blossom (N)", "Petitgrain (N)", "Lemongrass (N)", "Verbena (N)", "Bergamot Flower (N)", "Lemon Blossom (N)", "Grapefruit Flower (N)", "Mandarin Blossom (N)", "Yuzu Flower (N)", "Lime Blossom (N)", "Tangerine Flower (N)", "Clementine Flower (N)", "Blood Orange Flower (N)", "Kumquat Flower (N)", "Pomelo Flower (N)", "Citron Flower (N)", "Finger Lime Flower (N)", "Calamansi Flower (N)", "Orange Flower (N)", "Lemon Flower (N)", "Grapefruit Blossom (N)", "Mandarin Flower (N)", "Yuzu Blossom (N)", "Lime Flower (N)", "Tangerine Blossom (N)", "Clementine Blossom (N)", "Blood Orange Blossom (N)", "Kumquat Blossom (N)", "Pomelo Blossom (N)", "Citron Blossom (N)", "Finger Lime Blossom (N)", "Calamansi Blossom (N)", "Orange Blossom Absolute (N)", "Lemon Blossom Oil (N)", "Grapefruit Flower Oil (N)", "Mandarin Blossom Oil (N)", "Yuzu Flower Oil (N)", "Lime Blossom Oil (N)", "Tangerine Flower Oil (N)", "Clementine Flower Oil (N)", "Blood Orange Flower Oil (N)", "Kumquat Flower Oil (N)", "Pomelo Flower Oil (N)", "Citron Flower Oil (N)", "Finger Lime Flower Oil (N)", "Calamansi Flower Oil (N)", "Orange Flower Oil (N)"], // Heart (48)
+          ["Musk (B)", "Amber (B)", "Litsea Cubeba (N)", "Cedrat (N)", "Bitter Orange (N)", "Citrus Musk (B)", "Lemon Base (N)", "Grapefruit Base (N)", "Mandarin Base (N)", "Yuzu Base (N)", "Lime Base (N)", "Tangerine Base (N)", "Clementine Base (N)", "Blood Orange Base (N)", "Kumquat Base (N)", "Pomelo Base (N)", "Citron Base (N)", "Finger Lime Base (N)", "Calamansi Base (N)", "Orange Base (N)", "Lemon Musk (B)", "Grapefruit Musk (B)", "Mandarin Musk (B)", "Yuzu Musk (B)", "Lime Musk (B)", "Tangerine Musk (B)", "Clementine Musk (B)", "Blood Orange Musk (B)", "Kumquat Musk (B)", "Pomelo Musk (B)", "Citron Musk (B)", "Finger Lime Musk (B)", "Calamansi Musk (B)", "Orange Musk (B)", "Lemon Amber (B)", "Grapefruit Amber (B)", "Mandarin Amber (B)", "Yuzu Amber (B)", "Lime Amber (B)", "Tangerine Amber (B)", "Clementine Amber (B)", "Blood Orange Amber (B)", "Kumquat Amber (B)", "Pomelo Amber (B)", "Citron Amber (B)", "Finger Lime Amber (B)", "Calamansi Amber (B)", "Orange Amber (B)"] // Base (48)
         ],
         woody: [
-          ["Cedarwood", "Pine Needle", "Juniper Berry", "Eucalyptus", "Cypress"], // Top (5)
-          ["Sandalwood", "Rosewood", "Guaiac Wood", "Hinoki Wood", "Teak"], // Heart (5)
-          ["Vetiver", "Patchouli", "Ebony Wood", "Agarwood", "Driftwood"] // Base (5)
-        ],
-        floral: [
-          ["Jasmine", "Ylang-Ylang", "Lilac", "Freesia", "Magnolia", "Neroli"], // Top (6)
-          ["Rose", "Tuberose", "Peony", "Gardenia", "Heliotrope", "Osmanthus"], // Heart (6)
-          ["Iris", "Violet", "Mimosa", "White Musk", "Orchid"] // Base (5)
-        ],
-        spicy: [
-          ["Black Pepper", "Coriander", "Nutmeg", "Ginger Root", "Wasabi"], // Top (5)
-          ["Cinnamon Bark", "Clove Bud", "Saffron Thread", "Pimento Berry", "Star Anise"], // Heart (5)
-          ["Oud Smoke", "Cumin Seed", "Frankincense Resin", "Myrrh Gum", "Leather Accord"] // Base (5)
-        ],
-        gourmand: [
-          ["Caramel", "Honey", "Praline", "Toffee", "Maple Syrup"], // Top (5)
-          ["Chocolate", "Coffee Bean", "Hazelnut", "Almond Milk", "Chestnut Cream"], // Heart (5)
-          ["Tonka Bean", "Cocoa Absolute", "Vanilla Pod", "Salted Caramel", "Brown Sugar"] // Base (5)
-        ],
-        aquatic: [
-          ["Sea Salt", "Calone", "Aquatic Accord", "Melon", "Cucumber"], // Top (5)
-          ["Water Lily", "Lotus Blossom", "Marine Accord", "Seaweed", "Blue Chamomile"], // Heart (5)
-          ["Ambergris", "Driftwood", "Moss", "Mineral Musk", "Ozone"] // Base (5)
-        ]
-      },
-      seasonMapping: {
-        spring: { family: "floral", note: ["Jasmine", "Rose", "Musk"], emotion: "joy" },
-        summer: { family: "citrus", note: ["Bergamot", "Neroli", "Musk"], emotion: "refreshing" },
-        autumn: { family: "woody", note: ["Cedarwood", "Sandalwood", "Vetiver"], emotion: "reflection" },
-        winter: { family: "oriental", note: ["Amber", "Myrrh", "Benzoin"], emotion: "serenity" }
-      },
-      monthNames: {
-        1: "January Glow", 2: "February Mist", 3: "March Bloom", 4: "April Dew",
-        5: "May Blossom", 6: "June Radiance", 7: "July Spark", 8: "August Dusk",
-        9: "September Amber", 10: "October Haze", 11: "November Ember", 12: "December Frost"
-      },
-
-      init() {
-        // Initialize scores
-        for (let cat in this.categories) {
-          this.categories[cat].forEach(trait => this.score[cat][trait] = 0);
-        }
-        // Bind event listeners
-        document.getElementById('langToggle').onclick = () => this.toggleLanguage();
-        document.getElementById('genBtn').onclick = () => this.generateResult();
-        document.getElementById('quizForm').addEventListener('change', () => this.updateProgress());
-        this.renderQuestions();
-      },
-
-      toggleLanguage() {
-        this.lang = this.lang === "en" ? "ar" : "en";
-        this.renderQuestions();
-      },
-
-      renderQuestions() {
-        try {
-          const wrap = document.getElementById("questions");
-          wrap.innerHTML = "";
-          document.body.className = this.lang === "ar" ? "rtl" : "";
-          document.getElementById("title").innerHTML = this.lang === "ar"
-            ? "اكتشف عطرك الشخصي<br /><span style='font-size:.6em'>Discover Your Signature Fragrance</span>"
-            : "Discover Your Signature Fragrance<br /><span style='font-size:.6em'>اكتشف عطرك الشخصي</span>";
-
-          this.questionsData.forEach((q, i) => {
-            const div = document.createElement("div");
-            div.className = "question";
-            div.setAttribute("role", "region");
-            div.setAttribute("aria-labelledby", `q${i}`);
-            const text = this.lang === "ar" ? q.ar : q.en;
-            div.innerHTML = `<p id="q${i}"><strong>${i + 1}. ${text}</strong></p>`;
-            q.options.forEach((opt, idx) => {
-              const label = this.lang === "ar" ? opt[1] : opt[0];
-              div.insertAdjacentHTML("beforeend",
-                `<label><input type="radio" name="q${i}" value="${idx}" aria-label="${label}"> ${label}</label>`
-              );
-            });
-            wrap.appendChild(div);
-          });
-          this.updateProgress();
-        } catch (e) {
-          console.error('Error rendering questions:', e);
-        }
-      },
-
-      updateProgress() {
-        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
-        document.getElementById('currentQ').textContent = answered + 1;
-      },
-
-      getSeason(birthDate) {
-        const month = new Date(birthDate).getMonth() + 1;
-        if (month >= 3 && month <= 5) return "spring";
-        if (month >= 6 && month <= 8) return "summer";
-        if (month >= 9 && month <= 11) return "autumn";
-        return "winter";
-      },
-
-      generateResult() {
-        try {
-          // Validate all questions answered
-          const unanswered = this.questionsData.find((q, i) => !document.querySelector(`input[name="q${i}"]:checked`));
-          if (unanswered) {
-            alert(this.lang === "ar" ? "يرجى الإجابة على جميع الأسئلة" : "Please answer all questions");
-            return;
-          }
-
-          // Reset scores
-          for (let cat in this.score) {
-            for (let t in this.score[cat]) this.score[cat][t] = 0;
-          }
-
-          // Core scoring
-          this.questionsData.forEach((q, i) => {
-            const sel = document.querySelector(`input[name="q${i}"]:checked`);
-            if (!sel) return;
-            const [s, e, f, m] = q.options[+sel.value][2];
-            this.score.style[s] += 1;
-            this.score.emotion[e] += 1;
-            this.score.family[f] += 1;
-            this.score.memory[m] += 1;
-          });
-
-          // Birth date adjustment
-          const birthDate = document.getElementById('birthDate').value;
-          if (birthDate) {
-            const season = this.getSeason(birthDate);
-            const { family, emotion } = this.seasonMapping[season];
-            this.score.family[family] += 1; // Subtle boost
-            this.score.emotion[emotion] += 0.5;
-          }
-
-          // Calculate percentages
-          const result = {};
-          for (let cat in this.score) {
-            const entries = Object.entries(this.score[cat]).sort((a, b) => b[1] - a[1]);
-            const [[t1, n1], [t2, n2], [t3, n3]] = entries;
-            const sum3 = n1 + n2 + n3 || 1;
-            result[cat] = [
-              { trait: t1, percent: Math.round(100 * n1 / sum3) },
-              { trait: t2, percent: Math.round(100 * n2 / sum3) },
-              { trait: t3, percent: 100 - Math.round(100 * n1 / sum3) - Math.round(100 * n2 / sum3) }
-            ];
-          }
-
-          // Generate perfume name
-          const perfumeName = birthDate
-            ? `${this.monthNames[new Date(birthDate).getMonth() + 1]} ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`
-            : `Essence ${result.family[0].trait.charAt(0).toUpperCase() + result.family[0].trait.slice(1)}`;
-
-          // Generate narrative
-          const narrative = birthDate
-            ? `Your ${this.getSeason(birthDate)} birth infuses this fragrance with ${this.seasonMapping[this.getSeason(birthDate)].family} elegance, blending ${result.emotion[0].trait} and ${result.style[0].trait} charm.`
-            : `A unique fragrance crafted to reflect your ${result.emotion[0].trait} and ${result.style[0].trait} personality.`;
-
-          // Build blends HTML
-          let blendsHTML = `<h2>${perfumeName}</h2><p>${narrative}</p>`;
-          ["style", "emotion", "family", "memory"].forEach(cat => {
-            blendsHTML += `<h3>${this.lang === "ar"
-              ? { "style": "أسلوب", "emotion": "العاطفة", "family": "عائلة العطر", "memory": "الذاكرة" }[cat]
-              : cat.charAt(0).toUpperCase() + cat.slice(1)}</h3><ul class="blend-list">`;
-            result[cat].forEach(({ trait, percent }) => {
-              blendsHTML += `<li>${trait} — ${percent}%</li>`;
-            });
-            blendsHTML += `</ul>`;
-          });
-
-          // Dynamic fragrance pyramid
-          const famBlend = result.family;
-          const layers = ["Top Note", "Heart Note", "Base Note"];
-          blendsHTML += `<h3>${this.lang === "ar" ? "هرم العطر" : "Fragrance Pyramid"}</h3>`;
-          layers.forEach((layer, i) => {
-            blendsHTML += `<p><strong>${this.lang === "ar"
-              ? ["المقدمة", "القلب", "القاعدة"][i]
-              : layer}:</strong> `;
-            blendsHTML += famBlend.map(({ trait, percent }) => {
-              const note = this.pyramidNotes[trait][i][Math.floor(Math.random() * this.pyramidNotes[trait][i].length)];
-              return `${note} (${percent}%)`;
-            }).join(" • ");
-            blendsHTML += `</p>`;
-          });
-
-          document.getElementById("result").innerHTML = blendsHTML;
-        } catch (e) {
-          console.error('Error generating result:', e);
-          document.getElementById("result").innerHTML = this.lang === "ar"
-            ? "حدث خطأ، حاول مرة أخرى" : "An error occurred, please try again";
-        }
-      }
-    };
-
-    document.addEventListener("DOMContentLoaded", () => Quiz.init());
-  </script>
-</body>
-</html>
+          ["Cedarwood (N)", "Pine Needle (N)", "Juniper Berry (N)", "Eucalyptus (N)", "Cypress (N)", "Fir Needle (N)", "Spruce (N)", "Hemlock (N)", "Redwood (N)", "Birch Leaf (N)", "Oakmoss (N)", "Sandalwood Dust (N)", "Rosewood Leaf (N)", "Guaiac Leaf (N)", "Hinoki Leaf (N)", "Teak Leaf (N)", "Cedar Leaf (N)", "Pine Bark (N)", "Juniper Leaf (N)", "Eucalyptus Leaf (N)", "Cypress Needle (N)", "Fir Bark (N)", "Spruce Needle (N)", "Hemlock Needle (N)", "Redwood Leaf (N)", "Birch Bark (N)", "Oakmoss Essence (N)", "Sandalwood Powder (N)", "Rosewood Bark (N)", "Guaiac Bark (N)", "Hinoki Bark (N)", "Teak Bark (N)", "Cedar Bark (N)", "Pine Leaf (N)", "Juniper Bark (N)", "Eucalyptus Bark (N)", "Cypress Bark (N)", "Fir Leaf (N)", "Spruce Bark (N)", "Hemlock Bark (N)", "Redwood Bark (N)", "Birch Leaf Essence (N)", "Oakmoss Oil (N)", "Sandalwood Leaf (N)", "Rosewood Essence (N)", "Guaiac Essence (N)", "Hinoki Essence (N)", "Teak Essence (N)"], // Top (48)
+          ["Sandalwood (N)", "Rosewood (N)", "Guaiac Wood (N)", "Hinoki Wood (N)", "Teak (N)", "Cedarwood Heart (N)", "Pine Wood (N)", "Juniper Wood (N)", "Eucalyptus Wood (N)", "Cypress Wood (N)", "Fir Wood (N)", "Spruce Wood (N)", "Hemlock Wood (N)", "Redwood Heart (N)", "Birch Wood (N)", "Oak Wood (N)", "Sandalwood Heart (N)", "Rosewood Heart (N)", "Guaiac Heart (N)", "Hinoki Heart (N)", "Teak Heart (N)", "Cedarwood Essence (N)", "Pine Essence (N)", "Juniper Essence (N)", "Eucalyptus Essence (N)", "Cypress Essence (N)", "Fir Essence (N)", "Spruce Essence (N)", "Hemlock Essence (N)", "Redwood Essence (N)", "Birch Essence (N)", "Oak Essence (N)", "Sandalwood Oil (N)", "Rosewood Oil (N)", "Guaiac Oil (N)", "Hinoki Oil (N)", "Teak Oil (N)", "Cedarwood Oil (N)", "Pine Oil (N)", "Juniper Oil (N)", "Eucalyptus Oil (N)", "Cypress Oil (N)", "Fir Oil (N)", "Spruce Oil (N)", "Hemlock Oil (N)", "Redwood Oil (N)", "Bir
