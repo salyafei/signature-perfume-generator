@@ -1430,6 +1430,9 @@ generateResult: function() {
         const resultDiv = document.getElementById('result');
         if (!resultDiv) return;
 
+        // Hide introductory paragraphs
+        document.querySelectorAll('.intro-text').forEach(p => p.style.display = 'none');
+
         resultDiv.innerHTML = '<p class="loading">Generating your fragrance profile...</p>';
         document.querySelector('.quiz-container').classList.add('al-nada-hidden');
         resultDiv.classList.remove('al-nada-hidden');
@@ -1478,35 +1481,12 @@ generateResult: function() {
                     <p>This composition tells the story of someone who is ${topCategories.style.primary} in nature, with a ${topCategories.emotion.primary} spirit. The ${dominantFamily} foundation reflects your preference for ${this.getFamilyDescription(dominantFamily)} experiences, while the carefully selected notes create a scent that evolves throughout the day, revealing different facets of your personality.</p>
                     <p class="disclaimer">Disclaimer: This advanced fragrance profile uses weighted personality analysis and intelligent note selection. A master perfumer will fine-tune the exact proportions and add bridging notes for perfect harmony and longevity.</p>
                 </div>
-                <div class="feedback-section">
-                    <h3>Rate Your Profile</h3>
-                    <select id="feedbackRating">
-                        <option value="">Select rating</option>
-                        <option value="1">1 - Not accurate</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5 - Very accurate</option>
-                    </select>
-                    <textarea id="feedbackComments" placeholder="Optional: Share your thoughts or preferences (e.g., prefer woody notes)"></textarea>
-                    <button class="nav-button" id="submitFeedback">Submit Feedback</button>
-                </div>
                 <button class="nav-button" id="restartButton" aria-label="Restart the quiz">Restart Quiz</button>
             `;
 
             resultDiv.innerHTML = resultHtml;
             localStorage.setItem('alNadaQuizResult', JSON.stringify({ html: resultHtml, timestamp: new Date().toISOString() }));
             document.getElementById('restartButton').addEventListener('click', () => this.restartQuiz());
-            document.getElementById('submitFeedback').addEventListener('click', () => {
-                const rating = document.getElementById('feedbackRating').value;
-                const comments = document.getElementById('feedbackComments').value;
-                if (rating) {
-                    localStorage.setItem('alNadaFeedback', JSON.stringify({ rating, comments, profile: topCategories }));
-                    alert('Thank you for your feedback!');
-                } else {
-                    alert('Please select a rating.');
-                }
-            });
         }, 1000);
     } catch (error) {
         console.error('Result generation failed:', error);
@@ -1515,7 +1495,6 @@ generateResult: function() {
         if (generateButton) generateButton.disabled = false;
     }
 },
-
 restartQuiz: function() {
     this.currentQuestion = 0;
     this.answers = [];
