@@ -17,7 +17,7 @@
             --dark-burgundy: #5C001A;
             --shadow-light: rgba(229, 127, 109, 0.2);
             --shadow-dark: rgba(128, 0, 32, 0.1);
-        }
+        }xai
 
         html, body, div, h1, p, button, input, select {
             margin: 0;
@@ -1543,47 +1543,6 @@ document.addEventListener('DOMContentLoaded', () => PerfumeGenerator.init());
 </script>
 </body>
 </html>
-</xaiArtifact>
 
----
-
-### **Implementation Notes**
-
-- **Completing the 1,000 Notes**:
-  - The `pyramidNotes` object includes 323 notes (223 existing + 100 new sample). To reach 1,000, generate 677 more notes using the provided script:
-    ```javascript
-    const noteTypes = [
-        'Rose', 'Musk', 'Cedar', 'Amber', 'Jasmine', 'Sandalwood', 'Vanilla', 'Oud', 'Bergamot', 'Lemon',
-        'Patchouli', 'Vetiver', 'Ylang', 'Iris', 'Tuberose', 'Saffron', 'Cardamom', 'Pepper', 'Cinnamon', 'Clove',
-        'Neroli', 'Petitgrain', 'Lavender', 'Rosemary', 'Mint', 'Grapefruit', 'Orange', 'Lime', 'Pine', 'Juniper',
-        'Violet', 'Mimosa', 'Hyacinth', 'Freesia', 'Lilac', 'Cumin', 'Ginger', 'Nutmeg', 'Anise', 'Caramel',
-        'Coffee', 'Chocolate', 'Honey', 'Almond', 'Coconut', 'Tonka', 'Sea', 'Marine', 'Cucumber', 'Lotus'
-    ];
-    const origins = [
-        'Moroccan', 'Haitian', 'Mysore', 'Sicilian', 'Egyptian', 'Indian', 'French', 'Australian', 'Japanese',
-        'Brazilian', 'Tahitian', 'Cuban', 'Javanese', 'Persian', 'Omani', 'Guatemalan', 'Madagascan', 'Spanish',
-        'Russian', 'SouthAfrican', 'Tunisian', 'Calabrian', 'Himalayan', 'Ethiopian', 'Zanzibar'
-    ];
-    const variants = [
-        'Petal', 'Resin', 'Absolute', 'Oil', 'Blossom', 'Leaf', 'Root', 'Bark', 'Zest', 'Dew', 'Needle',
-        'Berry', 'Pod', 'Flower', 'Wood', 'Seed', 'Rind', 'Tear', 'Crystal', 'Wax', 'Juice', 'Stigma', 'Heart'
-    ];
-    const sources = ['(N)', '(B)', '(S)'];
-    const existingNotes = new Set([
-        // Add the 323 notes from pyramidNotes here
-        'Bergamot-(N)', 'Yuzu-(N)', 'Rose Absolute-(N)', /* etc. */
-    ]);
-    let newNotes = new Set();
-    while (newNotes.size < 677) {
-        const type = noteTypes[Math.floor(Math.random() * noteTypes.length)];
-        const origin = origins[Math.floor(Math.random() * origins.length)];
-        const variant = variants[Math.floor(Math.random() * variants.length)];
-        const source = sources[Math.floor(Math.random() * sources.length)];
-        const note = `${type}-${origin}-${variant}-${source}`;
-        if (!existingNotes.has(note)) {
-            newNotes.add(note);
-        }
-    }
-    // Distribute to families: ~97 notes per family (677 ÷ 7), split across top (~33), heart (~33), base (~31)
 
     
