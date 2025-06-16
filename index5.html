@@ -650,50 +650,203 @@
         const TOTAL_QUESTIONS = 20;
 
         const translations = {
-            en: {
-                resultTitle: "Your Signature Scent Profile",
-                personalityAnalysis: "Personality Analysis",
-                styleLabel: "Style",
-                emotionLabel: "Emotion",
-                fragranceFamilyLabel: "Fragrance Family",
-                memoryLabel: "Memory Association",
-                fragranceComposition: "Your Bespoke Fragrance Composition",
-                topNotes: "Top Notes (First Impression)",
-                heartNotes: "Heart Notes (Personality Core)",
-                baseNotes: "Base Notes (Lasting Impression)",
-                seasonalHarmony: "Seasonal Harmony",
-                seasonalText: "Your {{season}} birth month adds {{character}} {{intensity}} notes that complement your natural energy.",
-                fragranceStory: "Your Fragrance Story",
-                storyText: "This composition tells the story of someone who is {{style}} in nature, with a {{emotion}} spirit. The {{family}} foundation reflects your preference for {{description}} experiences, while the carefully selected notes create a scent that evolves throughout the day, revealing different facets of your personality.",
-                disclaimer: "Disclaimer: This advanced fragrance profile uses weighted personality analysis and intelligent note selection. A master perfumer will fine-tune the exact proportions and add bridging notes for perfect harmony and longevity.",
-                consultationLabel: "Request Further Consultation",
-                consultationNote: "Consultation fee is 50 AED.",
-                consultationButton: "Request Consultation",
-                emailPlaceholder: "Enter your email for consultation"
-            },
-            ar: {
-                resultTitle: "ملف عطرك المميز",
-                personalityAnalysis: "تحليل الشخصية",
-                styleLabel: "الأسلوب",
-                emotionLabel: "العاطفة",
-                fragranceFamilyLabel: "عائلة العطر",
-                memoryLabel: "ارتباط الذاكرة",
-                fragranceComposition: "تركيبة عطرك المخصصة",
-                topNotes: "النوتات العليا (الانطباع الأول)",
-                heartNotes: "النوتات الوسطى (جوهر الشخصية)",
-                baseNotes: "النوتات القاعدية (الانطباع الدائم)",
-                seasonalHarmony: "التناغم الموسمي",
-                seasonalText: "شهر ميلادك في {{season}} يضيف نوتات {{character}} {{intensity}} تكمل طاقتك الطبيعية.",
-                fragranceStory: "قصة عطرك",
-                storyText: "هذه التركيبة تحكي قصة شخص {{style}} بطبعه، بروح {{emotion}}. الأساس {{family}} يعكس تفضيلك لتجارب {{description}}، بينما النوتات المختارة بعناية تخلق عطرًا يتطور طوال اليوم، كاشفًا عن جوانب مختلفة من شخصيتك.",
-                disclaimer: "تنويه: ملف العطر المتقدم هذا يستخدم تحليل الشخصية الموزون واختيار النوتات الذكي. سيقوم أنف عطري محترف بتهيئة النسب الدقيقة وإضافة نوتات جسرية لتحقيق التناغم والدوام المثاليين.",
-                consultationLabel: "طلب استشارة إضافية",
-                consultationNote: "رسوم الاستشارة 50 درهم إماراتي.",
-                consultationButton: "طلب الاستشارة",
-                emailPlaceholder: "أدخل بريدك الإلكتروني للاستشارة"
-            }
-        };
-
+    en: {
+        resultTitle: "Your Signature Scent Profile",
+        personalityAnalysis: "Personality Analysis",
+        styleLabel: "Style",
+        emotionLabel: "Emotion",
+        fragranceFamilyLabel: "Fragrance Family",
+        memoryLabel: "Memory Association",
+        fragranceComposition: "Your Bespoke Fragrance Composition",
+        topNotes: "Top Notes (First Impression)",
+        heartNotes: "Heart Notes (Personality Core)",
+        baseNotes: "Base Notes (Lasting Impression)",
+        seasonalHarmony: "Seasonal Harmony",
+        seasonalText: "Your {{season}} birth month adds {{character}} {{intensity}} notes that complement your natural energy.",
+        fragranceStory: "Your Fragrance Story",
+        storyText: "This composition tells the story of someone who is {{style}} in nature, with a {{emotion}} spirit. The {{family}} foundation reflects your preference for {{description}} experiences, while the carefully selected notes create a scent that evolves throughout the day, revealing different facets of your personality.",
+        disclaimer: "Disclaimer: This advanced fragrance profile uses weighted personality analysis and intelligent note selection. A master perfumer will fine-tune the exact proportions and add bridging notes for perfect harmony and longevity.",
+        consultationLabel: "Request Further Consultation",
+        consultationNote: "Consultation fee is 50 AED.",
+        consultationButton: "Request Consultation",
+        emailPlaceholder: "Enter your email for consultation",
+        // Dynamic content translations
+        styles: {
+            elegant: "Elegant",
+            bold: "Bold",
+            mysterious: "Mysterious",
+            refreshing: "Refreshing",
+            playful: "Playful",
+            sensual: "Sensual",
+            exotic: "Exotic",
+            minimalist: "Minimalist",
+            adventurous: "Adventurous",
+            classic: "Classic",
+            bohemian: "Bohemian",
+            modern: "Modern"
+        },
+        emotions: {
+            serenity: "Serenity",
+            confidence: "Confidence",
+            intrigue: "Intrigue",
+            joy: "Joy",
+            excitement: "Excitement",
+            romance: "Romance",
+            reflection: "Reflection",
+            passion: "Passion",
+            power: "Power",
+            melancholy: "Melancholy",
+            nostalgia: "Nostalgia",
+            curiosity: "Curiosity",
+            calm: "Calm",
+            ambition: "Ambition",
+            empathy: "Empathy"
+        },
+        families: {
+            oriental: "Oriental",
+            spicy: "Spicy",
+            woody: "Woody",
+            citrus: "Citrus",
+            floral: "Floral",
+            gourmand: "Gourmand",
+            aquatic: "Aquatic"
+        },
+        memories: {
+            reflection: "Reflection",
+            celebration: "Celebration",
+            childhood: "Childhood",
+            nature: "Nature",
+            travel: "Travel",
+            romance: "Romance"
+        },
+        seasons: {
+            spring: "Spring",
+            summer: "Summer",
+            autumn: "Autumn",
+            winter: "Winter"
+        },
+        seasonalCharacters: {
+            "fresh and blooming": "Fresh and Blooming",
+            "vibrant and energetic": "Vibrant and Energetic",
+            "warm and spicy": "Warm and Spicy",
+            "cozy and intense": "Cozy and Intense"
+        },
+        seasonalIntensities: {
+            light: "Light",
+            moderate: "Moderate",
+            rich: "Rich",
+            deep: "Deep"
+        },
+        familyDescriptions: {
+            oriental: "warm, exotic, and mysterious",
+            citrus: "fresh, energetic, and uplifting",
+            woody: "grounded, sophisticated, and natural",
+            floral: "romantic, elegant, and feminine",
+            spicy: "bold, passionate, and adventurous",
+            gourmand: "comforting, indulgent, and warm",
+            aquatic: "fresh, clean, and serene",
+            "unique and distinctive": "unique and distinctive"
+        }
+    },
+    ar: {
+        resultTitle: "ملف عطرك المميز",
+        personalityAnalysis: "تحليل الشخصية",
+        styleLabel: "الأسلوب",
+        emotionLabel: "العاطفة",
+        fragranceFamilyLabel: "عائلة العطر",
+        memoryLabel: "ارتباط الذاكرة",
+        fragranceComposition: "تركيبة عطرك المخصصة",
+        topNotes: "النوتات العليا (الانطباع الأول)",
+        heartNotes: "النوتات الوسطى (جوهر الشخصية)",
+        baseNotes: "النوتات القاعدية (الانطباع الدائم)",
+        seasonalHarmony: "التناغم الموسمي",
+        seasonalText: "شهر ميلادك في {{season}} يضيف نوتات {{character}} {{intensity}} تكمل طاقتك الطبيعية.",
+        fragranceStory: "قصة عطرك",
+        storyText: "هذه التركيبة تحكي قصة شخص {{style}} بطبعه، بروح {{emotion}}. الأساس {{family}} يعكس تفضيلك لتجارب {{description}}، بينما النوتات المختارة بعناية تخلق عطرًا يتطور طوال اليوم، كاشفًا عن جوانب مختلفة من شخصيتك.",
+        disclaimer: "تنويه: ملف العطر المتقدم هذا يستخدم تحليل الشخصية الموزون واختيار النوتات الذكي. سيقوم أنف عطري محترف بتهيئة النسب الدقيقة وإضافة نوتات جسرية لتحقيق التناغم والدوام المثاليين.",
+        consultationLabel: "طلب استشارة إضافية",
+        consultationNote: "رسوم الاستشارة 50 درهم إماراتي.",
+        consultationButton: "طلب الاستشارة",
+        emailPlaceholder: "أدخل بريدك الإلكتروني للاستشارة",
+        // Dynamic content translations
+        styles: {
+            elegant: "أنيق",
+            bold: "جريء",
+            mysterious: "غامض",
+            refreshing: "منعش",
+            playful: "مرح",
+            sensual: "حسي",
+            exotic: "غريب",
+            minimalist: "بسيط",
+            adventurous: "مغامر",
+            classic: "كلاسيكي",
+            bohemian: "بوهيمي",
+            modern: "عصري"
+        },
+        emotions: {
+            serenity: "هدوء",
+            confidence: "ثقة",
+            intrigue: "فضول",
+            joy: "فرح",
+            excitement: "حماس",
+            romance: "رومانسية",
+            reflection: "تأمل",
+            passion: "عاطفة",
+            power: "قوة",
+            melancholy: "حزن",
+            nostalgia: "حنين",
+            curiosity: "فضول",
+            calm: "سكينة",
+            ambition: "طموح",
+            empathy: "تعاطف"
+        },
+        families: {
+            oriental: "شرقي",
+            spicy: "حار",
+            woody: "خشبي",
+            citrus: "حمضي",
+            floral: "زهري",
+            gourmand: "غورماند",
+            aquatic: "مائي"
+        },
+        memories: {
+            reflection: "تأمل",
+            celebration: "احتفال",
+            childhood: "طفولة",
+            nature: "طبيعة",
+            travel: "سفر",
+            romance: "رومانسية"
+        },
+        seasons: {
+            spring: "الربيع",
+            summer: "الصيف",
+            autumn: "الخريف",
+            winter: "الشتاء"
+        },
+        seasonalCharacters: {
+            "fresh and blooming": "منعش ومزهر",
+            "vibrant and energetic": "نابض بالحياة ومليء بالطاقة",
+            "warm and spicy": "دافئ وحار",
+            "cozy and intense": "مريح ومكثف"
+        },
+        seasonalIntensities: {
+            light: "خفيف",
+            moderate: "معتدل",
+            rich: "غني",
+            deep: "عميق"
+        },
+        familyDescriptions: {
+            oriental: "دافئ، غريب، وغامض",
+            citrus: "منعش، نشيط، ومبهج",
+            woody: "متأصل، راقي، وطبيعي",
+            floral: "رومانسي، أنيق، وأنثوي",
+            spicy: "جريء، عاطفي، ومغامر",
+            gourmand: "مريح، متسامح، ودافئ",
+            aquatic: "منعش، نظيف، وساكن",
+            "unique and distinctive": "فريد ومميز"
+        }
+    }
+};
         function simpleHash(str) {
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
@@ -1046,7 +1199,7 @@
 
             questionWeights: {
                 0: 1.5, 1: 1.3, 2: 1.2, 3: 1.1, 4: 1.0, 5: 1.4, 6: 1.3, 7: 1.0, 8: 1.0, 9: 1.1,
-                                10: 1.5, 11: 1.2, 12: 1.3, 13: 1.4, 14: 1.1, 15: 1.2, 16: 1.1, 17: 1.0, 18: 1.0, 19: 1.3
+                                           10: 1.5, 11: 1.2, 12: 1.3, 13: 1.4, 14: 1.1, 15: 1.2, 16: 1.1, 17: 1.0, 18: 1.0, 19: 1.3
             },
 
             init: function() {
@@ -1066,13 +1219,11 @@
                     this.initScore();
                     this.responseTimes = new Array(TOTAL_QUESTIONS).fill(null);
 
-                    // Only load saved result if no new answers and result is recent
                     const savedResult = localStorage.getItem('alNadaQuizResult');
                     if (savedResult && this.answers.length === 0) {
                         const parsedResult = JSON.parse(savedResult);
                         const resultTimestamp = new Date(parsedResult.timestamp);
                         const now = new Date();
-                        // Check if result is less than 24 hours old
                         if (now - resultTimestamp < 24 * 60 * 60 * 1000) {
                             console.log('Loading saved result...');
                             this.showSavedResult(parsedResult);
@@ -1083,7 +1234,6 @@
                         }
                     }
 
-                    // Ensure quiz container is visible and result is hidden
                     const quizContainer = document.querySelector('.quiz-container');
                     const resultDiv = document.getElementById('result');
                     if (quizContainer) quizContainer.classList.remove('al-nada-hidden');
@@ -1410,58 +1560,76 @@
             },
 
             getPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
-                let blend = { top: [], heart: [], base: [] };
-                const familyNotes = this.pyramidNotes[dominantFamily];
+                try {
+                    console.log(`Generating perfume blend for family: ${dominantFamily}, pref: ${ingredientPref}`);
+                    let blend = { top: [], heart: [], base: [] };
+                    const familyNotes = this.pyramidNotes[dominantFamily];
 
-                const filterNotes = (notesArray) => {
-                    if (ingredientPref === 'natural') {
-                        return notesArray.filter(note => note.endsWith('(N)'));
-                    } else if (ingredientPref === 'synthetic') {
-                        return notesArray.filter(note => note.endsWith('(B)') || note.endsWith('(S)'));
-                    }
-                    return notesArray;
-                };
-
-                const selectNotes = (notes, count, layer) => {
-                    let availableNotes = filterNotes(notes);
-                    let selectedNotes = [];
-                    const primaryStyle = topCategories.style.primary;
-                    const primaryEmotion = topCategories.emotion.primary;
-                    const secondaryStyle = topCategories.style.secondary;
-                    const secondaryEmotion = topCategories.emotion.secondary;
-
-                    const traitNotes = [
-                        ...(this.traitToNoteMap[primaryStyle] || []),
-                        ...(this.traitToNoteMap[primaryEmotion] || []),
-                        ...(this.traitToNoteMap[secondaryStyle] || []),
-                        ...(this.traitToNoteMap[secondaryEmotion] || [])
-                    ].filter(note => availableNotes.includes(note));
-
-                    for (let i = traitNotes.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
+                    if (!familyNotes || !familyNotes[0] || !familyNotes[1] || !familyNotes[2]) {
+                        throw new Error('Invalid family notes structure');
                     }
 
-                    for (let i = 0; i < count && traitNotes.length > 0; i++) {
-                        selectedNotes.push(traitNotes[0]);
-                        traitNotes.splice(0, 1);
-                        availableNotes = availableNotes.filter(note => !selectedNotes.includes(note));
-                    }
+                    const filterNotes = (notesArray) => {
+                        if (ingredientPref === 'natural') {
+                            return notesArray.filter(note => note.endsWith('(N)'));
+                        } else if (ingredientPref === 'synthetic') {
+                            return notesArray.filter(note => note.endsWith('(B)') || note.endsWith('(S)'));
+                        }
+                        return notesArray;
+                    };
 
-                    while (selectedNotes.length < count && availableNotes.length > 0) {
-                        const noteIndex = Math.floor(Math.random() * availableNotes.length);
-                        selectedNotes.push(availableNotes[noteIndex]);
-                        availableNotes.splice(noteIndex, 1);
-                    }
+                    const selectNotes = (notes, count, layer) => {
+                        let availableNotes = filterNotes(notes);
+                        if (availableNotes.length < count) {
+                            console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
+                            availableNotes = availableNotes.concat(notes); // Fallback to unfiltered notes
+                        }
+                        let selectedNotes = [];
+                        const primaryStyle = topCategories.style.primary;
+                        const primaryEmotion = topCategories.emotion.primary;
+                        const secondaryStyle = topCategories.style.secondary;
+                        const secondaryEmotion = topCategories.emotion.secondary;
 
-                    return selectedNotes;
-                };
+                        const traitNotes = [
+                            ...(this.traitToNoteMap[primaryStyle] || []),
+                            ...(this.traitToNoteMap[primaryEmotion] || []),
+                            ...(this.traitToNoteMap[secondaryStyle] || []),
+                            ...(this.traitToNoteMap[secondaryEmotion] || [])
+                        ].filter(note => availableNotes.includes(note));
 
-                blend.top = selectNotes(familyNotes[0], 3, 'top');
-                blend.heart = selectNotes(familyNotes[1], 3, 'heart');
-                blend.base = selectNotes(familyNotes[2], 3, 'base');
+                        // Shuffle traitNotes
+                        for (let i = traitNotes.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
+                        }
 
-                return blend;
+                        for (let i = 0; i < count && traitNotes.length > 0; i++) {
+                            selectedNotes.push(traitNotes.shift());
+                            availableNotes = availableNotes.filter(note => !selectedNotes.includes(note));
+                        }
+
+                        while (selectedNotes.length < count && availableNotes.length > 0) {
+                            const noteIndex = Math.floor(Math.random() * availableNotes.length);
+                            selectedNotes.push(availableNotes[noteIndex]);
+                            availableNotes.splice(noteIndex, 1);
+                        }
+
+                        if (selectedNotes.length < count) {
+                            console.warn(`Only selected ${selectedNotes.length} notes for ${layer}`);
+                        }
+                        return selectedNotes;
+                    };
+
+                    blend.top = selectNotes(familyNotes[0], 3, 'top');
+                    blend.heart = selectNotes(familyNotes[1], 3, 'heart');
+                    blend.base = selectNotes(familyNotes[2], 3, 'base');
+
+                    console.log('Generated blend:', blend);
+                    return blend;
+                } catch (error) {
+                    console.error('Failed to generate perfume blend:', error);
+                    return { top: [], heart: [], base: [] };
+                }
             },
 
             generateResult: function() {
@@ -1542,36 +1710,36 @@
                             <div class="result-title">${t.resultTitle}</div>
                             <div class="personality-analysis">
                                 <div class="analysis-title">${t.personalityAnalysis}</div>
-                                <p><strong>${t.styleLabel}:</strong> ${topCategories.style.primary} (${confidence.toFixed(1)}% confidence)</p>
-                                <p><strong>${t.emotionLabel}:</strong> ${topCategories.emotion.primary} with ${topCategories.emotion.secondary} undertones</p>
-                                <p><strong>${t.fragranceFamilyLabel}:</strong> ${dominantFamily.charAt(0).toUpperCase() + dominantFamily.slice(1)}</p>
-                                <p><strong>${t.memoryLabel}:</strong> ${topCategories.memory.primary}</p>
+                                <p><strong>${t.styleLabel}:</strong> ${t.styles[topCategories.style.primary]} (${confidence.toFixed(1)}% confidence)</p>
+                                <p><strong>${t.emotionLabel}:</strong> ${t.emotions[topCategories.emotion.primary]} with ${t.emotions[topCategories.emotion.secondary]} undertones</p>
+                                <p><strong>${t.fragranceFamilyLabel}:</strong> ${t.families[dominantFamily]}</p>
+                                <p><strong>${t.memoryLabel}:</strong> ${t.memories[topCategories.memory.primary]}</p>
                             </div>
                             <div class="analysis-title">${t.fragranceComposition}</div>
                             <div class="fragrance-composition">
                                 <div class="note-category">
                                     <div class="note-title">${t.topNotes}</div>
-                                    <div class="note-list">${blend.top.join('<br>')}</div>
+                                    <div class="note-list">${blend.top.length > 0 ? blend.top.join('<br>') : 'No top notes available'}</div>
                                 </div>
                                 <div class="note-category">
                                     <div class="note-title">${t.heartNotes}</div>
-                                    <div class="note-list">${blend.heart.join('<br>')}</div>
+                                    <div class="note-list">${blend.heart.length > 0 ? blend.heart.join('<br>') : 'No heart notes available'}</div>
                                 </div>
                                 <div class="note-category">
                                     <div class="note-title">${t.baseNotes}</div>
-                                    <div class="note-list">${blend.base.join('<br>')}</div>
+                                    <div class="note-list">${blend.base.length > 0 ? blend.base.join('<br>') : 'No base notes available'}</div>
                                 </div>
                             </div>`;
 
                         if (season) {
                             const seasonalData = this.seasonalInfluence[season];
-                            resultHtml += `<p><strong>${t.seasonalHarmony}:</strong> ${t.seasonalText.replace('{{season}}', season).replace('{{character}}', seasonalData.character).replace('{{intensity}}', seasonalData.intensity)}</p>`;
+                            resultHtml += `<p><strong>${t.seasonalHarmony}:</strong> ${t.seasonalText.replace('{{season}}', t.seasons[season]).replace('{{character}}', t.seasonalCharacters[seasonalData.character]).replace('{{intensity}}', t.seasonalIntensities[seasonalData.intensity])}</p>`;
                         }
 
                         resultHtml += `
                             <div class="fragrance-story">
                                 <div class="story-title">${t.fragranceStory}</div>
-                                <p>${t.storyText.replace('{{style}}', topCategories.style.primary).replace('{{emotion}}', topCategories.emotion.primary).replace('{{family}}', dominantFamily).replace('{{description}}', this.getFamilyDescription(dominantFamily))}</p>
+                                <p>${t.storyText.replace('{{style}}', t.styles[topCategories.style.primary]).replace('{{emotion}}', t.emotions[topCategories.emotion.primary]).replace('{{family}}', t.families[dominantFamily]).replace('{{description}}', t.familyDescriptions[this.getFamilyDescription(dominantFamily)])}</p>
                                 <p class="disclaimer">${t.disclaimer}</p>
                             </div>
                             <div class="consultation-section">
