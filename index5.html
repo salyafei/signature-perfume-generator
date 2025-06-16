@@ -1088,8 +1088,7 @@
                 this.cachedScore = null;
             },
 
-            ```javascript
-            setupEventListeners: function() {
+                           setupEventListeners: function() {
                 try {
                     const langToggle = document.getElementById('langToggle');
                     const prevButton = document.getElementById('prevButton');
@@ -1478,8 +1477,10 @@
                     const resultDiv = document.getElementById('result');
                     if (!resultDiv) return;
 
+                    // Hide introductory paragraphs
                     document.querySelectorAll('.intro-text').forEach(p => p.style.display = 'none');
 
+                    // Generate answer set key
                     const answerSet = {
                         answers: this.answers,
                         birthDate: document.getElementById('birthDateInput').value,
@@ -1487,6 +1488,7 @@
                     };
                     const answerKey = simpleHash(JSON.stringify(answerSet));
 
+                    // Check cache
                     if (this.resultCache[answerKey]) {
                         resultDiv.innerHTML = this.resultCache[answerKey];
                         document.querySelector('.quiz-container').classList.add('al-nada-hidden');
@@ -1532,8 +1534,7 @@
                                     <div class="note-title">${t.baseNotes}</div>
                                     <div class="note-list">${blend.base.join('<br>')}</div>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
 
                         if (season) {
                             const seasonalData = this.seasonalInfluence[season];
