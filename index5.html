@@ -992,7 +992,7 @@
                     ]
                 },
                 {
-                    en: "Your dream landscape painting would feature...",
+                    en: "Your dream landscape paintin10g would feature...",
                     ar: "لوحة المناظر الطبيعية الحلم ستتضمن...",
                     options: [
                         ["Moonlit forest with silvery mist", "غابة مقمرة مع ضباب فضي", ["mysterious", "serenity", "woody", "nature"]],
@@ -1199,12 +1199,15 @@
 
             questionWeights: {
                 0: 1.5, 1: 1.3, 2: 1.2, 3: 1.1, 4: 1.0, 5: 1.4, 6: 1.3, 7: 1.0, 8: 1.0, 9: 1.1,
-                                           10: 1.5, 11: 1.2, 12: 1.3, 13: 1.4, 14: 1.1, 15: 1.2, 16: 1.1, 17: 1.0, 18: 1.0, 19: 1.3
+                                10: 1.5, 11: 1.2, 12: 1.3, 13: 1.4, 14: 1.1, 15: 1.2, 16: 1.1, 17: 1.0, 18: 1.0, 19: 1.3
             },
+
+            // Generate a unique session ID for in-memory caching
+            sessionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
 
             init: function() {
                 try {
-                    console.log('Initializing PerfumeGenerator...');
+                    console.log(`Initializing PerfumeGenerator, session ID: ${this.sessionId}`);
                     const requiredElements = [
                         'langToggle', 'questionText', 'optionsContainer', 'currentQ',
                         'totalQ', 'progressFill', 'prevButton', 'nextButton',
@@ -1219,21 +1222,7 @@
                     this.initScore();
                     this.responseTimes = new Array(TOTAL_QUESTIONS).fill(null);
 
-                    const savedResult = localStorage.getItem('alNadaQuizResult');
-                    if (savedResult && this.answers.length === 0) {
-                        const parsedResult = JSON.parse(savedResult);
-                        const resultTimestamp = new Date(parsedResult.timestamp);
-                        const now = new Date();
-                        if (now - resultTimestamp < 24 * 60 * 60 * 1000) {
-                            console.log('Loading saved result...');
-                            this.showSavedResult(parsedResult);
-                            return;
-                        } else {
-                            console.log('Clearing stale result...');
-                            localStorage.removeItem('alNadaQuizResult');
-                        }
-                    }
-
+                    // Ensure quiz container is visible and result is hidden
                     const quizContainer = document.querySelector('.quiz-container');
                     const resultDiv = document.getElementById('result');
                     if (quizContainer) quizContainer.classList.remove('al-nada-hidden');
@@ -1247,6 +1236,12 @@
                             e.preventDefault();
                             e.returnValue = 'You have unsaved quiz answers. Are you sure you want to leave?';
                         }
+                    });
+
+                    // Clear resultCache on session end
+                    window.addEventListener('unload', () => {
+                        console.log(`Clearing result cache for session: ${this.sessionId}`);
+                        this.resultCache = {};
                     });
                 } catch (error) {
                     console.error('Initialization failed:', error);
@@ -1582,7 +1577,7 @@
                         let availableNotes = filterNotes(notes);
                         if (availableNotes.length < count) {
                             console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
-                            availableNotes = availableNotes.concat(notes); // Fallback to unfiltered notes
+                            availableNotes = availableNotes.concat(notes);
                         }
                         let selectedNotes = [];
                         const primaryStyle = topCategories.style.primary;
@@ -1597,7 +1592,6 @@
                             ...(this.traitToNoteMap[secondaryEmotion] || [])
                         ].filter(note => availableNotes.includes(note));
 
-                        // Shuffle traitNotes
                         for (let i = traitNotes.length - 1; i > 0; i--) {
                             const j = Math.floor(Math.random() * (i + 1));
                             [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
@@ -1684,7 +1678,9 @@
                     };
                     const answerKey = simpleHash(JSON.stringify(answerSet));
 
+                    // Check in-memory cache for this session
                     if (this.resultCache[answerKey]) {
+                        console.log(`Loading cached result for answerKey: ${answerKey}`);
                         resultDiv.innerHTML = this.resultCache[answerKey];
                         document.querySelector('.quiz-container').classList.add('al-nada-hidden');
                         resultDiv.classList.remove('al-nada-hidden');
@@ -1751,8 +1747,8 @@
                         `;
 
                         resultDiv.innerHTML = resultHtml;
-                        localStorage.setItem('alNadaQuizResult', JSON.stringify({ html: resultHtml, timestamp: new Date().toISOString(), answerKey }));
                         this.resultCache[answerKey] = resultHtml;
+                        console.log(`Cached result for answerKey: ${answerKey} in session: ${this.sessionId}`);
                         this.setupConsultationButton(answerKey);
                     }, 1000);
                 } catch (error) {
