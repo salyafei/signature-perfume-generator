@@ -1479,19 +1479,18 @@
             return notesArray;
         };
 
-        const selectNotes = (notes, count, layer) => {
+        const selectNotes = (notes, count, layer, selectedFamilies) => {
             let availableNotes = filterNotes(notes);
             if (availableNotes.length < count) {
                 console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
                 availableNotes = availableNotes.concat(notes);
             }
             let selectedNotes = [];
-            const selectedFamilies = new Set();
             const getNoteFamily = (note) => {
-    const base = note.split('-')[0].toLowerCase();
-    if (base.includes('allspice')) return 'allspice'; // Normalize Allspice variants
-    return base;
-};
+                const base = note.split('-')[0].toLowerCase();
+                if (base.includes('allspice')) return 'allspice';
+                return base;
+            };
             const primaryStyle = topCategories.style.primary;
             const primaryEmotion = topCategories.emotion.primary;
             const secondaryStyle = topCategories.style.secondary;
@@ -1565,30 +1564,31 @@
         console.log(`Variance: ${variance([...styleScores, ...emotionScores]).toFixed(3)}`);
         
         let topCount = Math.max(2, Math.min(5, Math.round(topWeight * totalNotes)));
-        let heartCount = Math.max(3, Math.min(5, Math.round(heartWeight * totalNotes * 1.2))); // Scale heart weight
+        let heartCount = Math.max(3, Math.min(5, Math.round(heartWeight * totalNotes * 1.2)));
         let baseCount = Math.max(2, Math.min(5, Math.round(baseWeight * totalNotes)));
 
         console.log(`Initial Counts: Top ${topCount}, Heart ${heartCount}, Base ${baseCount}`);
 
         let currentTotal = topCount + heartCount + baseCount;
+        const selectedFamilies = new Set(); // Shared across layers
         while (currentTotal !== totalNotes) {
             if (currentTotal < totalNotes) {
-                if (heartCount < 5) heartCount++; // Prioritize heart
-                else if (baseCount < 4) baseCount++; // Target 4 base
+                if (heartCount < 5) heartCount++;
+                else if (baseCount < 4) baseCount++;
                 else if (topCount < 5) topCount++;
             } else {
-                if (baseCount > 4) baseCount--; // Reduce base first
+                if (baseCount > 4) baseCount--;
                 else if (topCount > 2 && topCount > heartCount) topCount--;
-                else if (heartCount > 3) heartCount--; // Only reduce heart if > 3
+                else if (heartCount > 3) heartCount--;
             }
             currentTotal = topCount + heartCount + baseCount;
         }
 
         console.log(`Final Counts: Top ${topCount}, Heart ${heartCount}, Base ${baseCount}`);
 
-        blend.top = selectNotes(familyNotes[0], topCount, 'top');
-        blend.heart = selectNotes(familyNotes[1], heartCount, 'heart');
-        blend.base = selectNotes(familyNotes[2], baseCount, 'base');
+        blend.top = selectNotes(familyNotes[0], topCount, 'top', selectedFamilies);
+        blend.heart = selectNotes(familyNotes[1], heartCount, 'heart', selectedFamilies);
+        blend.base = selectNotes(familyNotes[2], baseCount, 'base', selectedFamilies);
 
         console.log(`Blend allocation: ${topCount} top, ${heartCount} heart, ${baseCount} base`);
         console.log('Generated blend:', blend);
