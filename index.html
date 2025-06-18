@@ -1421,45 +1421,48 @@
                 }
             },
             calculateConfidence: function() {
-                try {
-                    console.log('Calculating confidence score...');
-                    const totalResponses = this.answers.filter(a => a !== undefined).length;
-                    let consistencyScore = 0;
-                    let coherenceScore = 0;
-                    let responseTimeScore = 0;
+    try {
+        console.log('Calculating confidence score...');
+        const totalResponses = this.answers.filter(a => a !== undefined).length;
+        let consistencyScore = 0;
+        let coherenceScore = 0;
+        let responseTimeScore = 0;
 
-                    for (let category in this.score) {
-                        const scores = Object.values(this.score[category]);
-                        const maxScore = Math.max(...scores);
-                        const secondMaxScore = scores.sort((a, b) => b - a)[1] || 0;
-                        if (maxScore > 0) {
-                            consistencyScore += (maxScore - secondMaxScore) / maxScore;
-                        }
-                    }
-                    consistencyScore /= Object.keys(this.score).length;
+        for (let category in this.score) {
+            const scores = Object.values(this.score[category]);
+            const maxScore = Math.max(...scores);
+            const secondMaxScore = scores.sort((a, b) => b - a)[1] || 0;
+            if (maxScore > 0) {
+                consistencyScore += (maxScore - secondMaxScore) / maxScore;
+            }
+        }
+        consistencyScore /= Object.keys(this.score).length;
 
-                    const style = this.getTopCategories().style.primary;
-                    const family = this.getTopCategories().family.primary;
-                    const validPairs = {
-                        elegant: ['oriental', 'floral'], bold: ['spicy', 'citrus'], mysterious: ['woody', 'oriental'],
-                        refreshing: ['citrus', 'aquatic'], playful: ['citrus', 'gourmand'], sensual: ['floral', 'oriental'],
-                        exotic: ['spicy', 'oriental'], minimalist: ['aquatic', 'woody'], adventurous: ['spicy', 'woody'],
-                        classic: ['floral', 'oriental'], bohemian: ['floral', 'gourmand'], modern: ['citrus', 'aquatic']
-                    };
-                    coherenceScore = validPairs[style].includes(family) ? 1 : 0.5;
+        const style = this.getTopCategories().style.primary;
+        const family = this.getTopCategories().family.primary;
+        const validPairs = {
+            elegant: ['oriental', 'floral'], bold: ['spicy', 'citrus'], mysterious: ['woody', 'oriental'],
+            refreshing: ['citrus', 'aquatic'], playful: ['citrus', 'gourmand'], sensual: ['floral', 'oriental'],
+            exotic: ['spicy', 'oriental'], minimalist: ['aquatic', 'woody'], adventurous: ['spicy', 'woody'],
+            classic: ['floral', 'oriental'], bohemian: ['floral', 'gourmand'], modern: ['citrus', 'aquatic']
+        };
+        coherenceScore = validPairs[style].includes(family) ? 1 : 0.5;
 
-                    const durations = this.responseTimes.map(t => t?.duration || 0).filter(d => d > 0);
-                    const avgDuration = durations.length ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
-                    responseTimeScore = durations.every(d => d >= 1000 && d <= 30000) ? 1 : 0.8;
+        const durations = this.responseTimes.map(t => t?.duration || 0).filter(d => d > 0);
+        const avgDuration = durations.length ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+        responseTimeScore = durations.every(d => d >= 1000 && d <= 30000) ? 1 : 0.8;
 
-                    const baseConfidence = consistencyScore * 0.6 + coherenceScore * 0.2 + responseTimeScore * 0.2;
-                    const responseCompleteness = (totalResponses / this.questions.length);
-                    return Math.min(99, (baseConfidence * 0.8 + responseCompleteness * 0.2) * 100);
-                } catch (error) {
-                    console.error('Failed to calculate confidence:', error);
-                    return 50;
-                }
-            },
+        console.log(`Consistency: ${consistencyScore.toFixed(3)}, Coherence: ${coherenceScore.toFixed(3)}, Response Time: ${responseTimeScore.toFixed(3)}`);
+        console.log(`Durations: ${durations.map(d => (d/1000).toFixed(1)).join('s, ')}s, Avg: ${(avgDuration/1000).toFixed(1)}s`);
+
+        const baseConfidence = consistencyScore * 0.6 + coherenceScore * 0.2 + responseTimeScore * 0.2;
+        const responseCompleteness = (totalResponses / this.questions.length);
+        return Math.min(99, (baseConfidence * 0.8 + responseCompleteness * 0.2) * 100);
+    } catch (error) {
+        console.error('Failed to calculate confidence:', error);
+        return 50;
+    }
+},
            getPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
     try {
         console.log(`Generating perfume blend for family: ${dominantFamily}, pref: ${ingredientPref}`);
