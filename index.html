@@ -1191,7 +1191,7 @@ No personal data or quiz responses are stored, retained, or shared with third pa
         const nextBtn = document.getElementById('nextBtn');
         const optionsContainer = document.getElementById('optionsContainer');
         
-        if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer || {
+        if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer) {
             throw new Error('Required DOM elements not found');
         }
 
