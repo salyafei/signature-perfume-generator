@@ -1460,12 +1460,150 @@
                     return 50;
                 }
             },
+           getPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
+    try {
+        console.log(`Generating perfume blend for family: ${dominantFamily}, pref: ${ingredientPref}`);
+        let blend = { top: [], heart: [], base: [] };
+        const familyNotes = this.pyramidNotes[dominantFamily];
+
+        if (!familyNotes || !familyNotes[0] || !familyNotes[1] || !familyNotes[2]) {
+            throw new Error('Invalid family notes structure');
+        }
+
+        const filterNotes = (notesArray) => {
+            if (ingredientPref === 'natural') {
+                return notesArray.filter(note => note.endsWith('(N)'));
+            } else if (ingredientPref === 'synthetic') {
+                return notesArray.filter(note => note.endsWith('(B)') || note.endsWith('(S)'));
+            }
+            return notesArray;
+        };
+
+        const selectNotes = (notes, count, layer, selectedFamilies) => {
+            let availableNotes = filterNotes(notes);
+            if (availableNotes.length < count) {
+                console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
+                availableNotes = availableNotes.concat(notes);
+            }
+            let selectedNotes = [];
             const getNoteFamily = (note) => {
-    const base = note.split('-')[0].toLowerCase();
-    if (base.includes('allspice')) return 'allspice';
-    if (base.includes('clove')) return 'clove'; // Normalize clove variants
-    return base;
-};
+                // Remove suffixes like (N), (B), (S), and regional descriptors after hyphens
+                let base = note.replace(/\s*\(.*\)$/g, '').split('-')[0].toLowerCase().trim();
+                // Handle special cases with spaces (e.g., "Pink Pepper" -> "pinkpepper")
+                base = base.replace(/\s+/g, '');
+                return base; // e.g., "Clove-Madagascan-Bud-(N)" -> "clove", "Pink-Pepper-Brazilian-(N)" -> "pinkpepper"
+            };
+            const primaryStyle = topCategories.style.primary;
+            const primaryEmotion = topCategories.emotion.primary;
+            const secondaryStyle = topCategories.style.secondary;
+            const secondaryEmotion = topCategories.emotion.secondary;
+
+            const traitNotes = [
+                ...(this.traitToNoteMap[primaryStyle] || []),
+                ...(this.traitToNoteMap[primaryEmotion] || []),
+                ...(this.traitToNoteMap[secondaryStyle] || []),
+                ...(this.traitToNoteMap[secondaryEmotion] || [])
+            ].filter(note => availableNotes.includes(note));
+
+            console.log(`Trait notes for ${layer}:`, traitNotes);
+
+            for (let i = traitNotes.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
+            }
+
+            for (let i = 0; i < count && traitNotes.length > 0; i++) {
+                const note = traitNotes.shift();
+                const noteFamily = getNoteFamily(note);
+                if (!selectedFamilies.has(noteFamily)) {
+                    selectedNotes.push(note);
+                    selectedFamilies.add(noteFamily);
+                    availableNotes = availableNotes.filter(n => n !== note);
+                    console.log(`Selected ${note} for ${layer}, family: ${noteFamily}`);
+                }
+            }
+
+            while (selectedNotes.length < count && availableNotes.length > 0) {
+                const noteIndex = Math.floor(Math.random() * availableNotes.length);
+                const note = availableNotes[noteIndex];
+                const noteFamily = getNoteFamily(note);
+                if (!selectedFamilies.has(noteFamily)) {
+                    selectedNotes.push(note);
+                    selectedFamilies.add(noteFamily);
+                    availableNotes.splice(noteIndex, 1);
+                    console.log(`Fallback selected ${note} for ${layer}, family: ${noteFamily}`);
+                } else {
+                    availableNotes.splice(noteIndex, 1);
+                }
+            }
+
+            if (selectedNotes.length < count) {
+                console.warn(`Only selected ${selectedNotes.length} notes for ${layer}`);
+            }
+            return selectedNotes;
+        };
+
+        const topTraits = ['bold', 'joy', 'excitement', 'playful', 'refreshing', 'curiosity'];
+        const heartTraits = ['elegant', 'romance', 'serenity', 'sensual', 'empathy', 'intrigue'];
+        const baseTraits = ['mysterious', 'reflection', 'melancholy', 'power', 'nostalgia', 'confidence', 'ambition'];
+
+        let topScore = topTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
+        let heartScore = heartTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
+        let baseScore = baseTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
+        const totalScore = topScore + heartScore + baseScore || 1;
+
+        const topWeight = topScore / totalScore;
+        const heartWeight = heartScore / totalScore;
+        const baseWeight = baseScore / totalScore;
+
+        const styleScores = Object.values(this.score.style).filter(score => score !== undefined);
+        const emotionScores = Object.values(this.score.emotion).filter(score => score !== undefined);
+        const variance = (arr) => {
+            if (!arr.length) return 0;
+            const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+            return Math.sqrt(arr.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / arr.length);
+        };
+        const totalNotes = variance([...styleScores, ...emotionScores]) > 2 ? 12 : 9;
+
+        console.log(`Scores: Top ${topScore}, Heart ${heartScore}, Base ${baseScore}`);
+        console.log(`Weights: Top ${topWeight.toFixed(3)}, Heart ${heartWeight.toFixed(3)}, Base ${baseWeight.toFixed(3)}`);
+        console.log(`Variance: ${variance([...styleScores, ...emotionScores]).toFixed(3)}`);
+        
+        let topCount = Math.max(2, Math.min(5, Math.round(topWeight * totalNotes)));
+        let heartCount = Math.max(3, Math.min(5, Math.round(heartWeight * totalNotes * 1.2)));
+        let baseCount = Math.max(2, Math.min(5, Math.round(baseWeight * totalNotes)));
+
+        console.log(`Initial Counts: Top ${topCount}, Heart ${heartCount}, Base ${baseCount}`);
+
+        let currentTotal = topCount + heartCount + baseCount;
+        const selectedFamilies = new Set();
+        while (currentTotal !== totalNotes) {
+            if (currentTotal < totalNotes) {
+                if (heartCount < 5) heartCount++;
+                else if (baseCount < 4) baseCount++;
+                else if (topCount < 5) topCount++;
+            } else {
+                if (baseCount > 4) baseCount--;
+                else if (topCount > 2 && topCount > heartCount) topCount--;
+                else if (heartCount > 3) heartCount--;
+            }
+            currentTotal = topCount + heartCount + baseCount;
+        }
+
+        console.log(`Final Counts: Top ${topCount}, Heart ${heartCount}, Base ${baseCount}`);
+
+        blend.top = selectNotes(familyNotes[0], topCount, 'top', selectedFamilies);
+        blend.heart = selectNotes(familyNotes[1], heartCount, 'heart', selectedFamilies);
+        blend.base = selectNotes(familyNotes[2], baseCount, 'base', selectedFamilies);
+
+        console.log(`Blend allocation: ${topCount} top, ${heartCount} heart, ${baseCount} base`);
+        console.log('Generated blend:', blend);
+        return blend;
+    } catch (error) {
+        console.error('Failed to generate perfume blend:', error);
+        return { top: [], heart: [], base: [] };
+    }
+},
             generateResult: function() {
                 try {
                     console.log('Generating result...');
