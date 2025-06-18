@@ -1490,11 +1490,11 @@
             }
             let selectedNotes = [];
             const getNoteFamily = (note) => {
-    let base = note.replace(/\s*\(.*\)$/g, '').trim().toLowerCase();
-    // Split on hyphen or space, take first part
-    base = base.split(/[- ]/)[0];
-    return base; // e.g., "Amber Accord (B)" -> "amber", "Amber-Emirati-Glow-(B)" -> "amber"
-};
+                let base = note.replace(/\s*\(.*\)$/g, '').trim().toLowerCase();
+                base = base.split(/[- ]/)[0];
+                if (base.startsWith('ambrox')) return 'ambrox'; // Normalize ambrox variants
+                return base; // e.g., "Ambrox-Oak-(B)" -> "ambrox", "Patchouli-Bangladeshi-(N)" -> "patchouli"
+            };
             const primaryStyle = topCategories.style.primary;
             const primaryEmotion = topCategories.emotion.primary;
             const secondaryStyle = topCategories.style.secondary;
@@ -1539,6 +1539,8 @@
                 }
             }
 
+            console.log(`Selected families after ${layer}:`, Array.from(selectedFamilies));
+
             if (selectedNotes.length < count) {
                 console.warn(`Only selected ${selectedNotes.length} notes for ${layer}`);
             }
@@ -1565,14 +1567,14 @@
             const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
             return Math.sqrt(arr.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / arr.length);
         };
-        const totalNotes = variance([...styleScores, ...emotionScores]) > 2 ? 12 : 9;
+        const totalNotes = variance([...styleScores, ...emotionScores]) > 1.8 ? 12 : 9;
 
         console.log(`Scores: Top ${topScore}, Heart ${heartScore}, Base ${baseScore}`);
         console.log(`Weights: Top ${topWeight.toFixed(3)}, Heart ${heartWeight.toFixed(3)}, Base ${baseWeight.toFixed(3)}`);
         console.log(`Variance: ${variance([...styleScores, ...emotionScores]).toFixed(3)}`);
         
         let topCount = Math.max(2, Math.min(5, Math.round(topWeight * totalNotes)));
-        let heartCount = Math.max(3, Math.min(5, Math.round(heartWeight * totalNotes * 1.2)));
+        let heartCount = Math.max(2, Math.min(5, Math.round(heartWeight * totalNotes))); // Remove 1.2 scaling
         let baseCount = Math.max(2, Math.min(5, Math.round(baseWeight * totalNotes)));
 
         console.log(`Initial Counts: Top ${topCount}, Heart ${heartCount}, Base ${baseCount}`);
@@ -1581,13 +1583,13 @@
         const selectedFamilies = new Set();
         while (currentTotal !== totalNotes) {
             if (currentTotal < totalNotes) {
-                if (heartCount < 5) heartCount++;
-                else if (baseCount < 4) baseCount++;
-                else if (topCount < 5) topCount++;
+                if (topCount < 3) topCount++; // Prioritize top to reach 3
+                else if (baseCount < 5) baseCount++;
+                else if (heartCount < 3) heartCount++;
             } else {
-                if (baseCount > 4) baseCount--;
-                else if (topCount > 2 && topCount > heartCount) topCount--;
-                else if (heartCount > 3) heartCount--;
+                if (heartCount > 3 && heartWeight < baseWeight) heartCount--; // Reduce heart if base dominates
+                else if (baseCount > 5) baseCount--;
+                else if (topCount > 3) topCount--;
             }
             currentTotal = topCount + heartCount + baseCount;
         }
