@@ -1487,12 +1487,11 @@
             }
             let selectedNotes = [];
             const getNoteFamily = (note) => {
-                // Remove suffixes like (N), (B), (S), and regional descriptors after hyphens
-                let base = note.replace(/\s*\(.*\)$/g, '').split('-')[0].toLowerCase().trim();
-                // Handle special cases with spaces (e.g., "Pink Pepper" -> "pinkpepper")
-                base = base.replace(/\s+/g, '');
-                return base; // e.g., "Clove-Madagascan-Bud-(N)" -> "clove", "Pink-Pepper-Brazilian-(N)" -> "pinkpepper"
-            };
+    let base = note.replace(/\s*\(.*\)$/g, '').trim().toLowerCase();
+    // Split on hyphen or space, take first part
+    base = base.split(/[- ]/)[0];
+    return base; // e.g., "Amber Accord (B)" -> "amber", "Amber-Emirati-Glow-(B)" -> "amber"
+};
             const primaryStyle = topCategories.style.primary;
             const primaryEmotion = topCategories.emotion.primary;
             const secondaryStyle = topCategories.style.secondary;
