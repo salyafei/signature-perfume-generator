@@ -1663,7 +1663,7 @@
                         aquatic: this.currentLang === 'en' ? 'fresh and clean' : 'منعش ونظيف'
                     };
                     const analysis = this.currentLang === 'en' ?
-                        `Your fragrance profile reveals ${styleDesc[topCategories.style.primary]} with undertones of ${styleDesc[topCategories.style.secondary]}. You embody a ${emotionDesc[topCategories.emotion.primary]} spirit, often seeking moments of ${emotionDesc[topCategories.emotion.secondary]}. Your scent leans toward a ${familyDesc[topCategories.family.primary]} essence, capturing your unique personality.` :
+                        `Your fragrance profile reveals ${styleDesc[topCategories.style.primary]} with undertones of ${styleDesc[topCategories.style.secondary]}. You embody the ${emotionDesc[topCategories.emotion.primary]} spirit, often seeking moments of ${emotionDesc[topCategories.emotion.secondary]}. Your scent leans toward a ${familyDesc[topCategories.family.primary]} essence, capturing your unique personality.` :
                         `ملف عطرك يكشف عن ${styleDesc[topCategories.style.primary]} مع لمحات من ${styleDesc[topCategories.style.secondary]}. أنت تجسد روح ${emotionDesc[topCategories.emotion.primary]}، غالبًا ما تسعى للحظات من ${emotionDesc[topCategories.emotion.secondary]}. عطرك يميل نحو جوهر ${familyDesc[topCategories.family.primary]}، يعكس شخصيتك الفريدة.`;
                     return analysis;
                 } catch (error) {
