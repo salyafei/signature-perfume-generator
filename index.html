@@ -1487,7 +1487,11 @@
             }
             let selectedNotes = [];
             const selectedFamilies = new Set();
-            const getNoteFamily = (note) => note.split('-')[0]; // e.g., "Clove-Tunisian-Bud-(N)" -> "Clove"
+            const getNoteFamily = (note) => {
+    const base = note.split('-')[0].toLowerCase();
+    if (base.includes('allspice')) return 'allspice'; // Normalize Allspice variants
+    return base;
+};
             const primaryStyle = topCategories.style.primary;
             const primaryEmotion = topCategories.emotion.primary;
             const secondaryStyle = topCategories.style.secondary;
