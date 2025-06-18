@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Nada • Fragrance Personality Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <img src="./al-nada-logo.png" alt="Al Nada Logo" class="logo-img" onerror="console.error('Logo failed to load'); this.src='https://via.placeholder.com/150?text=Logo+Missing';" />
+                <h2 class="main-title">Discover Your Signature Fragrance</h2>
+                <p class="intro-text" data-lang="en">This quiz crafts a personalized perfume based on your personality, emotions, and preferences. Answer 20 questions honestly to create a unique fragrance blend.</p>
+                <p class="intro-text" data-lang="ar" style="display: none;">هذا الاستبيان يصيغ عطرًا مخصصًا بناءً على شخصيتك، عواطفك، وتفضيلاتك. أجب على 20 سؤالًا بصدق لإنشاء مزيج عطري فريد.</p>
+                <p class="subtitle" id="subtitle">Discover Your Signature Scent</p>
+            </div>
+            <div class="form-section">
+                <label for="birthDateInput" class="form-label">Your Birth Date:</label>
+                <input type="date" id="birthDateInput" class="form-input" required>
+                <label for="ingredientPref" class="form-label">Ingredient Preference:</label>
+                <select id="ingredientPref" class="form-input">
+                    <option value="both">Both Natural & Synthetic</option>
+                    <option value="natural">Natural Only</option>
+                    <option value="synthetic">Synthetic Only</option>
+                </select>
+                <button id="startQuizBtn" class="btn primary-btn">Start Quiz</button>
+            </div>
+        </div>
+        <div class="quiz-section" style="display: none;">
+            <div class="language-toggle">
+                <button id="langToggle" class="lang-btn">عربي</button>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <p class="progress-text">Question <span id="currentQ">1</span> of <span id="totalQ">20</span></p>
+            <h2 id="questionText" class="question-text"></h2>
+            <div id="optionsContainer" class="options-container"></div>
+            <div class="navigation-buttons">
+                <button id="prevBtn" class="btn secondary-btn" disabled>Previous</button>
+                <button id="nextBtn" class="btn primary-btn" disabled>Next</button>
+            </div>
+        </div>
+        <div class="result-section" style="display: none;">
+            <h2 class="result-title">Your Signature Fragrance Profile</h2>
+            <p class="result-subtitle" id="resultSubtitle">A bespoke fragrance crafted for your unique essence.</p>
+            <div class="personality-analysis" id="personalityAnalysis"></div>
+            <div class="fragrance-composition" id="fragranceComposition"></div>
+            <p class="confidence-score" id="confidenceScore"></p>
+            <p class="disclaimer">DISCLAIMER:The fragrance quiz is designed to propose fragrance notes that may correspond to your personality, based exclusively on the responses you provide. The suggested blend is a preliminary recommendation only and does not guarantee an exact match to your personality, preferences, or expectations. To achieve a more precise and personalized fragrance, further refinement by a certified Perfume Nose Expert from Al Nada House of Perfume is required.
+No warranties, whether express or implied, are provided regarding the accuracy, appropriateness, or completeness of the quiz results. The quiz is offered solely for entertainment purposes, and any decisions or actions based on the results are undertaken at your own risk and discretion.
+If you opt to engage Al Nada House of Perfume Experts for a consultation to refine your fragrance blend and receive a detailed formulation, you may share your quiz results by sending a screenshot to alnadaperfumes@gmail.com. A non-refundable consultation fee of 50 AED is mandatory and must be paid in full prior to scheduling or conducting the fine-tuning session. Payment of the consultation fee does not guarantee a final fragrance blend, satisfaction with the results, or any specific outcome, as results depend on individual preferences, expert recommendations, and your subjective experience. All consultations are undertaken at your own risk.
+All fees, services, and outcomes are governed by the terms and conditions of Al Nada House of Perfume, which you are responsible for reviewing and understanding prior to engaging in any consultation. We bear no liability for any dissatisfaction, costs, damages, or consequences arising from the quiz results, consultations, or any related services.
+No personal data or quiz responses are stored, retained, or shared with third parties under any circumstances, except as explicitly required to facilitate your consultation with Al Nada House of Perfume upon your request. Any data shared with Al Nada House of Perfume is subject to their privacy policies, which you are responsible for reviewing. </p>
+            <button id="shareResultsBtn" class="btn primary-btn">Share Results</button>
+        </div>
+    </div>
+    
+    <style>
+    :root {
+        --coral-rose: #ff6f61;
+        --deep-burgundy: #4a2c40;
+        --earthy-green: #3a5f3f;
+        --soft-white: #f9f5f0;
+        --light-coral: #ff8c82;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: var(--soft-white);
+        color: var(--deep-burgundy);
+        line-height: 1.6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        width: 100%;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        margin: auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .logo-img {
+        max-width: 200px;
+        margin-bottom: 10px;
+    }
+
+    .main-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        color: var(--deep-burgundy);
+        margin-bottom: 20px;
+    }
+
+    .intro-text {
+        font-size: 1.1rem;
+        color: var(--deep-burgundy);
+        max-width: 800px;
+        margin: 10px auto;
+        text-align: justify;
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+        color: var(--earthy-green);
+        margin-top: 30px;
+    }
+
+    .form-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .form-label {
+        font-size: 1.2rem;
+        color: var(--deep-burgundy);
+    }
+
+    .form-input {
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid var(--light-coral);
+        border-radius: 10px;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .primary-btn {
+        background: var(--coral-rose);
+        color: #fff;
+    }
+
+    .primary-btn:hover {
+        background: var(--light-coral);
+    }
+
+    .secondary-btn {
+        background: var(--earthy-green);
+        color: #fff;
+    }
+
+    .secondary-btn:hover {
+        background: #4a7f4d;
+    }
+
+    .quiz-section {
+        text-align: center;
+    }
+
+    .language-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .lang-btn {
+        background: none;
+        border: none;
+        font-size: 1rem;
+        color: var(--coral-rose);
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: #e0e0e0;
+        border-radius: 5px;
+        margin: 20px 0;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--coral-rose);
+        border-radius: 5px;
+        width: 0;
+        transition: width 0.3s ease;
+    }
+
+    .progress-text {
+        font-size: 1rem;
+        color: var(--deep-burgundy);
+        margin-bottom: 20px;
+    }
+
+    .question-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: var(--deep-burgundy);
+        margin-bottom: 30px;
+    }
+
+    .options-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .option-card {
+        background: var(--soft-white);
+        border: 2px solid var(--light-coral);
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        min-height: 80px;
+    }
+
+    .option-card:hover {
+        background: var(--light-coral);
+        color: #fff;
+    }
+
+    .option-card.selected {
+        background: var(--coral-rose);
+        color: #fff;
+        border-color: var(--coral-rose);
+    }
+
+    .option-text {
+        font-size: 1.1rem;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .result-section {
+        text-align: center;
+    }
+
+    .result-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        color: var(--deep-burgundy);
+        margin-bottom: 20px;
+    }
+
+    .result-subtitle {
+        font-size: 1.5rem;
+        color: var(--earthy-green);
+        margin-bottom: 30px;
+    }
+
+    .personality-analysis {
+        font-size: 1.1rem;
+        color: var(--deep-burgundy);
+        max-width: 800px;
+        margin: 20px auto;
+        text-align: justify;
+    }
+
+    .fragrance-composition {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .note-category {
+        background: var(--soft-white);
+        border-radius: 15px;
+        padding: 20px;
+        border: 2px solid var(--light-coral);
+        text-align: center;
+    }
+
+    .note-list {
+        color: var(--earthy-green);
+        font-weight: 500;
+    }
+
+    .confidence-score {
+        font-size: 1.2rem;
+        color: var(--coral-rose);
+        margin: 20px 0;
+    }
+
+    .disclaimer {
+        font-size: 0.9rem;
+        color: var(--earthy-green);
+        margin-top: 20px;
+        text-align: justify;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        .main-title {
+            font-size: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.8rem;
+        }
+
+        .options-container {
+            grid-template-columns: 1fr;
+        }
+
+        .fragrance-composition {
+            grid-template-columns: 1fr;
+        }
+
+        .navigation-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+</style>
+
+<script>
+    // Note Registry: ~100 unique IDs per family (~700 total)
+    const noteRegistry = {
+        // Oriental (~100 notes)
+        "rose-moroccan-valley-n": { name: "Rose-Moroccan-Valley-(N)", family: "oriental", layer: "top", type: "natural" },
+        "vanilla-tahitian-orchid-n": { name: "Vanilla-Tahitian-Orchid-(N)", family: "oriental", layer: "top", type: "natural" },
+        "clary-sage-turkish-leaf-n": { name: "Clary-Sage-Turkish-Leaf-(N)", family: "oriental", layer: "top", type: "natural" },
+        "pink-pepper-bahraini-n": { name: "Pink-Pepper-Bahraini-(N)", family: "oriental", layer: "top", type: "natural" },
+        "saffron-kashmiri-stigma-n": { name: "Saffron-Kashmiri-Stigma-(N)", family: "oriental", layer: "top", type: "natural" },
+        "bergamot-tunisian-rind-n": { name: "Bergamot-Tunisian-Rind-(N)", family: "oriental", layer: "top", type: "natural" },
+        "mandarin-sicilian-zest-n": { name: "Mandarin-Sicilian-Zest-(N)", family: "oriental", layer: "top", type: "natural" },
+        "osmanthus-chinese-blossom-n": { name: "Osmanthus-Chinese-Blossom-(N)", family: "oriental", layer: "top", type: "natural" },
+        "neroli-egyptian-bloom-n": { name: "Neroli-Egyptian-Bloom-(N)", family: "oriental", layer: "top", type: "natural" },
+        "juniper-moroccan-berry-n": { name: "Juniper-Moroccan-Berry-(N)", family: "oriental", layer: "top", type: "natural" },
+        "cardamom-indian-pod-n": { name: "Cardamom-Indian-Pod-(N)", family: "oriental", layer: "top", type: "natural" },
+        "lychee-thai-fruit-n": { name: "Lychee-Thai-Fruit-(N)", family: "oriental", layer: "top", type: "natural" },
+        "kumquat-japanese-zest-n": { name: "Kumquat-Japanese-Zest-(N)", family: "oriental", layer: "top", type: "natural" },
+        "bitter-almond-moroccan-n": { name: "Bitter-Almond-Moroccan-(N)", family: "oriental", layer: "top", type: "natural" },
+        "star-anise-vietnamese-n": { name: "Star-Anise-Vietnamese-(N)", family: "oriental", layer: "top", type: "natural" },
+        "pomegranate-iranian-seed-n": { name: "Pomegranate-Iranian-Seed-(N)", family: "oriental", layer: "top", type: "natural" },
+        "fig-mediterranean-fruit-n": { name: "Fig-Mediterranean-Fruit-(N)", family: "oriental", layer: "top", type: "natural" },
+        "cinnamon-ceylon-bark-n": { name: "Cinnamon-Ceylon-Bark-(N)", family: "oriental", layer: "top", type: "natural" },
+        "ginger-omani-root-n": { name: "Ginger-Omani-Root-(N)", family: "oriental", layer: "top", type: "natural" },
+        "rose-omani-petal-n": { name: "Rose-Omani-Petal-(N)", family: "oriental", layer: "top", type: "natural" },
+        "mandarin-moroccan-peel-n": { name: "Mandarin-Moroccan-Peel-(N)", family: "oriental", layer: "top", type: "natural" },
+        "apricot-turkish-fruit-n": { name: "Apricot-Turkish-Fruit-(N)", family: "oriental", layer: "top", type: "natural" },
+        "peach-georgian-nectar-n": { name: "Peach-Georgian-Nectar-(N)", family: "oriental", layer: "top", type: "natural" },
+        "plum-damascene-n": { name: "Plum-Damascene-(N)", family: "oriental", layer: "top", type: "natural" },
+        "date-medjool-n": { name: "Date-Medjool-(N)", family: "oriental", layer: "top", type: "natural" },
+        "coriander-egyptian-seed-n": { name: "Coriander-Egyptian-Seed-(N)", family: "oriental", layer: "top", type: "natural" },
+        "fennel-lebanese-seed-n": { name: "Fennel-Lebanese-Seed-(N)", family: "oriental", layer: "top", type: "natural" },
+        "caraway-tunisian-n": { name: "Caraway-Tunisian-(N)", family: "oriental", layer: "top", type: "natural" },
+        "anise-syrian-seed-n": { name: "Anise-Syrian-Seed-(N)", family: "oriental", layer: "top", type: "natural" },
+        "nutmeg-indonesian-n": { name: "Nutmeg-Indonesian-(N)", family: "oriental", layer: "top", type: "natural" },
+        "allspice-jamaican-n": { name: "Allspice-Jamaican-(N)", family: "oriental", layer: "top", type: "natural" },
+        "cassia-chinese-bark-n": { name: "Cassia-Chinese-Bark-(N)", family: "oriental", layer: "top", type: "natural" },
+        "galangal-thai-root-n": { name: "Galangal-Thai-Root-(N)", family: "oriental", layer: "top", type: "natural" },
+        "ylang-ylang-comorian-n": { name: "Ylang-Ylang-Comorian-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "tuberose-indian-sunset-n": { name: "Tuberose-Indian-Sunset-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "saffron-turkish-absolute-n": { name: "Saffron-Turkish-Absolute-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "iris-florentine-powder-n": { name: "Iris-Florentine-Powder-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "champaca-bangladeshi-n": { name: "Champaca-Bangladeshi-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "myrrh-yemeni-sacred-n": { name: "Myrrh-Yemeni-Sacred-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "rose-bulgarian-night-n": { name: "Rose-Bulgarian-Night-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "jasmine-moroccan-dusk-n": { name: "Jasmine-Moroccan-Dusk-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "tuberose-mexican-dawn-n": { name: "Tuberose-Mexican-Dawn-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "gardenia-hawaiian-bloom-n": { name: "Gardenia-Hawaiian-Bloom-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "heliotrope-fijian-n": { name: "Heliotrope-Fijian-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "lotus-egyptian-white-n": { name: "Lotus-Egyptian-White-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "frangipani-maldivian-n": { name: "Frangipani-Maldivian-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "magnolia-chinese-blossom-n": { name: "Magnolia-Chinese-Blossom-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "iris-tuscan-root-n": { name: "Iris-Tuscan-Root-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "saffron-iranian-absolute-n": { name: "Saffron-Iranian-Absolute-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "myrrh-sudanese-gum-n": { name: "Myrrh-Sudanese-Gum-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "champaca-thai-golden-n": { name: "Champaca-Thai-Golden-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "rose-taif-petal-n": { name: "Rose-Taif-Petal-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "jasmine-tunisian-star-n": { name: "Jasmine-Tunisian-Star-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "ylang-ylang-seychelles-n": { name: "Ylang-Ylang-Seychelles-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "tuberose-fijian-bloom-n": { name: "Tuberose-Fijian-Bloom-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "gardenia-vietnamese-n": { name: "Gardenia-Vietnamese-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "heliotrope-tahitian-vanilla-n": { name: "Heliotrope-Tahitian-Vanilla-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "lotus-indian-sacred-n": { name: "Lotus-Indian-Sacred-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "frangipani-balinese-dream-n": { name: "Frangipani-Balinese-Dream-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "magnolia-laotian-petal-n": { name: "Magnolia-Laotian-Petal-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "iris-moroccan-rhizome-n": { name: "Iris-Moroccan-Rhizome-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "saffron-persian-absolute-n": { name: "Saffron-Persian-Absolute-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "myrrh-omani-frankincense-n": { name: "Myrrh-Omani-Frankincense-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "champaca-sri-lankan-n": { name: "Champaca-Sri-Lankan-(N)", family: "oriental", layer: "heart", type: "natural" },
+        "amber-emirati-glow-b": { name: "Amber-Emirati-Glow-(B)", family: "oriental", layer: "base", type: "synthetic" },
+        "oud-myanmar-wood-n": { name: "Oud-Myanmar-Wood-(N)", family: "oriental", layer: "base", type: "natural" },
+        "musk-moroccan-soft-b": { name: "Musk-Moroccan-Soft-(B)", family: "oriental", layer: "base", type: "synthetic" },
+        "benzoin-siam-n": { name: "Benzoin-Siam-(N)", family: "oriental", layer: "base", type: "natural" },
+        "patchouli-indonesian-deep-n": { name: "Patchouli-Indonesian-Deep-(N)", family: "oriental", layer: "base", type: "natural" },
+        "sandalwood-australian-creamy-n": { name: "Sandalwood-Australian-Creamy-(N)", family: "oriental", layer: "base", type: "natural" },
+        "frankincense-omani-tear-n": { name: "Frankincense-Omani-Tear-(N)", family: "oriental", layer: "base", type: "natural" },
+        "tonka-brazilian-roast-n": { name: "Tonka-Brazilian-Roast-(N)", family: "oriental", layer: "base", type: "natural" },
+        "vanilla-reunion-orchid-n": { name: "Vanilla-Reunion-Orchid-(N)", family: "oriental", layer: "base", type: "natural" },
+        "musk-oriental-synthetic-b": { name: "Musk-Oriental-Synthetic-(B)", family: "oriental", layer: "base", type: "synthetic" },
+        "oud-cambodian-dark-n": { name: "Oud-Cambodian-Dark-(N)", family: "oriental", layer: "base", type: "natural" },
+        "benzoin-thai-crystal-n": { name: "Benzoin-Thai-Crystal-(N)", family: "oriental", layer: "base", type: "natural" },
+        "peru-balsam-ecuadorian-n": { name: "Peru-Balsam-Ecuadorian-(N)", family: "oriental", layer: "base", type: "natural" },
+        "civet-indian-synthetic-b": { name: "Civet-Indian-Synthetic-(B)", family: "oriental", layer: "base", type: "synthetic" },
+        "oud-thai-aged-n": { name: "Oud-Thai-Aged-(N)", family: "oriental", layer: "base", type: "natural" },
+        "patchouli-sri-lankan-n": { name: "Patchouli-Sri-Lankan-(N)", family: "oriental", layer: "base", type: "natural" },
+        "sandalwood-tamil-nadu-n": { name: "Sandalwood-Tamil-Nadu-(N)", family: "oriental", layer: "base", type: "natural" },
+        "tonka-venezuelan-dark-n": { name: "Tonka-Venezuelan-Dark-(N)", family: "oriental", layer: "base", type: "natural" },
+        // Citrus (~100 notes)
+        "bergamot-calabrian-rind-n": { name: "Bergamot-Calabrian-Rind-(N)", family: "citrus", layer: "top", type: "natural" },
+        "lemon-sorrento-peel-n": { name: "Lemon-Sorrento-Peel-(N)", family: "citrus", layer: "top", type: "natural" },
+        "yuzu-japanese-citrus-n": { name: "Yuzu-Japanese-Citrus-(N)", family: "citrus", layer: "top", type: "natural" },
+        "grapefruit-florida-pink-n": { name: "Grapefruit-Florida-Pink-(N)", family: "citrus", layer: "top", type: "natural" },
+        "lime-mexican-key-n": { name: "Lime-Mexican-Key-(N)", family: "citrus", layer: "top", type: "natural" },
+        "tangerine-moroccan-zest-n": { name: "Tangerine-Moroccan-Zest-(N)", family: "citrus", layer: "top", type: "natural" },
+        "blood-orange-sicilian-n": { name: "Blood-Orange-Sicilian-(N)", family: "citrus", layer: "top", type: "natural" },
+        "clementine-corsican-n": { name: "Clementine-Corsican-(N)", family: "citrus", layer: "top", type: "natural" },
+        "pomelo-thai-fruit-n": { name: "Pomelo-Thai-Fruit-(N)", family: "citrus", layer: "top", type: "natural" },
+        "verbena-moroccan-leaf-n": { name: "Verbena-Moroccan-Leaf-(N)", family: "citrus", layer: "top", type: "natural" },
+        "litsea-cubeba-vietnamese-n": { name: "Litsea-Cubeba-Vietnamese-(N)", family: "citrus", layer: "top", type: "natural" },
+        "lemon-tunisian-zest-n": { name: "Lemon-Tunisian-Zest-(N)", family: "citrus", layer: "top", type: "natural" },
+        "grapefruit-bahamian-white-n": { name: "Grapefruit-Bahamian-White-(N)", family: "citrus", layer: "top", type: "natural" },
+        "bergamot-tunisian-n": { name: "Bergamot-Tunisian-(N)", family: "citrus", layer: "top", type: "natural" },
+        "lime-persian-green-n": { name: "Lime-Persian-Green-(N)", family: "citrus", layer: "top", type: "natural" },
+        "orange-brazilian-sweet-n": { name: "Orange-Brazilian-Sweet-(N)", family: "citrus", layer: "top", type: "natural" },
+        "mandarin-spanish-red-n": { name: "Mandarin-Spanish-Red-(N)", family: "citrus", layer: "top", type: "natural" },
+        "yuzu-korean-citrus-n": { name: "Yuzu-Korean-Citrus-(N)", family: "citrus", layer: "top", type: "natural" },
+        "blood-orange-maltese-n": { name: "Blood-Orange-Maltese-(N)", family: "citrus", layer: "top", type: "natural" },
+        "clementine-algerian-n": { name: "Clementine-Algerian-(N)", family: "citrus", layer: "top", type: "natural" },
+        "pomelo-vietnamese-n": { name: "Pomelo-Vietnamese-(N)", family: "citrus", layer: "top", type: "natural" },
+        "tangerine-florida-n": { name: "Tangerine-Florida-(N)", family: "citrus", layer: "top", type: "natural" },
+        "verbena-argentinian-n": { name: "Verbena-Argentinian-(N)", family: "citrus", layer: "top", type: "natural" },
+        "litsea-cubeba-chinese-n": { name: "Litsea-Cubeba-Chinese-(N)", family: "citrus", layer: "top", type: "natural" },
+        "lemon-californian-peel-n": { name: "Lemon-Californian-Peel-(N)", family: "citrus", layer: "top", type: "natural" },
+        "grapefruit-texas-ruby-n": { name: "Grapefruit-Texas-Ruby-(N)", family: "citrus", layer: "top", type: "natural" },
+        "bergamot-moroccan-rind-n": { name: "Bergamot-Moroccan-Rind-(N)", family: "citrus", layer: "top", type: "natural" },
+        "lime-australian-finger-n": { name: "Lime-Australian-Finger-(N)", family: "citrus", layer: "top", type: "natural" },
+        "orange-egyptian-navel-n": { name: "Orange-Egyptian-Navel-(N)", family: "citrus", layer: "top", type: "natural" },
+        "mandarin-japanese-satsuma-n": { name: "Mandarin-Japanese-Satsuma-(N)", family: "citrus", layer: "top", type: "natural" },
+        "yuzu-chinese-citrus-n": { name: "Yuzu-Chinese-Citrus-(N)", family: "citrus", layer: "top", type: "natural" },
+        "blood-orange-tunisian-n": { name: "Blood-Orange-Tunisian-(N)", family: "citrus", layer: "top", type: "natural" },
+        "clementine-spanish-n": { name: "Clementine-Spanish-(N)", family: "citrus", layer: "top", type: "natural" },
+        "petitgrain-paraguayan-leaf-n": { name: "Petitgrain-Paraguayan-Leaf-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "verbena-moroccan-herb-n": { name: "Verbena-Moroccan-Herb-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "neroli-moroccan-blossom-n": { name: "Neroli-Moroccan-Blossom-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lavender-french-provence-n": { name: "Lavender-French-Provence-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "rosemary-tunisian-n": { name: "Rosemary-Tunisian-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "mint-moroccan-spearmint-n": { name: "Mint-Moroccan-Spearmint-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lemongrass-thai-stalk-n": { name: "Lemongrass-Thai-Stalk-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "citronella-javanese-n": { name: "Citronella-Javanese-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "orange-flower-tunisian-n": { name: "Orange-Flower-Tunisian-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lemon-blossom-spanish-n": { name: "Lemon-Blossom-Spanish-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "bergamot-flower-italian-n": { name: "Bergamot-Flower-Italian-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "kaffir-lime-leaf-thai-n": { name: "Kaffir-Lime-Leaf-Thai-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "coriander-indian-leaf-n": { name: "Coriander-Indian-Leaf-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "neroli-tunisian-bloom-n": { name: "Neroli-Tunisian-Bloom-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "petitgrain-spanish-branch-n": { name: "Petitgrain-Spanish-Branch-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "verbena-indian-lemon-n": { name: "Verbena-Indian-Lemon-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "citron-mediterranean-flower-n": { name: "Citron-Mediterranean-Flower-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lime-blossom-moroccan-n": { name: "Lime-Blossom-Moroccan-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lavender-bulgarian-n": { name: "Lavender-Bulgarian-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "rosemary-spanish-n": { name: "Rosemary-Spanish-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "mint-egyptian-peppermint-n": { name: "Mint-Egyptian-Peppermint-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lemongrass-vietnamese-n": { name: "Lemongrass-Vietnamese-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "citronella-sri-lankan-n": { name: "Citronella-Sri-Lankan-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "orange-flower-egyptian-n": { name: "Orange-Flower-Egyptian-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lemon-blossom-greek-n": { name: "Lemon-Blossom-Greek-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "bergamot-flower-moroccan-n": { name: "Bergamot-Flower-Moroccan-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "kaffir-lime-leaf-vietnamese-n": { name: "Kaffir-Lime-Leaf-Vietnamese-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "coriander-moroccan-leaf-n": { name: "Coriander-Moroccan-Leaf-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "neroli-spanish-blossom-n": { name: "Neroli-Spanish-Blossom-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "petitgrain-moroccan-leaf-n": { name: "Petitgrain-Moroccan-Leaf-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "verbena-tunisian-herb-n": { name: "Verbena-Tunisian-Herb-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "citron-tunisian-flower-n": { name: "Citron-Tunisian-Flower-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lime-blossom-egyptian-n": { name: "Lime-Blossom-Egyptian-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "lavender-turkish-n": { name: "Lavender-Turkish-(N)", family: "citrus", layer: "heart", type: "natural" },
+        "white-musk-mediterranean-b": { name: "White-Musk-Mediterranean-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "cedar-moroccan-bark-n": { name: "Cedar-Moroccan-Bark-(N)", family: "citrus", layer: "base", type: "natural" },
+        "vetiver-javanese-root-n": { name: "Vetiver-Javanese-Root-(N)", family: "citrus", layer: "base", type: "natural" },
+        "ambergris-coastal-synthetic-b": { name: "Ambergris-Coastal-Synthetic-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "citrus-musk-synthetic-b": { name: "Citrus-Musk-Synthetic-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "ambermax-mediterranean-b": { name: "Ambermax-Mediterranean-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "vetiver-sri-lankan-n": { name: "Vetiver-Sri-Lankan-(N)", family: "citrus", layer: "base", type: "natural" },
+        "cedarwood-himalayan-n": { name: "Cedarwood-Himalayan-(N)", family: "citrus", layer: "base", type: "natural" },
+        "iso-e-super-citrus-b": { name: "Iso-E-Super-Citrus-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "galbanum-iranian-resin-n": { name: "Galbanum-Iranian-Resin-(N)", family: "citrus", layer: "base", type: "natural" },
+        "lemon-cedar-tunisian-n": { name: "Lemon-Cedar-Tunisian-(N)", family: "citrus", layer: "base", type: "natural" },
+        "citrus-amber-egyptian-b": { name: "Citrus-Amber-Egyptian-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "vetiver-burmese-root-n": { name: "Vetiver-Burmese-Root-(N)", family: "citrus", layer: "base", type: "natural" },
+        "cedar-lebanese-base-n": { name: "Cedar-Lebanese-Base-(N)", family: "citrus", layer: "base", type: "natural" },
+        "ambergris-tunisian-b": { name: "Ambergris-Tunisian-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "white-musk-tunisian-b": { name: "White-Musk-Tunisian-(B)", family: "citrus", layer: "base", type: "synthetic" },
+        "cedar-texas-wood-n": { name: "Cedar-Texas-Wood-(N)", family: "citrus", layer: "base", type: "natural" },
+        "vetiver-tunisian-root-n": { name: "Vetiver-Tunisian-Root-(N)", family: "citrus", layer: "base", type: "natural" },
+        "ambergris-moroccan-n": { name: "Ambergris-Moroccan-(N)", family: "citrus", layer: "base", type: "natural" },
+        "tonka-argentinian-bean-n": { name: "Tonka-Argentinian-Bean-(N)", family: "citrus", layer: "base", type: "natural" }
+    };
+    
+            // Woody (~100 notes)
+        "eucalyptus-indian-n": { name: "Eucalyptus-Indian-(N)", family: "woody", layer: "top", type: "natural" },
+        "elemi-thai-gum-n": { name: "Elemi-Thai-Gum-(N)", family: "woody", layer: "top", type: "natural" },
+        "juniper-lebanese-berry-n": { name: "Juniper-Lebanese-Berry-(N)", family: "woody", layer: "top", type: "natural" },
+        "pine-moroccan-needle-n": { name: "Pine-Moroccan-Needle-(N)", family: "woody", layer: "top", type: "natural" },
+        "black-pepper-madagascan-n": { name: "Black-Pepper-Madagascan-(N)", family: "woody", layer: "top", type: "natural" },
+        "hinoki-japanese-branch-n": { name: "Hinoki-Japanese-Branch-(N)", family: "woody", layer: "top", type: "natural" },
+        "cedar-lebanese-twig-n": { name: "Cedar-Lebanese-Twig-(N)", family: "woody", layer: "top", type: "natural" },
+        "fir-siberian-balsam-n": { name: "Fir-Siberian-Balsam-(N)", family: "woody", layer: "top", type: "natural" },
+        "pine-scots-needle-n": { name: "Pine-Scots-Needle-(N)", family: "woody", layer: "top", type: "natural" },
+        "juniper-himalayan-berry-n": { name: "Juniper-Himalayan-Berry-(N)", family: "woody", layer: "top", type: "natural" },
+        "black-pepper-indian-n": { name: "Black-Pepper-Indian-(N)", family: "woody", layer: "top", type: "natural" },
+        "elemi-philippine-gum-n": { name: "Elemi-Philippine-Gum-(N)", family: "woody", layer: "top", type: "natural" },
+        "galbanum-iranian-leaf-n": { name: "Galbanum-Iranian-Leaf-(N)", family: "woody", layer: "top", type: "natural" },
+        "hinoki-korean-wood-n": { name: "Hinoki-Korean-Wood-(N)", family: "woody", layer: "top", type: "natural" },
+        "cedar-moroccan-leaf-n": { name: "Cedar-Moroccan-Leaf-(N)", family: "woody", layer: "top", type: "natural" },
+        "spruce-norwegian-twig-n": { name: "Spruce-Norwegian-Twig-(N)", family: "woody", layer: "top", type: "natural" },
+        "fir-canadian-needle-n": { name: "Fir-Canadian-Needle-(N)", family: "woody", layer: "top", type: "natural" },
+        "eucalyptus-tasmanian-n": { name: "Eucalyptus-Tasmanian-(N)", family: "woody", layer: "top", type: "natural" },
+        "camphor-chinese-n": { name: "Camphor-Chinese-(N)", family: "woody", layer: "top", type: "natural" },
+        "pine-resin-turkish-n": { name: "Pine-Resin-Turkish-(N)", family: "woody", layer: "top", type: "natural" },
+        "pine-tunisian-needle-n": { name: "Pine-Tunisian-Needle-(N)", family: "woody", layer: "top", type: "natural" },
+        "juniper-moroccan-berry-n": { name: "Juniper-Moroccan-Berry-(N)", family: "woody", layer: "top", type: "natural" },
+        "black-pepper-sri-lankan-n": { name: "Black-Pepper-Sri-Lankan-(N)", family: "woody", layer: "top", type: "natural" },
+        "elemi-indonesian-resin-n": { name: "Elemi-Indonesian-Resin-(N)", family: "woody", layer: "top", type: "natural" },
+        "galbanum-tunisian-n": { name: "Galbanum-Tunisian-(N)", family: "woody", layer: "top", type: "natural" },
+        "hinoki-taiwanese-branch-n": { name: "Hinoki-Taiwanese-Branch-(N)", family: "woody", layer: "top", type: "natural" },
+        "cedar-tunisian-leaf-n": { name: "Cedar-Tunisian-Leaf-(N)", family: "woody", layer: "top", type: "natural" },
+        "spruce-austrian-n": { name: "Spruce-Austrian-(N)", family: "woody", layer: "top", type: "natural" },
+        "fir-alaskan-balsam-n": { name: "Fir-Alaskan-Balsam-(N)", family: "woody", layer: "top", type: "natural" },
+        "eucalyptus-moroccan-n": { name: "Eucalyptus-Moroccan-(N)", family: "woody", layer: "top", type: "natural" },
+        "camphor-vietnamese-n": { name: "Camphor-Vietnamese-(N)", family: "woody", layer: "top", type: "natural" },
+        "pine-resin-greek-n": { name: "Pine-Resin-Greek-(N)", family: "woody", layer: "top", type: "natural" },
+        "pine-lebanese-needle-n": { name: "Pine-Lebanese-Needle-(N)", family: "woody", layer: "top", type: "natural" },
+        "patchouli-indonesian-leaf-n": { name: "Patchouli-Indonesian-Leaf-(N)", family: "woody", layer: "heart", type: "natural" },
+        "sandalwood-fijian-soft-n": { name: "Sandalwood-Fijian-Soft-(N)", family: "woody", layer: "heart", type: "natural" },
+        "oakmoss-lebanese-n": { name: "Oakmoss-Lebanese-(N)", family: "woody", layer: "heart", type: "natural" },
+        "cedar-himalayan-core-n": { name: "Cedar-Himalayan-Core-(N)", family: "woody", layer: "heart", type: "natural" },
+        "vetiver-haitian-root-n": { name: "Vetiver-Haitian-Root-(N)", family: "woody", layer: "heart", type: "natural" },
+        "palo-santo-ecuadorian-n": { name: "Palo-Santo-Ecuadorian-(N)", family: "woody", layer: "heart", type: "natural" },
+        "guaiac-paraguayan-heart-n": { name: "Guaiac-Paraguayan-Heart-(N)", family: "woody", layer: "heart", type: "natural" },
+        "cypress-tuscan-branch-n": { name: "Cypress-Tuscan-Branch-(N)", family: "woody", layer: "heart", type: "natural" },
+        "teak-burmese-wood-n": { name: "Teak-Burmese-Wood-(N)", family: "woody", layer: "heart", type: "natural" },
+        "birch-finnish-bark-n": { name: "Birch-Finnish-Bark-(N)", family: "woody", layer: "heart", type: "natural" },
+        "cedar-virginian-core-n": { name: "Cedar-Virginian-Core-(N)", family: "woody", layer: "heart", type: "natural" },
+        "patchouli-sri-lankan-n": { name: "Patchouli-Sri-Lankan-(N)", family: "woody", layer: "heart", type: "natural" },
+        "vetiver-indian-grass-n": { name: "Vetiver-Indian-Grass-(N)", family: "woody", layer: "heart", type: "natural" },
+        "oakmoss-icelandic-n": { name: "Oakmoss-Icelandic-(N)", family: "woody", layer: "heart", type: "natural" },
+        "palo-santo-peruvian-n": { name: "Palo-Santo-Peruvian-(N)", family: "woody", layer: "heart", type: "natural" },
+        "guaiac-bolivian-wood-n": { name: "Guaiac-Bolivian-Wood-(N)", family: "woody", layer: "heart", type: "natural" },
+        "teak-thai-bark-n": { name: "Teak-Thai-Bark-(N)", family: "woody", layer: "heart", type: "natural" },
+        "ebony-madagascan-n": { name: "Ebony-Madagascan-(N)", family: "woody", layer: "heart", type: "natural" },
+        "birch-swedish-tar-n": { name: "Birch-Swedish-Tar-(N)", family: "woody", layer: "heart", type: "natural" },
+        "cypress-moroccan-n": { name: "Cypress-Moroccan-(N)", family: "woody", layer: "heart", type: "natural" },
+        "juniper-mediterranean-berry-n": { name: "Juniper-Mediterranean-Berry-(N)", family: "woody", layer: "heart", type: "natural" },
+        "sandalwood-indian-creamy-n": { name: "Sandalwood-Indian-Creamy-(N)", family: "woody", layer: "heart", type: "natural" },
+        "guaiac-argentinian-heart-n": { name: "Guaiac-Argentinian-Heart-(N)", family: "woody", layer: "heart", type: "natural" },
+        "cypress-spanish-branch-n": { name: "Cypress-Spanish-Branch-(N)", family: "woody", layer: "heart", type: "natural" },
+        "teak-indonesian-wood-n": { name: "Teak-Indonesian-Wood-(N)", family: "woody", layer: "heart", type: "natural" },
+        "birch-russian-bark-n": { name: "Birch-Russian-Bark-(N)", family: "woody", layer: "heart", type: "natural" },
+        "cedar-texas-core-n": { name: "Cedar-Texas-Core-(N)", family: "woody", layer: "heart", type: "natural" },
+        "patchouli-javanese-n": { name: "Patchouli-Javanese-(N)", family: "woody", layer: "heart", type: "natural" },
+        "vetiver-sri-lankan-root-n": { name: "Vetiver-Sri-Lankan-Root-(N)", family: "woody", layer: "heart", type: "natural" },
+        "oakmoss-turkish-n": { name: "Oakmoss-Turkish-(N)", family: "woody", layer: "heart", type: "natural" },
+        "palo-santo-bolivian-n": { name: "Palo-Santo-Bolivian-(N)", family: "woody", layer: "heart", type: "natural" },
+        "guaiac-brazilian-wood-n": { name: "Guaiac-Brazilian-Wood-(N)", family: "woody", layer: "heart", type: "natural" },
+        "teak-vietnamese-bark-n": { name: "Teak-Vietnamese-Bark-(N)", family: "woody", layer: "heart", type: "natural" },
+        "ebony-african-n": { name: "Ebony-African-(N)", family: "woody", layer: "heart", type: "natural" },
+        "birch-norwegian-tar-n": { name: "Birch-Norwegian-Tar-(N)", family: "woody", layer: "heart", type: "natural" },
+        "labdanum-spanish-resin-n": { name: "Labdanum-Spanish-Resin-(N)", family: "woody", layer: "base", type: "natural" },
+        "amber-tunisian-resin-n": { name: "Amber-Tunisian-Resin-(N)", family: "woody", layer: "base", type: "natural" },
+        "vanilla-madagascan-bean-n": { name: "Vanilla-Madagascan-Bean-(N)", family: "woody", layer: "base", type: "natural" },
+        "cashmeran-vetiver-b": { name: "Cashmeran-Vetiver-(B)", family: "woody", layer: "base", type: "synthetic" },
+        "oud-cambodian-resin-n": { name: "Oud-Cambodian-Resin-(N)", family: "woody", layer: "base", type: "natural" },
+        "sandalwood-australian-creamy-n": { name: "Sandalwood-Australian-Creamy-(N)", family: "woody", layer: "base", type: "natural" },
+        "amber-moroccan-resin-n": { name: "Amber-Moroccan-Resin-(N)", family: "woody", layer: "base", type: "natural" },
+        "benzoin-laotian-gum-n": { name: "Benzoin-Laotian-Gum-(N)", family: "woody", layer: "base", type: "natural" },
+        "vetiver-madagascan-root-n": { name: "Vetiver-Madagascan-Root-(N)", family: "woody", layer: "base", type: "natural" },
+        "ambrox-synthetic-b": { name: "Ambrox-Synthetic-(B)", family: "woody", layer: "base", type: "synthetic" },
+        "cedar-himalayan-base-n": { name: "Cedar-Himalayan-Base-(N)", family: "woody", layer: "base", type: "natural" },
+        "musk-woody-synthetic-b": { name: "Musk-Woody-Synthetic-(B)", family: "woody", layer: "base", type: "synthetic" },
+        "oakwood-french-absolute-n": { name: "Oakwood-French-Absolute-(N)", family: "woody", layer: "base", type: "natural" },
+        "oud-vietnamese-resin-n": { name: "Oud-Vietnamese-Resin-(N)", family: "woody", layer: "base", type: "natural" },
+        "vetiver-tunisian-root-n": { name: "Vetiver-Tunisian-Root-(N)", family: "woody", layer: "base", type: "natural" },
+        "ambrox-mediterranean-b": { name: "Ambrox-Mediterranean-(B)", family: "woody", layer: "base", type: "synthetic" },
+        "cedar-tunisian-base-n": { name: "Cedar-Tunisian-Base-(N)", family: "woody", layer: "base", type: "natural" },
+        "musk-tunisian-synthetic-b": { name: "Musk-Tunisian-Synthetic-(B)", family: "woody", layer: "base", type: "synthetic" },
+        // Floral (~100 notes)
+        "rose-moroccan-valley-n": { name: "Rose-Moroccan-Valley-(N)", family: "floral", layer: "top", type: "natural" },
+        "freesia-southafrican-petal-n": { name: "Freesia-SouthAfrican-Petal-(N)", family: "floral", layer: "top", type: "natural" },
+        "neroli-moroccan-blossom-n": { name: "Neroli-Moroccan-Blossom-(N)", family: "floral", layer: "top", type: "natural" },
+        "clary-sage-turkish-leaf-n": { name: "Clary-Sage-Turkish-Leaf-(N)", family: "floral", layer: "top", type: "natural" },
+        "angelica-moroccan-flower-n": { name: "Angelica-Moroccan-Flower-(N)", family: "floral", layer: "top", type: "natural" },
+        "cumin-egyptian-seed-n": { name: "Cumin-Egyptian-Seed-(N)", family: "floral", layer: "top", type: "natural" },
+        "cardamom-sri-lankan-n": { name: "Cardamom-Sri-Lankan-(N)", family: "floral", layer: "top", type: "natural" },
+        "pink-grapefruit-florida-n": { name: "Pink-Grapefruit-Florida-(N)", family: "floral", layer: "top", type: "natural" },
+        "bergamot-italian-rind-n": { name: "Bergamot-Italian-Rind-(N)", family: "floral", layer: "top", type: "natural" },
+        "freesia-tunisian-n": { name: "Freesia-Tunisian-(N)", family: "floral", layer: "top", type: "natural" },
+        "hyacinth-greek-bloom-n": { name: "Hyacinth-Greek-Bloom-(N)", family: "floral", layer: "top", type: "natural" },
+        "mimosa-australian-bloom-n": { name: "Mimosa-Australian-Bloom-(N)", family: "floral", layer: "top", type: "natural" },
+        "violet-french-leaf-n": { name: "Violet-French-Leaf-(N)", family: "floral", layer: "top", type: "natural" },
+        "linden-german-blossom-n": { name: "Linden-German-Blossom-(N)", family: "floral", layer: "top", type: "natural" },
+        "apple-blossom-english-n": { name: "Apple-Blossom-English-(N)", family: "floral", layer: "top", type: "natural" },
+        "violet-italian-leaf-n": { name: "Violet-Italian-Leaf-(N)", family: "floral", layer: "top", type: "natural" },
+        "mimosa-french-riviera-n": { name: "Mimosa-French-Riviera-(N)", family: "floral", layer: "top", type: "natural" },
+        "hyacinth-spanish-flower-n": { name: "Hyacinth-Spanish-Flower-(N)", family: "floral", layer: "top", type: "natural" },
+        "freesia-egyptian-petal-n": { name: "Freesia-Egyptian-Petal-(N)", family: "floral", layer: "top", type: "natural" },
+        "linden-french-blossom-n": { name: "Linden-French-Blossom-(N)", family: "floral", layer: "top", type: "natural" },
+        "angelica-tunisian-flower-n": { name: "Angelica-Tunisian-Flower-(N)", family: "floral", layer: "top", type: "natural" },
+        "cumin-tunisian-seed-n": { name: "Cumin-Tunisian-Seed-(N)", family: "floral", layer: "top", type: "natural" },
+        "cardamom-tunisian-n": { name: "Cardamom-Tunisian-(N)", family: "floral", layer: "top", type: "natural" },
+        "pink-grapefruit-tunisian-n": { name: "Pink-Grapefruit-Tunisian-(N)", family: "floral", layer: "top", type: "natural" },
+        "bergamot-tunisian-rind-n": { name: "Bergamot-Tunisian-Rind-(N)", family: "floral", layer: "top", type: "natural" },
+        "freesia-spanish-n": { name: "Freesia-Spanish-(N)", family: "floral", layer: "top", type: "natural" },
+        "hyacinth-italian-bloom-n": { name: "Hyacinth-Italian-Bloom-(N)", family: "floral", layer: "top", type: "natural" },
+        "neroli-egyptian-blossom-n": { name: "Neroli-Egyptian-Blossom-(N)", family: "floral", layer: "top", type: "natural" },
+        "mimosa-spanish-bloom-n": { name: "Mimosa-Spanish-Bloom-(N)", family: "floral", layer: "top", type: "natural" },
+        "violet-moroccan-leaf-n": { name: "Violet-Moroccan-Leaf-(N)", family: "floral", layer: "top", type: "natural" },
+        "linden-spanish-flower-n": { name: "Linden-Spanish-Flower-(N)", family: "floral", layer: "top", type: "natural" },
+        "apple-blossom-turkish-n": { name: "Apple-Blossom-Turkish-(N)", family: "floral", layer: "top", type: "natural" },
+        "violet-turkish-leaf-n": { name: "Violet-Turkish-Leaf-(N)", family: "floral", layer: "top", type: "natural" },
+        "jasmine-sambac-indian-n": { name: "Jasmine-Sambac-Indian-(N)", family: "floral", layer: "heart", type: "natural" },
+        "lily-of-the-valley-french-n": { name: "Lily-of-the-Valley-French-(N)", family: "floral", layer: "heart", type: "natural" },
+        "rose-bulgarian-oil-n": { name: "Rose-Bulgarian-Oil-(N)", family: "floral", layer: "heart", type: "natural" },
+        "peony-chinese-pink-n": { name: "Peony-Chinese-Pink-(N)", family: "floral", layer: "heart", type: "natural" },
+        "magnolia-vietnamese-bloom-n": { name: "Magnolia-Vietnamese-Bloom-(N)", family: "floral", layer: "heart", type: "natural" },
+        "tiare-tahitian-flower-n": { name: "Tiare-Tahitian-Flower-(N)", family: "floral", layer: "heart", type: "natural" },
+        "frangipani-mauritian-n": { name: "Frangipani-Mauritian-(N)", family: "floral", layer: "heart", type: "natural" },
+        "carnation-spanish-petal-n": { name: "Carnation-Spanish-Petal-(N)", family: "floral", layer: "heart", type: "natural" },
+        "lilac-syracuse-bloom-n": { name: "Lilac-Syracuse-Bloom-(N)", family: "floral", layer: "heart", type: "natural" },
+        "iris-tunisian-powder-n": { name: "Iris-Tunisian-Powder-(N)", family: "floral", layer: "heart", type: "natural" },
+        "rose-taif-absolute-n": { name: "Rose-Taif-Absolute-(N)", family: "floral", layer: "heart", type: "natural" },
+        "jasmine-egyptian-star-n": { name: "Jasmine-Egyptian-Star-(N)", family: "floral", layer: "heart", type: "natural" },
+        "peony-japanese-white-n": { name: "Peony-Japanese-White-(N)", family: "floral", layer: "heart", type: "natural" },
+        "lily-of-the-valley-english-n": { name: "Lily-of-the-Valley-English-(N)", family: "floral", layer: "heart", type: "natural" },
+        "magnolia-indian-creamy-n": { name: "Magnolia-Indian-Creamy-(N)", family: "floral", layer: "heart", type: "natural" },
+        "tiare-fijian-bloom-n": { name: "Tiare-Fijian-Bloom-(N)", family: "floral", layer: "heart", type: "natural" },
+        "frangipani-thai-temple-n": { name: "Frangipani-Thai-Temple-(N)", family: "floral", layer: "heart", type: "natural" },
+        "carnation-turkish-red-n": { name: "Carnation-Turkish-Red-(N)", family: "floral", layer: "heart", type: "natural" },
+        "lilac-french-lavender-n": { name: "Lilac-French-Lavender-(N)", family: "floral", layer: "heart", type: "natural" },
+        "iris-florentine-rhizome-n": { name: "Iris-Florentine-Rhizome-(N)", family: "floral", layer: "heart", type: "natural" },
+        "rose-damascene-petal-n": { name: "Rose-Damascene-Petal-(N)", family: "floral", layer: "heart", type: "natural" },
+        "jasmine-tunisian-dawn-n": { name: "Jasmine-Tunisian-Dawn-(N)", family: "floral", layer: "heart", type: "natural" },
+        "peony-korean-red-n": { name: "Peony-Korean-Red-(N)", family: "floral", layer: "heart", type: "natural" },
+        "lily-of-the-valley-italian-n": { name: "Lily-of-the-Valley-Italian-(N)", family: "floral", layer: "heart", type: "natural" },
+        "magnolia-thai-white-n": { name: "Magnolia-Thai-White-(N)", family: "floral", layer: "heart", type: "natural" },
+        "tiare-hawaiian-flower-n": { name: "Tiare-Hawaiian-Flower-(N)", family: "floral", layer: "heart", type: "natural" },
+        "frangipani-seychelles-n": { name: "Frangipani-Seychelles-(N)", family: "floral", layer: "heart", type: "natural" },
+        "carnation-greek-pink-n": { name: "Carnation-Greek-Pink-(N)", family: "floral", layer: "heart", type: "natural" },
+        "lilac-moroccan-purple-n": { name: "Lilac-Moroccan-Purple-(N)", family: "floral", layer: "heart", type: "natural" },
+        "iris-italian-orris-n": { name: "Iris-Italian-Orris-(N)", family: "floral", layer: "heart", type: "natural" },
+        "sandalwood-indian-mysore-n": { name: "Sandalwood-Indian-Mysore-(N)", family: "floral", layer: "base", type: "natural" },
+        "vanilla-tahitian-orchid-n": { name: "Vanilla-Tahitian-Orchid-(N)", family: "floral", layer: "base", type: "natural" },
+        "iris-florentine-rhizome-n": { name: "Iris-Florentine-Rhizome-(N)", family: "floral", layer: "base", type: "natural" },
+        "musk-floral-synthetic-b": { name: "Musk-Floral-Synthetic-(B)", family: "floral", layer: "base", type: "synthetic" },
+        "amber-rose-synthetic-b": { name: "Amber-Rose-Synthetic-(B)", family: "floral", layer: "base", type: "synthetic" },
+        "white-musk-moroccan-b": { name: "White-Musk-Moroccan-(B)", family: "floral", layer: "base", type: "synthetic" },
+        "sandalwood-australian-soft-n": { name: "Sandalwood-Australian-Soft-(N)", family: "floral", layer: "base", type: "natural" },
+        "amber-tunisian-floral-n": { name: "Amber-Tunisian-Floral-(N)", family: "floral", layer: "base", type: "natural" },
+        "vanilla-madagascan-pod-n": { name: "Vanilla-Madagascan-Pod-(N)", family: "floral", layer: "base", type: "natural" },
+        "iris-tunisian-root-n": { name: "Iris-Tunisian-Root-(N)", family: "floral", layer: "base", type: "natural" },
+        "vanilla-comorian-orchid-n": { name: "Vanilla-Comorian-Orchid-(N)", family: "floral", layer: "base", type: "natural" },
+        "amber-floral-egyptian-b": { name: "Amber-Floral-Egyptian-(B)", family: "floral", layer: "base", type: "synthetic" },
+        "musk-ketone-floral-b": { name: "Musk-Ketone-Floral-(B)", family: "floral", layer: "base", type: "synthetic" },
+        "orris-moroccan-concrete-n": { name: "Orris-Moroccan-Concrete-(N)", family: "floral", layer: "base", type: "natural" },
+        "sandalwood-sri-lankan-n": { name: "Sandalwood-Sri-Lankan-(N)", family: "floral", layer: "base", type: "natural" },
+        "tuberose-indian-wax-n": { name: "Tuberose-Indian-Wax-(N)", family: "floral", layer: "base", type: "natural" },
+        "ylang-madagascan-absolute-n": { name: "Ylang-Madagascan-Absolute-(N)", family: "floral", layer: "base", type: "natural" }
+    };
+    
+            // Spicy (~100 notes)
+        "black-pepper-madagascan-n": { name: "Black-Pepper-Madagascan-(N)", family: "spicy", layer: "top", type: "natural" },
+        "cinnamon-ceylon-bark-n": { name: "Cinnamon-Ceylon-Bark-(N)", family: "spicy", layer: "top", type: "natural" },
+        "nutmeg-indonesian-n": { name: "Nutmeg-Indonesian-(N)", family: "spicy", layer: "top", type: "natural" },
+        "clove-madagascan-bud-n": { name: "Clove-Madagascan-Bud-(N)", family: "spicy", layer: "top", type: "natural" },
+        "ginger-omani-root-n": { name: "Ginger-Omani-Root-(N)", family: "spicy", layer: "top", type: "natural" },
+        "pink-pepper-brazilian-n": { name: "Pink-Pepper-Brazilian-(N)", family: "spicy", layer: "top", type: "natural" },
+        "allspice-jamaican-n": { name: "Allspice-Jamaican-(N)", family: "spicy", layer: "top", type: "natural" },
+        "anise-turkish-seed-n": { name: "Anise-Turkish-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "caraway-egyptian-n": { name: "Caraway-Egyptian-(N)", family: "spicy", layer: "top", type: "natural" },
+        "coriander-moroccan-seed-n": { name: "Coriander-Moroccan-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "fennel-italian-seed-n": { name: "Fennel-Italian-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "saffron-iranian-stigma-n": { name: "Saffron-Iranian-Stigma-(N)", family: "spicy", layer: "top", type: "natural" },
+        "black-pepper-vietnamese-n": { name: "Black-Pepper-Vietnamese-(N)", family: "spicy", layer: "top", type: "natural" },
+        "cinnamon-vietnamese-bark-n": { name: "Cinnamon-Vietnamese-Bark-(N)", family: "spicy", layer: "top", type: "natural" },
+        "nutmeg-sri-lankan-n": { name: "Nutmeg-Sri-Lankan-(N)", family: "spicy", layer: "top", type: "natural" },
+        "clove-zanzibar-bud-n": { name: "Clove-Zanzibar-Bud-(N)", family: "spicy", layer: "top", type: "natural" },
+        "ginger-thai-root-n": { name: "Ginger-Thai-Root-(N)", family: "spicy", layer: "top", type: "natural" },
+        "pink-pepper-reunion-n": { name: "Pink-Pepper-Reunion-(N)", family: "spicy", layer: "top", type: "natural" },
+        "allspice-mexican-n": { name: "Allspice-Mexican-(N)", family: "spicy", layer: "top", type: "natural" },
+        "anise-syrian-seed-n": { name: "Anise-Syrian-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "caraway-tunisian-n": { name: "Caraway-Tunisian-(N)", family: "spicy", layer: "top", type: "natural" },
+        "coriander-egyptian-seed-n": { name: "Coriander-Egyptian-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "fennel-tunisian-seed-n": { name: "Fennel-Tunisian-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "saffron-moroccan-thread-n": { name: "Saffron-Moroccan-Thread-(N)", family: "spicy", layer: "top", type: "natural" },
+        "black-pepper-indian-n": { name: "Black-Pepper-Indian-(N)", family: "spicy", layer: "top", type: "natural" },
+        "cinnamon-indonesian-bark-n": { name: "Cinnamon-Indonesian-Bark-(N)", family: "spicy", layer: "top", type: "natural" },
+        "nutmeg-jamaican-n": { name: "Nutmeg-Jamaican-(N)", family: "spicy", layer: "top", type: "natural" },
+        "clove-indian-bud-n": { name: "Clove-Indian-Bud-(N)", family: "spicy", layer: "top", type: "natural" },
+        "ginger-vietnamese-root-n": { name: "Ginger-Vietnamese-Root-(N)", family: "spicy", layer: "top", type: "natural" },
+        "pink-pepper-moroccan-n": { name: "Pink-Pepper-Moroccan-(N)", family: "spicy", layer: "top", type: "natural" },
+        "allspice-guatemalan-n": { name: "Allspice-Guatemalan-(N)", family: "spicy", layer: "top", type: "natural" },
+        "anise-egyptian-seed-n": { name: "Anise-Egyptian-Seed-(N)", family: "spicy", layer: "top", type: "natural" },
+        "caraway-moroccan-n": { name: "Caraway-Moroccan-(N)", family: "spicy", layer: "top", type: "natural" },
+        "cardamom-guatemalan-pod-n": { name: "Cardamom-Guatemalan-Pod-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "ginger-zanzibar-root-n": { name: "Ginger-Zanzibar-Root-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "star-anise-vietnamese-n": { name: "Star-Anise-Vietnamese-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "bay-leaf-turkish-n": { name: "Bay-Leaf-Turkish-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "thyme-moroccan-herb-n": { name: "Thyme-Moroccan-Herb-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "rosemary-tunisian-n": { name: "Rosemary-Tunisian-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "turmeric-indian-root-n": { name: "Turmeric-Indian-Root-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "cumin-egyptian-seed-n": { name: "Cumin-Egyptian-Seed-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "saffron-turkish-absolute-n": { name: "Saffron-Turkish-Absolute-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "clove-tunisian-bud-n": { name: "Clove-Tunisian-Bud-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "cardamom-indian-green-n": { name: "Cardamom-Indian-Green-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "coriander-indian-leaf-n": { name: "Coriander-Indian-Leaf-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "fennel-moroccan-seed-n": { name: "Fennel-Moroccan-Seed-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "anise-moroccan-star-n": { name: "Anise-Moroccan-Star-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "bay-leaf-italian-n": { name: "Bay-Leaf-Italian-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "thyme-spanish-wild-n": { name: "Thyme-Spanish-Wild-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "rosemary-moroccan-n": { name: "Rosemary-Moroccan-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "turmeric-sri-lankan-n": { name: "Turmeric-Sri-Lankan-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "cumin-tunisian-seed-n": { name: "Cumin-Tunisian-Seed-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "saffron-kashmiri-thread-n": { name: "Saffron-Kashmiri-Thread-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "clove-sri-lankan-bud-n": { name: "Clove-Sri-Lankan-Bud-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "cardamom-sri-lankan-pod-n": { name: "Cardamom-Sri-Lankan-Pod-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "coriander-tunisian-leaf-n": { name: "Coriander-Tunisian-Leaf-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "fennel-egyptian-seed-n": { name: "Fennel-Egyptian-Seed-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "anise-tunisian-star-n": { name: "Anise-Tunisian-Star-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "bay-leaf-greek-n": { name: "Bay-Leaf-Greek-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "thyme-tunisian-n": { name: "Thyme-Tunisian-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "rosemary-spanish-n": { name: "Rosemary-Spanish-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "turmeric-moroccan-root-n": { name: "Turmeric-Moroccan-Root-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "cumin-moroccan-seed-n": { name: "Cumin-Moroccan-Seed-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "saffron-omani-absolute-n": { name: "Saffron-Omani-Absolute-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "clove-moroccan-bud-n": { name: "Clove-Moroccan-Bud-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "cardamom-tunisian-pod-n": { name: "Cardamom-Tunisian-Pod-(N)", family: "spicy", layer: "heart", type: "natural" },
+        "tobacco-cuban-leaf-n": { name: "Tobacco-Cuban-Leaf-(N)", family: "spicy", layer: "base", type: "natural" },
+        "leather-moroccan-accord-b": { name: "Leather-Moroccan-Accord-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "sandalwood-indian-spicy-n": { name: "Sandalwood-Indian-Spicy-(N)", family: "spicy", layer: "base", type: "natural" },
+        "patchouli-indonesian-deep-n": { name: "Patchouli-Indonesian-Deep-(N)", family: "spicy", layer: "base", type: "natural" },
+        "amber-spicy-synthetic-b": { name: "Amber-Spicy-Synthetic-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "musk-oriental-spicy-b": { name: "Musk-Oriental-Spicy-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "benzoin-siam-spicy-n": { name: "Benzoin-Siam-Spicy-(N)", family: "spicy", layer: "base", type: "natural" },
+        "oud-thai-resin-n": { name: "Oud-Thai-Resin-(N)", family: "spicy", layer: "base", type: "natural" },
+        "tonka-brazilian-dark-n": { name: "Tonka-Brazilian-Dark-(N)", family: "spicy", layer: "base", type: "natural" },
+        "vetiver-haitian-spicy-n": { name: "Vetiver-Haitian-Spicy-(N)", family: "spicy", layer: "base", type: "natural" },
+        "tobacco-virginian-leaf-n": { name: "Tobacco-Virginian-Leaf-(N)", family: "spicy", layer: "base", type: "natural" },
+        "leather-tunisian-accord-b": { name: "Leather-Tunisian-Accord-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "sandalwood-australian-spicy-n": { name: "Sandalwood-Australian-Spicy-(N)", family: "spicy", layer: "base", type: "natural" },
+        "patchouli-sri-lankan-dark-n": { name: "Patchouli-Sri-Lankan-Dark-(N)", family: "spicy", layer: "base", type: "natural" },
+        "amber-moroccan-spicy-b": { name: "Amber-Moroccan-Spicy-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "musk-tunisian-spicy-b": { name: "Musk-Tunisian-Spicy-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "benzoin-thai-resin-n": { name: "Benzoin-Thai-Resin-(N)", family: "spicy", layer: "base", type: "natural" },
+        "oud-indian-dark-n": { name: "Oud-Indian-Dark-(N)", family: "spicy", layer: "base", type: "natural" },
+        "tonka-venezuelan-roast-n": { name: "Tonka-Venezuelan-Roast-(N)", family: "spicy", layer: "base", type: "natural" },
+        "vetiver-indian-spicy-n": { name: "Vetiver-Indian-Spicy-(N)", family: "spicy", layer: "base", type: "natural" },
+        "tobacco-tunisian-leaf-n": { name: "Tobacco-Tunisian-Leaf-(N)", family: "spicy", layer: "base", type: "natural" },
+        "leather-egyptian-accord-b": { name: "Leather-Egyptian-Accord-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "sandalwood-tunisian-n": { name: "Sandalwood-Tunisian-(N)", family: "spicy", layer: "base", type: "natural" },
+        "patchouli-indian-dark-n": { name: "Patchouli-Indian-Dark-(N)", family: "spicy", layer: "base", type: "natural" },
+        "amber-tunisian-spicy-b": { name: "Amber-Tunisian-Spicy-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "musk-moroccan-spicy-b": { name: "Musk-Moroccan-Spicy-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "benzoin-moroccan-resin-n": { name: "Benzoin-Moroccan-Resin-(N)", family: "spicy", layer: "base", type: "natural" },
+        "oud-sri-lankan-resin-n": { name: "Oud-Sri-Lankan-Resin-(N)", family: "spicy", layer: "base", type: "natural" },
+        "tonka-moroccan-bean-n": { name: "Tonka-Moroccan-Bean-(N)", family: "spicy", layer: "base", type: "natural" },
+        "vetiver-tunisian-spicy-n": { name: "Vetiver-Tunisian-Spicy-(N)", family: "spicy", layer: "base", type: "natural" },
+        "tobacco-moroccan-leaf-n": { name: "Tobacco-Moroccan-Leaf-(N)", family: "spicy", layer: "base", type: "natural" },
+        "leather-indian-accord-b": { name: "Leather-Indian-Accord-(B)", family: "spicy", layer: "base", type: "synthetic" },
+        "sandalwood-moroccan-n": { name: "Sandalwood-Moroccan-(N)", family: "spicy", layer: "base", type: "natural" },
+        "patchouli-tunisian-dark-n": { name: "Patchouli-Tunisian-Dark-(N)", family: "spicy", layer: "base", type: "natural" },
+        // Gourmand (~100 notes)
+        "caramel-french-burnt-b": { name: "Caramel-French-Burnt-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "coffee-ethiopian-roast-n": { name: "Coffee-Ethiopian-Roast-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "vanilla-mexican-pod-n": { name: "Vanilla-Mexican-Pod-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "honey-french-lavender-n": { name: "Honey-French-Lavender-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "maple-canadian-syrup-n": { name: "Maple-Canadian-Syrup-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "toffee-english-sticky-b": { name: "Toffee-English-Sticky-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "butterscotch-scottish-b": { name: "Butterscotch-Scottish-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "coconut-malaysian-cream-n": { name: "Coconut-Malaysian-Cream-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "almond-italian-roast-n": { name: "Almond-Italian-Roast-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "hazelnut-turkish-n": { name: "Hazelnut-Turkish-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "praline-french-nut-b": { name: "Praline-French-Nut-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "brown-sugar-cuban-n": { name: "Brown-Sugar-Cuban-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "molasses-jamaican-dark-n": { name: "Molasses-Jamaican-Dark-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "caramel-brazilian-salted-b": { name: "Caramel-Brazilian-Salted-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "coffee-colombian-bean-n": { name: "Coffee-Colombian-Bean-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "vanilla-tahitian-cream-n": { name: "Vanilla-Tahitian-Cream-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "honey-tunisian-orange-n": { name: "Honey-Tunisian-Orange-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "maple-vermont-sap-n": { name: "Maple-Vermont-Sap-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "toffee-irish-cream-b": { name: "Toffee-Irish-Cream-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "butterscotch-english-b": { name: "Butterscotch-English-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "coconut-fijian-milk-n": { name: "Coconut-Fijian-Milk-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "almond-spanish-marcona-n": { name: "Almond-Spanish-Marcona-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "hazelnut-italian-roast-n": { name: "Hazelnut-Italian-Roast-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "praline-italian-nut-b": { name: "Praline-Italian-Nut-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "brown-sugar-barbadian-n": { name: "Brown-Sugar-Barbadian-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "molasses-hawaiian-dark-n": { name: "Molasses-Hawaiian-Dark-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "caramel-mexican-dulce-b": { name: "Caramel-Mexican-Dulce-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "coffee-brazilian-roast-n": { name: "Coffee-Brazilian-Roast-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "vanilla-comorian-pod-n": { name: "Vanilla-Comorian-Pod-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "honey-moroccan-acacia-n": { name: "Honey-Moroccan-Acacia-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "maple-quebec-syrup-n": { name: "Maple-Quebec-Syrup-(N)", family: "gourmand", layer: "top", type: "natural" },
+        "toffee-scottish-sticky-b": { name: "Toffee-Scottish-Sticky-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "butterscotch-irish-b": { name: "Butterscotch-Irish-(B)", family: "gourmand", layer: "top", type: "synthetic" },
+        "cocoa-venezuelan-bean-n": { name: "Cocoa-Venezuelan-Bean-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "tonka-brazilian-bean-n": { name: "Tonka-Brazilian-Bean-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "chocolate-mexican-dark-b": { name: "Chocolate-Mexican-Dark-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "praline-french-nut-b": { name: "Praline-French-Nut-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "hazelnut-french-roast-n": { name: "Hazelnut-French-Roast-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "almond-moroccan-sweet-n": { name: "Almond-Moroccan-Sweet-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "coconut-thai-cream-n": { name: "Coconut-Thai-Cream-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "toffee-australian-b": { name: "Toffee-Australian-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "caramel-italian-salted-b": { name: "Caramel-Italian-Salted-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "coffee-kenyan-roast-n": { name: "Coffee-Kenyan-Roast-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "vanilla-ugandan-pod-n": { name: "Vanilla-Ugandan-Pod-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "honey-australian-manuka-n": { name: "Honey-Australian-Manuka-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "maple-french-syrup-n": { name: "Maple-French-Syrup-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "butterscotch-french-b": { name: "Butterscotch-French-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "cocoa-peruvian-dark-n": { name: "Cocoa-Peruvian-Dark-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "tonka-venezuelan-bean-n": { name: "Tonka-Venezuelan-Bean-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "chocolate-swiss-milk-b": { name: "Chocolate-Swiss-Milk-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "praline-spanish-nut-b": { name: "Praline-Spanish-Nut-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "hazelnut-spanish-roast-n": { name: "Hazelnut-Spanish-Roast-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "almond-tunisian-sweet-n": { name: "Almond-Tunisian-Sweet-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "coconut-philippine-milk-n": { name: "Coconut-Philippine-Milk-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "toffee-french-sticky-b": { name: "Toffee-French-Sticky-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "caramel-english-burnt-b": { name: "Caramel-English-Burnt-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "coffee-yemeni-roast-n": { name: "Coffee-Yemeni-Roast-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "vanilla-papua-pod-n": { name: "Vanilla-Papua-Pod-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "honey-new-zealand-clover-n": { name: "Honey-New-Zealand-Clover-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "maple-swedish-syrup-n": { name: "Maple-Swedish-Syrup-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "butterscotch-tunisian-b": { name: "Butterscotch-Tunisian-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "cocoa-brazilian-bean-n": { name: "Cocoa-Brazilian-Bean-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "tonka-moroccan-bean-n": { name: "Tonka-Moroccan-Bean-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "chocolate-belgian-dark-b": { name: "Chocolate-Belgian-Dark-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "praline-tunisian-nut-b": { name: "Praline-Tunisian-Nut-(B)", family: "gourmand", layer: "heart", type: "synthetic" },
+        "hazelnut-moroccan-roast-n": { name: "Hazelnut-Moroccan-Roast-(N)", family: "gourmand", layer: "heart", type: "natural" },
+        "vanilla-madagascan-bean-n": { name: "Vanilla-Madagascan-Bean-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "tonka-brazilian-dark-n": { name: "Tonka-Brazilian-Dark-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "cocoa-madagascan-dark-n": { name: "Cocoa-Madagascan-Dark-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "chocolate-venezuelan-b": { name: "Chocolate-Venezuelan-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "benzoin-siam-gourmand-n": { name: "Benzoin-Siam-Gourmand-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "musk-gourmand-synthetic-b": { name: "Musk-Gourmand-Synthetic-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "amber-gourmand-synthetic-b": { name: "Amber-Gourmand-Synthetic-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "praline-moroccan-nut-b": { name: "Praline-Moroccan-Nut-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "caramel-tunisian-salted-b": { name: "Caramel-Tunisian-Salted-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "coffee-tunisian-roast-n": { name: "Coffee-Tunisian-Roast-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "vanilla-reunion-orchid-n": { name: "Vanilla-Reunion-Orchid-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "honey-spanish-orange-n": { name: "Honey-Spanish-Orange-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "maple-tunisian-syrup-n": { name: "Maple-Tunisian-Syrup-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "toffee-moroccan-sticky-b": { name: "Toffee-Moroccan-Sticky-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "butterscotch-moroccan-b": { name: "Butterscotch-Moroccan-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "cocoa-tunisian-dark-n": { name: "Cocoa-Tunisian-Dark-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "tonka-tunisian-bean-n": { name: "Tonka-Tunisian-Bean-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "chocolate-french-dark-b": { name: "Chocolate-French-Dark-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "praline-english-nut-b": { name: "Praline-English-Nut-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "hazelnut-tunisian-roast-n": { name: "Hazelnut-Tunisian-Roast-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "almond-english-sweet-n": { name: "Almond-English-Sweet-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "coconut-moroccan-cream-n": { name: "Coconut-Moroccan-Cream-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "toffee-tunisian-sticky-b": { name: "Toffee-Tunisian-Sticky-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "caramel-french-dulce-b": { name: "Caramel-French-Dulce-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "coffee-moroccan-roast-n": { name: "Coffee-Moroccan-Roast-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "vanilla-tunisian-pod-n": { name: "Vanilla-Tunisian-Pod-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "honey-tunisian-clover-n": { name: "Honey-Tunisian-Clover-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "maple-moroccan-syrup-n": { name: "Maple-Moroccan-Syrup-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "butterscotch-tunisian-dark-b": { name: "Butterscotch-Tunisian-Dark-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "cocoa-moroccan-dark-n": { name: "Cocoa-Moroccan-Dark-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "tonka-english-bean-n": { name: "Tonka-English-Bean-(N)", family: "gourmand", layer: "base", type: "natural" },
+        "chocolate-tunisian-dark-b": { name: "Chocolate-Tunisian-Dark-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        "praline-moroccan-dark-b": { name: "Praline-Moroccan-Dark-(B)", family: "gourmand", layer: "base", type: "synthetic" },
+        // Aquatic (~100 notes)
+        "sea-salt-mediterranean-b": { name: "Sea-Salt-Mediterranean-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "marine-accord-atlantic-b": { name: "Marine-Accord-Atlantic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "calone-ocean-breeze-b": { name: "Calone-Ocean-Breeze-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "watermelon-australian-n": { name: "Watermelon-Australian-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "cucumber-english-fresh-n": { name: "Cucumber-English-Fresh-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "ozonic-air-synthetic-b": { name: "Ozonic-Air-Synthetic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "seaweed-irish-kelp-n": { name: "Seaweed-Irish-Kelp-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "lotus-indian-blue-n": { name: "Lotus-Indian-Blue-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "water-hyacinth-thai-n": { name: "Water-Hyacinth-Thai-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "melon-cantaloupe-french-n": { name: "Melon-Cantaloupe-French-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "aquatic-fog-synthetic-b": { name: "Aquatic-Fog-Synthetic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "sea-salt-atlantic-b": { name: "Sea-Salt-Atlantic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "marine-accord-pacific-b": { name: "Marine-Accord-Pacific-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "calone-sea-breeze-b": { name: "Calone-Sea-Breeze-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "watermelon-fijian-n": { name: "Watermelon-Fijian-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "cucumber-japanese-fresh-n": { name: "Cucumber-Japanese-Fresh-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "ozonic-wave-synthetic-b": { name: "Ozonic-Wave-Synthetic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "seaweed-scottish-kelp-n": { name: "Seaweed-Scottish-Kelp-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "lotus-egyptian-white-n": { name: "Lotus-Egyptian-White-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "water-hyacinth-vietnamese-n": { name: "Water-Hyacinth-Vietnamese-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "melon-honeydew-australian-n": { name: "Melon-Honeydew-Australian-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "aquatic-mist-synthetic-b": { name: "Aquatic-Mist-Synthetic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "sea-salt-pacific-b": { name: "Sea-Salt-Pacific-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "marine-accord-mediterranean-b": { name: "Marine-Accord-Mediterranean-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "calone-coastal-breeze-b": { name: "Calone-Coastal-Breeze-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "watermelon-thai-n": { name: "Watermelon-Thai-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "cucumber-tunisian-fresh-n": { name: "Cucumber-Tunisian-Fresh-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "ozonic-tide-synthetic-b": { name: "Ozonic-Tide-Synthetic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "seaweed-japanese-nori-n": { name: "Seaweed-Japanese-Nori-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "lotus-thai-pink-n": { name: "Lotus-Thai-Pink-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "water-hyacinth-indian-n": { name: "Water-Hyacinth-Indian-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "melon-watermelon-moroccan-n": { name: "Melon-Watermelon-Moroccan-(N)", family: "aquatic", layer: "top", type: "natural" },
+        "aquatic-rain-synthetic-b": { name: "Aquatic-Rain-Synthetic-(B)", family: "aquatic", layer: "top", type: "synthetic" },
+        "water-lily-egyptian-n": { name: "Water-Lily-Egyptian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "lotus-indian-blue-n": { name: "Lotus-Indian-Blue-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-hyacinth-fijian-n": { name: "Water-Hyacinth-Fijian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "iris-aquatic-italian-n": { name: "Iris-Aquatic-Italian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "jasmine-aquatic-indian-n": { name: "Jasmine-Aquatic-Indian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-lily-thai-white-n": { name: "Water-Lily-Thai-White-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "lotus-vietnamese-pink-n": { name: "Lotus-Vietnamese-Pink-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "aquatic-flower-synthetic-b": { name: "Aquatic-Flower-Synthetic-(B)", family: "aquatic", layer: "heart", type: "synthetic" },
+        "marine-jasmine-tunisian-n": { name: "Marine-Jasmine-Tunisian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-hyacinth-moroccan-n": { name: "Water-Hyacinth-Moroccan-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "iris-aquatic-french-n": { name: "Iris-Aquatic-French-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "jasmine-aquatic-egyptian-n": { name: "Jasmine-Aquatic-Egyptian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-lily-indian-pink-n": { name: "Water-Lily-Indian-Pink-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "lotus-moroccan-white-n": { name: "Lotus-Moroccan-White-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "aquatic-lily-synthetic-b": { name: "Aquatic-Lily-Synthetic-(B)", family: "aquatic", layer: "heart", type: "synthetic" },
+        "marine-rose-tunisian-n": { name: "Marine-Rose-Tunisian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-hyacinth-tunisian-n": { name: "Water-Hyacinth-Tunisian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "iris-aquatic-tunisian-n": { name: "Iris-Aquatic-Tunisian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "jasmine-aquatic-moroccan-n": { name: "Jasmine-Aquatic-Moroccan-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-lily-fijian-blue-n": { name: "Water-Lily-Fijian-Blue-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "lotus-fijian-pink-n": { name: "Lotus-Fijian-Pink-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "aquatic-orchid-synthetic-b": { name: "Aquatic-Orchid-Synthetic-(B)", family: "aquatic", layer: "heart", type: "synthetic" },
+        "marine-lily-egyptian-n": { name: "Marine-Lily-Egyptian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-hyacinth-egyptian-n": { name: "Water-Hyacinth-Egyptian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "iris-aquatic-moroccan-n": { name: "Iris-Aquatic-Moroccan-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "jasmine-aquatic-tunisian-n": { name: "Jasmine-Aquatic-Tunisian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-lily-moroccan-white-n": { name: "Water-Lily-Moroccan-White-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "lotus-tunisian-blue-n": { name: "Lotus-Tunisian-Blue-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "aquatic-jasmine-synthetic-b": { name: "Aquatic-Jasmine-Synthetic-(B)", family: "aquatic", layer: "heart", type: "synthetic" },
+        "marine-iris-tunisian-n": { name: "Marine-Iris-Tunisian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "water-hyacinth-fijian-white-n": { name: "Water-Hyacinth-Fijian-White-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "iris-aquatic-egyptian-n": { name: "Iris-Aquatic-Egyptian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "jasmine-aquatic-fijian-n": { name: "Jasmine-Aquatic-Fijian-(N)", family: "aquatic", layer: "heart", type: "natural" },
+        "ambergris-moroccan-n": { name: "Ambergris-Moroccan-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "coastal-cedar-tunisian-n": { name: "Coastal-Cedar-Tunisian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "musk-aquatic-synthetic-b": { name: "Musk-Aquatic-Synthetic-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "amber-aquatic-synthetic-b": { name: "Amber-Aquatic-Synthetic-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "driftwood-atlantic-n": { name: "Driftwood-Atlantic-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sea-moss-irish-n": { name: "Sea-Moss-Irish-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "vetiver-aquatic-haitian-n": { name: "Vetiver-Aquatic-Haitian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sandalwood-fijian-aquatic-n": { name: "Sandalwood-Fijian-Aquatic-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "ambergris-pacific-n": { name: "Ambergris-Pacific-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "coastal-cedar-moroccan-n": { name: "Coastal-Cedar-Moroccan-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "musk-coastal-synthetic-b": { name: "Musk-Coastal-Synthetic-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "amber-aquatic-moroccan-b": { name: "Amber-Aquatic-Moroccan-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "driftwood-pacific-n": { name: "Driftwood-Pacific-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sea-moss-scottish-n": { name: "Sea-Moss-Scottish-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "vetiver-aquatic-indian-n": { name: "Vetiver-Aquatic-Indian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sandalwood-aquatic-australian-n": { name: "Sandalwood-Aquatic-Australian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "ambergris-atlantic-n": { name: "Ambergris-Atlantic-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "coastal-cedar-fijian-n": { name: "Coastal-Cedar-Fijian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "musk-aquatic-tunisian-b": { name: "Musk-Aquatic-Tunisian-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "amber-aquatic-tunisian-b": { name: "Amber-Aquatic-Tunisian-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "driftwood-mediterranean-n": { name: "Driftwood-Mediterranean-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sea-moss-tunisian-n": { name: "Sea-Moss-Tunisian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "vetiver-aquatic-tunisian-n": { name: "Vetiver-Aquatic-Tunisian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sandalwood-aquatic-fijian-n": { name: "Sandalwood-Aquatic-Fijian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "ambergris-moroccan-dark-n": { name: "Ambergris-Moroccan-Dark-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "coastal-cedar-tunisian-dark-n": { name: "Coastal-Cedar-Tunisian-Dark-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "musk-aquatic-moroccan-b": { name: "Musk-Aquatic-Moroccan-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "amber-aquatic-fijian-b": { name: "Amber-Aquatic-Fijian-(B)", family: "aquatic", layer: "base", type: "synthetic" },
+        "driftwood-tunisian-n": { name: "Driftwood-Tunisian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sea-moss-moroccan-n": { name: "Sea-Moss-Moroccan-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "vetiver-aquatic-moroccan-n": { name: "Vetiver-Aquatic-Moroccan-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "sandalwood-aquatic-tunisian-n": { name: "Sandalwood-Aquatic-Tunisian-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "ambergris-tunisian-dark-n": { name: "Ambergris-Tunisian-Dark-(N)", family: "aquatic", layer: "base", type: "natural" },
+        "coastal-cedar-moroccan-dark-n": { name: "Coastal-Cedar-Moroccan-Dark-(N)", family: "aquatic", layer: "base", type: "natural" }
+    };
+    
+        // Profile Distributions
+    const profileDistributions = {
+        "elegant-serenity": { top: 3, heart: 5, base: 4 },
+        "mysterious-reflection": { top: 3, heart: 3, base: 5 },
+        "playful-joy": { top: 5, heart: 3, base: 4 },
+        "classic-serenity": { top: 3, heart: 3, base: 3 },
+        "sensual-romance": { top: 3, heart: 5, base: 4 }
+    };
+
+    // Pyramid Notes: References ~700 note IDs across seven families
+    const pyramidNotes = {
+        oriental: [
+            ["rose-moroccan-valley-n", "vanilla-tahitian-orchid-n", "clary-sage-turkish-leaf-n", "pink-pepper-bahraini-n", "saffron-kashmiri-stigma-n", "bergamot-tunisian-rind-n", "mandarin-sicilian-zest-n", "osmanthus-chinese-blossom-n", "neroli-egyptian-bloom-n", "juniper-moroccan-berry-n", "cardamom-indian-pod-n", "lychee-thai-fruit-n", "kumquat-japanese-zest-n", "bitter-almond-moroccan-n", "star-anise-vietnamese-n", "pomegranate-iranian-seed-n", "fig-mediterranean-fruit-n", "cinnamon-ceylon-bark-n", "ginger-omani-root-n", "rose-omani-petal-n"],
+            ["ylang-ylang-comorian-n", "tuberose-indian-sunset-n", "saffron-turkish-absolute-n", "iris-florentine-powder-n", "champaca-bangladeshi-n", "myrrh-yemeni-sacred-n", "rose-bulgarian-night-n", "jasmine-moroccan-dusk-n", "tuberose-mexican-dawn-n", "gardenia-hawaiian-bloom-n", "heliotrope-fijian-n", "lotus-egyptian-white-n", "frangipani-maldivian-n", "magnolia-chinese-blossom-n", "iris-tuscan-root-n", "saffron-iranian-absolute-n", "myrrh-sudanese-gum-n", "champaca-thai-golden-n", "rose-taif-petal-n", "jasmine-tunisian-star-n"],
+            ["amber-emirati-glow-b", "oud-myanmar-wood-n", "musk-moroccan-soft-b", "benzoin-siam-n", "patchouli-indonesian-deep-n", "sandalwood-australian-creamy-n", "frankincense-omani-tear-n", "tonka-brazilian-roast-n", "vanilla-reunion-orchid-n", "musk-oriental-synthetic-b", "oud-cambodian-dark-n", "benzoin-thai-crystal-n", "peru-balsam-ecuadorian-n", "civet-indian-synthetic-b", "oud-thai-aged-n", "patchouli-sri-lankan-n", "sandalwood-tamil-nadu-n", "tonka-venezuelan-dark-n", "oud-indian-dark-n"]
+        ],
+        citrus: [
+            ["bergamot-calabrian-rind-n", "lemon-sorrento-peel-n", "yuzu-japanese-citrus-n", "grapefruit-florida-pink-n", "lime-mexican-key-n", "tangerine-moroccan-zest-n", "blood-orange-sicilian-n", "clementine-corsican-n", "pomelo-thai-fruit-n", "verbena-moroccan-leaf-n", "litsea-cubeba-vietnamese-n", "lemon-tunisian-zest-n", "grapefruit-bahamian-white-n", "bergamot-tunisian-n", "lime-persian-green-n", "orange-brazilian-sweet-n", "mandarin-spanish-red-n", "yuzu-korean-citrus-n", "blood-orange-maltese-n", "clementine-algerian-n"],
+            ["petitgrain-paraguayan-leaf-n", "verbena-moroccan-herb-n", "neroli-moroccan-blossom-n", "lavender-french-provence-n", "rosemary-tunisian-n", "mint-moroccan-spearmint-n", "lemongrass-thai-stalk-n", "citronella-javanese-n", "orange-flower-tunisian-n", "lemon-blossom-spanish-n", "bergamot-flower-italian-n", "kaffir-lime-leaf-thai-n", "coriander-indian-leaf-n", "neroli-tunisian-bloom-n", "petitgrain-spanish-branch-n", "verbena-indian-lemon-n", "citron-mediterranean-flower-n", "lime-blossom-moroccan-n", "lavender-bulgarian-n", "rosemary-spanish-n"],
+            ["white-musk-mediterranean-b", "cedar-moroccan-bark-n", "vetiver-javanese-root-n", "ambergris-coastal-synthetic-b", "citrus-musk-synthetic-b", "ambermax-mediterranean-b", "vetiver-sri-lankan-n", "cedarwood-himalayan-n", "iso-e-super-citrus-b", "galbanum-iranian-resin-n", "lemon-cedar-tunisian-n", "citrus-amber-egyptian-b", "vetiver-burmese-root-n", "cedar-lebanese-base-n", "ambergris-tunisian-b", "white-musk-tunisian-b", "cedar-texas-wood-n", "vetiver-tunisian-root-n", "ambergris-moroccan-n", "tonka-argentinian-bean-n"]
+        ],
+        woody: [
+            ["eucalyptus-indian-n", "elemi-thai-gum-n", "juniper-lebanese-berry-n", "pine-moroccan-needle-n", "black-pepper-madagascan-n", "hinoki-japanese-branch-n", "cedar-lebanese-twig-n", "fir-siberian-balsam-n", "pine-scots-needle-n", "juniper-himalayan-berry-n", "black-pepper-indian-n", "elemi-philippine-gum-n", "galbanum-iranian-leaf-n", "hinoki-korean-wood-n", "cedar-moroccan-leaf-n", "spruce-norwegian-twig-n", "fir-canadian-needle-n", "eucalyptus-tasmanian-n", "camphor-chinese-n", "pine-resin-turkish-n"],
+            ["patchouli-indonesian-leaf-n", "sandalwood-fijian-soft-n", "oakmoss-lebanese-n", "cedar-himalayan-core-n", "vetiver-haitian-root-n", "palo-santo-ecuadorian-n", "guaiac-paraguayan-heart-n", "cypress-tuscan-branch-n", "teak-burmese-wood-n", "birch-finnish-bark-n", "cedar-virginian-core-n", "patchouli-sri-lankan-n", "vetiver-indian-grass-n", "oakmoss-icelandic-n", "palo-santo-peruvian-n", "guaiac-bolivian-wood-n", "teak-thai-bark-n", "ebony-madagascan-n", "birch-swedish-tar-n", "cypress-moroccan-n"],
+            ["labdanum-spanish-resin-n", "amber-tunisian-resin-n", "vanilla-madagascan-bean-n", "cashmeran-vetiver-b", "oud-cambodian-resin-n", "sandalwood-australian-creamy-n", "amber-moroccan-resin-n", "benzoin-laotian-gum-n", "vetiver-madagascan-root-n", "ambrox-synthetic-b", "cedar-himalayan-base-n", "musk-woody-synthetic-b", "oakwood-french-absolute-n", "oud-vietnamese-resin-n", "vetiver-tunisian-root-n", "ambrox-mediterranean-b", "cedar-tunisian-base-n", "musk-tunisian-synthetic-b", "oud-indian-dark-n", "patchouli-indonesian-deep-n"]
+        ],
+        floral: [
+            ["rose-moroccan-valley-n", "freesia-southafrican-petal-n", "neroli-moroccan-blossom-n", "clary-sage-turkish-leaf-n", "angelica-moroccan-flower-n", "cumin-egyptian-seed-n", "cardamom-sri-lankan-n", "pink-grapefruit-florida-n", "bergamot-italian-rind-n", "freesia-tunisian-n", "hyacinth-greek-bloom-n", "mimosa-australian-bloom-n", "violet-french-leaf-n", "linden-german-blossom-n", "apple-blossom-english-n", "violet-italian-leaf-n", "mimosa-french-riviera-n", "hyacinth-spanish-flower-n", "freesia-egyptian-petal-n", "linden-french-blossom-n"],
+            ["jasmine-sambac-indian-n", "lily-of-the-valley-french-n", "rose-bulgarian-oil-n", "peony-chinese-pink-n", "magnolia-vietnamese-bloom-n", "tiare-tahitian-flower-n", "frangipani-mauritian-n", "carnation-spanish-petal-n", "lilac-syracuse-bloom-n", "iris-tunisian-powder-n", "rose-taif-absolute-n", "jasmine-egyptian-star-n", "peony-japanese-white-n", "lily-of-the-valley-english-n", "magnolia-indian-creamy-n", "tiare-fijian-bloom-n", "frangipani-thai-temple-n", "carnation-turkish-red-n", "lilac-french-lavender-n", "iris-florentine-rhizome-n"],
+            ["sandalwood-indian-mysore-n", "vanilla-tahitian-orchid-n", "iris-florentine-rhizome-n",            "musk-floral-synthetic-b", "amber-rose-synthetic-b", "white-musk-moroccan-b", "sandalwood-australian-soft-n", 
+            "amber-tunisian-floral-n", "vanilla-madagascan-pod-n", "iris-tunisian-root-n", "vanilla-comorian-orchid-n", 
+            "amber-floral-egyptian-b", "musk-ketone-floral-b", "orris-moroccan-concrete-n", "sandalwood-sri-lankan-n", 
+            "tuberose-indian-wax-n", "ylang-madagascan-absolute-n", "benzoin-siam-n", "patchouli-indonesian-deep-n", 
+            "rose-damascene-petal-n", "jasmine-tunisian-dawn-n"]
+        ],
+        spicy: [
+            ["black-pepper-madagascan-n", "cinnamon-ceylon-bark-n", "nutmeg-indonesian-n", "clove-madagascan-bud-n", 
+             "ginger-omani-root-n", "pink-pepper-brazilian-n", "allspice-jamaican-n", "anise-turkish-seed-n", 
+             "caraway-egyptian-n", "coriander-moroccan-seed-n", "fennel-italian-seed-n", "saffron-iranian-stigma-n", 
+             "black-pepper-vietnamese-n", "cinnamon-vietnamese-bark-n", "nutmeg-sri-lankan-n", "clove-zanzibar-bud-n", 
+             "ginger-thai-root-n", "pink-pepper-reunion-n", "allspice-mexican-n", "anise-syrian-seed-n"],
+            ["cardamom-guatemalan-pod-n", "ginger-zanzibar-root-n", "star-anise-vietnamese-n", "bay-leaf-turkish-n", 
+             "thyme-moroccan-herb-n", "rosemary-tunisian-n", "turmeric-indian-root-n", "cumin-egyptian-seed-n", 
+             "saffron-turkish-absolute-n", "clove-tunisian-bud-n", "cardamom-indian-green-n", "coriander-indian-leaf-n", 
+             "fennel-moroccan-seed-n", "anise-moroccan-star-n", "bay-leaf-italian-n", "thyme-spanish-wild-n", 
+             "rosemary-moroccan-n", "turmeric-sri-lankan-n", "cumin-tunisian-seed-n", "saffron-kashmiri-thread-n"],
+            ["tobacco-cuban-leaf-n", "leather-moroccan-accord-b", "sandalwood-indian-spicy-n", "patchouli-indonesian-deep-n", 
+             "amber-spicy-synthetic-b", "musk-oriental-spicy-b", "benzoin-siam-spicy-n", "oud-thai-resin-n", 
+             "tonka-brazilian-dark-n", "vetiver-haitian-spicy-n", "tobacco-virginian-leaf-n", "leather-tunisian-accord-b", 
+             "sandalwood-australian-spicy-n", "patchouli-sri-lankan-dark-n", "amber-moroccan-spicy-b", 
+             "musk-tunisian-spicy-b", "benzoin-thai-resin-n", "oud-indian-dark-n", "tonka-venezuelan-roast-n", 
+             "vetiver-indian-spicy-n"]
+        ],
+        gourmand: [
+            ["caramel-french-burnt-b", "coffee-ethiopian-roast-n", "vanilla-mexican-pod-n", "honey-french-lavender-n", 
+             "maple-canadian-syrup-n", "toffee-english-sticky-b", "butterscotch-scottish-b", "coconut-malaysian-cream-n", 
+             "almond-italian-roast-n", "hazelnut-turkish-n", "praline-french-nut-b", "brown-sugar-cuban-n", 
+             "molasses-jamaican-dark-n", "caramel-brazilian-salted-b", "coffee-colombian-bean-n", 
+             "vanilla-tahitian-cream-n", "honey-tunisian-orange-n", "maple-vermont-sap-n", "toffee-irish-cream-b", 
+             "butterscotch-english-b"],
+            ["cocoa-venezuelan-bean-n", "tonka-brazilian-bean-n", "chocolate-mexican-dark-b", "praline-french-nut-b", 
+             "hazelnut-french-roast-n", "almond-moroccan-sweet-n", "coconut-thai-cream-n", "toffee-australian-b", 
+             "caramel-italian-salted-b", "coffee-kenyan-roast-n", "vanilla-ugandan-pod-n", "honey-australian-manuka-n", 
+             "maple-french-syrup-n", "butterscotch-french-b", "cocoa-peruvian-dark-n", "tonka-venezuelan-bean-n", 
+             "chocolate-swiss-milk-b", "praline-spanish-nut-b", "hazelnut-spanish-roast-n", "almond-tunisian-sweet-n"],
+            ["vanilla-madagascan-bean-n", "tonka-brazilian-dark-n", "cocoa-madagascan-dark-n", "chocolate-venezuelan-b", 
+             "benzoin-siam-gourmand-n", "musk-gourmand-synthetic-b", "amber-gourmand-synthetic-b", 
+             "praline-moroccan-nut-b", "caramel-tunisian-salted-b", "coffee-tunisian-roast-n", 
+             "vanilla-reunion-orchid-n", "honey-spanish-orange-n", "maple-tunisian-syrup-n", 
+             "toffee-moroccan-sticky-b", "butterscotch-moroccan-b", "cocoa-tunisian-dark-n", 
+             "tonka-tunisian-bean-n", "chocolate-french-dark-b", "praline-english-nut-b", "hazelnut-tunisian-roast-n"]
+        ],
+        aquatic: [
+            ["sea-salt-mediterranean-b", "marine-accord-atlantic-b", "calone-ocean-breeze-b", "watermelon-australian-n", 
+             "cucumber-english-fresh-n", "ozonic-air-synthetic-b", "seaweed-irish-kelp-n", "lotus-indian-blue-n", 
+             "water-hyacinth-thai-n", "melon-cantaloupe-french-n", "aquatic-fog-synthetic-b", "sea-salt-atlantic-b", 
+             "marine-accord-pacific-b", "calone-sea-breeze-b", "watermelon-fijian-n", "cucumber-japanese-fresh-n", 
+             "ozonic-wave-synthetic-b", "seaweed-scottish-kelp-n", "lotus-egyptian-white-n", "water-hyacinth-vietnamese-n"],
+            ["water-lily-egyptian-n", "lotus-indian-blue-n", "water-hyacinth-fijian-n", "iris-aquatic-italian-n", 
+             "jasmine-aquatic-indian-n", "water-lily-thai-white-n", "lotus-vietnamese-pink-n", 
+             "aquatic-flower-synthetic-b", "marine-jasmine-tunisian-n", "water-hyacinth-moroccan-n", 
+             "iris-aquatic-french-n", "jasmine-aquatic-egyptian-n", "water-lily-indian-pink-n", 
+             "lotus-moroccan-white-n", "aquatic-lily-synthetic-b", "marine-rose-tunisian-n", 
+             "water-hyacinth-tunisian-n", "iris-aquatic-tunisian-n", "jasmine-aquatic-moroccan-n", 
+             "water-lily-fijian-blue-n"],
+            ["ambergris-moroccan-n", "coastal-cedar-tunisian-n", "musk-aquatic-synthetic-b", "amber-aquatic-synthetic-b", 
+             "driftwood-atlantic-n", "sea-moss-irish-n", "vetiver-aquatic-haitian-n", "sandalwood-fijian-aquatic-n", 
+             "ambergris-pacific-n", "coastal-cedar-moroccan-n", "musk-coastal-synthetic-b", 
+             "amber-aquatic-moroccan-b", "driftwood-pacific-n", "sea-moss-scottish-n", "vetiver-aquatic-indian-n", 
+             "sandalwood-aquatic-australian-n", "ambergris-atlantic-n", "coastal-cedar-fijian-n", 
+             "musk-aquatic-tunisian-b", "amber-aquatic-tunisian-b"]
+        ]
+    };
+
+    // Trait to Note Mapping
+    const traitToNoteMap = {
+        elegant: ["rose-moroccan-valley-n", "vanilla-tahitian-orchid-n", "iris-florentine-powder-n", "freesia-southafrican-petal-n", 
+                 "jasmine-sambac-indian-n", "sandalwood-indian-mysore-n"],
+        sensual: ["ylang-ylang-comorian-n", "tuberose-indian-sunset-n", "amber-emirati-glow-b", "champaca-bangladeshi-n", 
+                 "oud-myanmar-wood-n", "benzoin-siam-n"],
+        serenity: ["clary-sage-turkish-leaf-n", "saffron-turkish-absolute-n", "benzoin-siam-n", "water-lily-egyptian-n", 
+                  "neroli-moroccan-blossom-n", "lavender-french-provence-n"],
+        romance: ["rose-moroccan-valley-n", "jasmine-sambac-indian-n", "vanilla-tahitian-orchid-n", "lily-of-the-valley-french-n", 
+                 "frangipani-mauritian-n", "rose-bulgarian-oil-n"],
+        mysterious: ["patchouli-indonesian-leaf-n", "oud-myanmar-wood-n", "oakmoss-lebanese-n", "myrrh-yemeni-sacred-n", 
+                    "labdanum-spanish-resin-n", "amber-tunisian-resin-n"],
+        reflection: ["sandalwood-fijian-soft-n", "labdanum-spanish-resin-n", "amber-tunisian-resin-n", "cedar-himalayan-core-n", 
+                    "vetiver-haitian-root-n", "oud-cambodian-resin-n"],
+        playful: ["eucalyptus-indian-n", "juniper-lebanese-berry-n", "bergamot-calabrian-rind-n", "yuzu-japanese-citrus-n", 
+                 "caramel-french-burnt-b", "coffee-ethiopian-roast-n"],
+        joy: ["elemi-thai-gum-n", "vanilla-madagascan-bean-n", "lemon-sorrento-peel-n", "caramel-french-burnt-b", 
+              "watermelon-australian-n", "cucumber-english-fresh-n"],
+        oriental: ["saffron-kashmiri-stigma-n", "oud-myanmar-wood-n", "rose-omani-petal-n", "amber-emirati-glow-b", 
+                  "myrrh-yemeni-sacred-n", "frankincense-omani-tear-n"],
+        woody: ["cedar-himalayan-core-n", "sandalwood-fijian-soft-n", "patchouli-indonesian-leaf-n", "vetiver-haitian-root-n", 
+               "oud-cambodian-resin-n", "amber-tunisian-resin-n"],
+        floral: ["rose-moroccan-valley-n", "jasmine-sambac-indian-n", "freesia-southafrican-petal-n", "lily-of-the-valley-french-n", 
+                "magnolia-vietnamese-bloom-n", "iris-florentine-rhizome-n"],
+        citrus: ["bergamot-calabrian-rind-n", "yuzu-japanese-citrus-n", "lemon-sorrento-peel-n", "grapefruit-florida-pink-n", 
+                "petitgrain-paraguayan-leaf-n", "verbena-moroccan-herb-n"],
+        spicy: ["black-pepper-madagascan-n", "cinnamon-ceylon-bark-n", "cardamom-guatemalan-pod-n", "ginger-zanzibar-root-n", 
+               "saffron-iranian-stigma-n", "tobacco-cuban-leaf-n"],
+        gourmand: ["caramel-french-burnt-b", "coffee-ethiopian-roast-n", "vanilla-madagascan-bean-n", "cocoa-venezuelan-bean-n", 
+                  "tonka-brazilian-dark-n", "praline-french-nut-b"],
+        aquatic: ["sea-salt-mediterranean-b", "marine-accord-atlantic-b", "water-lily-egyptian-n", "lotus-indian-blue-n", 
+                 "ambergris-moroccan-n", "coastal-cedar-tunisian-n"],
+        childhood: ["caramel-french-burnt-b", "vanilla-madagascan-bean-n", "praline-french-nut-b", "cocoa-venezuelan-bean-n", 
+                   "honey-french-lavender-n", "maple-canadian-syrup-n"],
+        reflection: ["sandalwood-fijian-soft-n", "oud-cambodian-resin-n", "amber-tunisian-resin-n", "labdanum-spanish-resin-n", 
+                    "myrrh-yemeni-sacred-n", "benzoin-siam-n"]
+    };
+
+    // Questions: Placeholder (extend with full 20 questions if needed)
+    const questions = [
+        {
+            en: "If you could bottle one emotion, it would be...",
+            ar: "إذا كان بإمكانك تعبئة عاطفة واحدة, فستكون...",
+            options: [
+                ["Serene contentment", "رضا هادئ", ["elegant", "serenity", "oriental", "reflection"], 1.5],
+                ["Deep intrigue", "فضول عميق", ["mysterious", "reflection", "woody", "reflection"], 1.5],
+                ["Romantic nostalgia", "حنين رومانسي", ["sensual", "romance", "floral", "romance"], 1.5]
+            ]
+        },
+        {
+            en: "Your ideal evening setting is...",
+            ar: "مكان أمسيتك المثالي هو...",
+            options: [
+                ["Candlelit salon with soft music", "صالون مضاء بالشموع مع موسيقى هادئة", ["elegant", "serenity", "oriental", "romance"], 1.2],
+                ["Secluded reading nook by the fireplace", "ركن قراءة منعزل بجوار المدفأة", ["mysterious", "reflection", "woody", "reflection"], 1.2],
+                ["Cozy dinner under fairy lights", "عشاء مريح تحت الأضواء الخيالية", ["sensual", "romance", "floral", "romance"], 1.2]
+            ]
+        },
+        ...Array(18).fill().map((_, i) => ({
+            en: `Question ${i + 3}...`,
+            ar: `سؤال ${i + 3}...`,
+            options: [
+                ["Option 1", "خيار 1", ["elegant", "serenity", "floral", "reflection"], 1.0],
+                ["Option 2", "خيار 2", ["mysterious", "reflection", "woody", "reflection"], 1.0],
+                ["Option 3", "خيار 3", ["sensual", "romance", "oriental", "romance"], 1.0]
+            ]
+        }))
+    ];
+
+    // Translations
+    const translations = {
+        en: {
+            startQuiz: "Start Quiz",
+            discoverScent: "Discover Your Signature Scent",
+            yourScentProfile: "Your Signature Fragrance Profile",
+            resultSubtitle: "A bespoke fragrance crafted for your unique essence.",
+            prev: "Previous",
+            next: "Next",
+            arabic: "عربي",
+            english: "English"
+        },
+        ar: {
+            startQuiz: "بدء الاختبار",
+            discoverScent: "اكتشف عطرك المميز",
+            yourScentProfile: "ملف عطرك المميز",
+            resultSubtitle: "عطر مصمم خصيصًا يعكس جوهرك الفريد.",
+            prev: "السابق",
+            next: "التالي",
+            arabic: "عربي",
+            english: "English"
+        }
+    };
+    
+    <script>
+    const PerfumeGenerator = {
+        currentQuestion: 0,
+        answers: Array(20).fill(undefined),
+        responseTimes: Array(20).fill(null),
+        score: { style: {}, emotion: {}, family: {}, memory: {} },
+        currentLang: "en",
+        categories: {
+            style: ["elegant", "mysterious", "playful", "classic", "sensual"],
+            emotion: ["serenity", "reflection", "joy", "romance"],
+            family: ["oriental", "woody", "floral"],
+            memory: ["reflection", "romance", "childhood"]
+        },
+
+        init: function() {
+            console.log("Initializing...");
+            Object.keys(this.categories).forEach(cat => {
+                this.categories[cat].forEach(item => { this.score[cat][item] = 0; });
+            });
+            const els = {
+                startQuizBtn: document.getElementById("startQuizBtn"),
+                langToggle: document.getElementById("langToggle"),
+                prevBtn: document.getElementById("prevBtn"),
+                nextBtn: document.getElementById("nextBtn"),
+                optionsContainer: document.getElementById("optionsContainer"),
+                shareResultsBtn: document.getElementById("shareResultsBtn")
+            };
+            Object.entries(els).forEach(([key, el]) => {
+                if (!el && key !== "shareResultsBtn") console.error(`${key} not found`);
+            });
+            if (!els.startQuizBtn || !els.langToggle || !els.prevBtn || !els.nextBtn || !els.optionsContainer) {
+                throw new Error("Required DOM elements missing");
+            }
+            els.startQuizBtn.addEventListener("click", () => {
+                console.log("Start Quiz clicked");
+                this.startQuiz();
+            });
+            els.langToggle.addEventListener("click", () => this.toggleLanguage());
+            els.prevBtn.addEventListener("click", () => this.prevQuestion());
+            els.nextBtn.addEventListener("click", () => this.nextQuestion());
+            if (els.shareResultsBtn) {
+                els.shareResultsBtn.addEventListener("click", () => this.shareResults());
+            }
+            els.optionsContainer.addEventListener("click", e => {
+                const card = e.target.closest(".option-card");
+                if (card) this.selectOption(card);
+            });
+            els.optionsContainer.addEventListener("keydown", e => {
+                if (e.key === "Enter" || e.key === " ") {
+                    const card = e.target.closest(".option-card");
+                    if (card) {
+                        e.preventDefault();
+                        this.selectOption(card);
+                    }
+                }
+            });
+            document.getElementById("birthDateInput").value = "";
+            document.getElementById("ingredientPref").value = "both";
+            this.updateTranslations();
+            console.log("Initialization complete");
+        },
+
+        startQuiz: function() {
+            if (!document.getElementById("birthDateInput").value) {
+                alert(this.currentLang === "en" ? "Please enter your birth date." : "يرجى إدخال تاريخ ميلادك.");
+                return;
+            }
+            document.querySelector(".header").style.display = "none";
+            document.querySelector(".quiz-section").style.display = "block";
+            this.currentQuestion = 0;
+            this.answers.fill(undefined);
+            this.responseTimes.fill(null);
+            Object.keys(this.score).forEach(cat => {
+                Object.keys(this.score[cat]).forEach(item => { this.score[cat][item] = 0; });
+            });
+            this.startTime = Date.now();
+            this.displayQuestion();
+        },
+
+        toggleLanguage: function() {
+            this.currentLang = this.currentLang === "en" ? "ar" : "en";
+            this.updateTranslations();
+            this.displayQuestion();
+            document.getElementById("langToggle").textContent = translations[this.currentLang][this.currentLang === "en" ? "arabic" : "english"];
+            const dir = this.currentLang === "ar" ? "rtl" : "ltr";
+            document.body.style.direction = dir;
+            document.querySelector(".container").style.direction = dir;
+            document.querySelectorAll(".intro-text").forEach(text => {
+                text.style.display = text.getAttribute("data-lang") === this.currentLang ? "block" : "none";
+            });
+        },
+
+        updateTranslations: function() {
+            document.getElementById("startQuizBtn").textContent = translations[this.currentLang].startQuiz;
+            document.getElementById("subtitle").textContent = translations[this.currentLang].discoverScent;
+            document.getElementById("prevBtn").textContent = translations[this.currentLang].prev;
+            document.getElementById("nextBtn").textContent = translations[this.currentLang].next;
+            const resultSubtitle = document.getElementById("resultSubtitle");
+            if (resultSubtitle) resultSubtitle.textContent = translations[this.currentLang].resultSubtitle;
+        },
+
+        displayQuestion: function() {
+            const q = questions[this.currentQuestion];
+            const els = {
+                questionText: document.getElementById("questionText"),
+                optionsContainer: document.getElementById("optionsContainer"),
+                currentQ: document.getElementById("currentQ"),
+                totalQ: document.getElementById("totalQ"),
+                progressFill: document.getElementById("progressFill")
+            };
+            els.questionText.textContent = q[this.currentLang];
+            els.currentQ.textContent = this.currentQuestion + 1;
+            els.totalQ.textContent = questions.length;
+            els.progressFill.style.width = `${((this.currentQuestion + 1) / questions.length) * 100}%`;
+            els.optionsContainer.innerHTML = "";
+            q.options.forEach((opt, i) => {
+                const card = document.createElement("div");
+                card.className = `option-card${this.answers[this.currentQuestion] === i ? " selected" : ""}`;
+                card.setAttribute("role", "option");
+                card.setAttribute("tabindex", "0");
+                card.setAttribute("aria-selected", this.answers[this.currentQuestion] === i ? "true" : "false");
+                card.innerHTML = `<div class="option-text">${opt[this.currentLang === "en" ? 0 : 1]}</div>`;
+                els.optionsContainer.appendChild(card);
+            });
+            this.updateNavigationButtons();
+        },
+
+        updateNavigationButtons: function() {
+            document.getElementById("prevBtn").disabled = this.currentQuestion === 0;
+            document.getElementById("nextBtn").disabled = this.answers[this.currentQuestion] === undefined;
+        },
+
+        selectOption: function(card) {
+            const options = Array.from(card.parentElement.children);
+            const index = options.indexOf(card);
+            if (this.responseTimes[this.currentQuestion] === null) {
+                this.responseTimes[this.currentQuestion] = { start: this.startTime, duration: Date.now() - this.startTime };
+            }
+            this.answers[this.currentQuestion] = index;
+            options.forEach(opt => {
+                opt.classList.remove("selected");
+                opt.setAttribute("aria-selected", "false");
+            });
+            card.classList.add("selected");
+            card.setAttribute("aria-selected", "true");
+            this.updateNavigationButtons();
+        },
+
+        prevQuestion: function() {
+            if (this.currentQuestion > 0) {
+                this.currentQuestion--;
+                this.startTime = Date.now();
+                this.displayQuestion();
+            }
+        },
+
+        nextQuestion: function() {
+            if (this.answers[this.currentQuestion] !== undefined) {
+                this.calculateScore();
+                this.currentQuestion++;
+                if (this.currentQuestion < questions.length) {
+                    this.startTime = Date.now();
+                    this.displayQuestion();
+                } else {
+                    document.querySelector(".quiz-section").style.display = "none";
+                    document.querySelector(".result-section").style.display = "block";
+                    this.showResult();
+                }
+            }
+        },
+
+        calculateScore: function() {
+            const qIndex = this.currentQuestion;
+            const aIndex = this.answers[qIndex];
+            if (aIndex !== undefined) {
+                const [,, traits, weight] = questions[qIndex].options[aIndex];
+                traits.forEach((trait, i) => {
+                    const cat = ["style", "emotion", "family", "memory"][i];
+                    this.score[cat][trait] = (this.score[cat][trait] || 0) + weight;
+                });
+            }
+        },
+
+        getTopCategories: function() {
+            const top = {};
+            Object.keys(this.score).forEach(cat => {
+                const scores = Object.entries(this.score[cat]).sort((a, b) => b[1] - a[1]);
+                top[cat] = {
+                    primary: scores[0]?.[0] || null,
+                    secondary: scores[1]?.[0] || null
+                };
+            });
+            return top;
+        },
+
+        getPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
+            console.log(`Generating blend for ${dominantFamily}, pref: ${ingredientPref}`);
+            const blend = { top: [], heart: [], base: [] };
+            const familyNotes = pyramidNotes[dominantFamily] || pyramidNotes.oriental;
+            const profileKey = `${topCategories.style.primary}-${topCategories.emotion.primary}`;
+            const profile = profileDistributions[profileKey] || { top: 3, heart: 3, base: 3 };
+            const { top: topCount, heart: heartCount, base: baseCount } = profile;
+
+            const filterNotes = ids => ids.filter(id => {
+                const note = noteRegistry[id];
+                return ingredientPref === "both" || note.type === ingredientPref;
+            });
+
+            const selectNotes = (noteIds, count, layer, selectedFamilies) => {
+                const available = filterNotes(noteIds);
+                const selected = [];
+                const getFamily = id => {
+                    const name = noteRegistry[id].name.toLowerCase().replace(/\s*\(.*\)$/g, '').split(/[- ]/)[0];
+                    return name.startsWith("ambrox") ? "ambrox" : name;
+                };
+                const traits = [
+                    topCategories.style.primary,
+                    topCategories.emotion.primary,
+                    topCategories.style.secondary,
+                    topCategories.emotion.secondary
+                ];
+                let traitNotes = traits.flatMap(t => traitToNoteMap[t] || []).filter(id => available.includes(id));
+                traitNotes = [...new Set(traitNotes)].sort(() => Math.random() - 0.5);
+
+                while (selected.length < count && traitNotes.length) {
+                    const id = traitNotes.shift();
+                    const family = getFamily(id);
+                    if (!selectedFamilies.has(family)) {
+                        selected.push(id);
+                        selectedFamilies.add(family);
+                        console.log(`Selected ${noteRegistry[id].name} for ${layer}`);
+                    }
+                }
+
+                const remaining = available.filter(id => !selected.includes(id));
+                while (selected.length < count && remaining.length) {
+                    const id = remaining.splice(Math.floor(Math.random() * remaining.length), 1)[0];
+                    const family = getFamily(id);
+                    if (!selectedFamilies.has(family)) {
+                        selected.push(id);
+                        selectedFamilies.add(family);
+                        console.log(`Fallback ${noteRegistry[id].name} for ${layer}`);
+                    }
+                }
+
+                return selected.map(id => noteRegistry[id].name);
+            };
+
+            const selectedFamilies = new Set();
+            blend.top = selectNotes(familyNotes[0], topCount, "top", selectedFamilies);
+            blend.heart = selectNotes(familyNotes[1], heartCount, "heart", selectedFamilies);
+            blend.base = selectNotes(familyNotes[2], baseCount, "base", selectedFamilies);
+            console.log(`Blend: ${topCount}/${heartCount}/${baseCount}`, blend);
+            return blend;
+        },
+
+        calculateConfidence: function() {
+            console.log("Calculating confidence...");
+            const totalResponses = this.answers.filter(a => a !== undefined).length;
+            let consistencyScore = 0;
+            let coherenceScore = 0;
+            let responseTimeScore = 0;
+
+            Object.keys(this.score).forEach(cat => {
+                const scores = Object.values(this.score[cat]);
+                const maxScore = Math.max(...scores);
+                const totalScore = scores.reduce((s, v) => s + v, 0) || 1;
+                consistencyScore += maxScore / totalScore;
+            });
+            consistencyScore /= Object.keys(this.score).length;
+
+            const style = this.getTopCategories().style.primary;
+            const family = this.getTopCategories().family.primary;
+            const validPairs = {
+                elegant: ["oriental", "floral"],
+                mysterious: ["woody", "oriental"],
+                playful: ["floral", "oriental"],
+                classic: ["floral", "oriental"],
+                sensual: ["floral", "oriental"]
+            };
+            coherenceScore = validPairs[style]?.includes(family) ? 1 : 0.5;
+
+            const durations = this.responseTimes.map(t => t?.duration || 0).filter(d => d > 0);
+            responseTimeScore = durations.every(d => d >= 500 && d <= 60000) ? 1 : 0.9;
+
+            console.log(`Consistency: ${consistencyScore.toFixed(3)}, Coherence: ${coherenceScore.toFixed(3)}, Response Time: ${responseTimeScore.toFixed(3)}`);
+            console.log(`Durations: ${durations.map(d => (d/1000).toFixed(1)).join('s, ')}s`);
+
+            const baseConfidence = consistencyScore * 0.5 + coherenceScore * 0.3 + responseTimeScore * 0.2;
+            const completeness = totalResponses / questions.length;
+            const confidence = Math.min(99, (baseConfidence * 0.8 + completeness * 0.2) * 100);
+            console.log(`Confidence: ${confidence.toFixed(1)}%`);
+            return confidence;
+        },
+
+        generateResult: function() {
+            const topCategories = this.getTopCategories();
+            const dominantFamily = topCategories.family.primary || "oriental";
+            const blend = this.getPerfumeBlend(dominantFamily, topCategories, document.getElementById("ingredientPref").value);
+            const confidence = this.calculateConfidence();
+            const analysis = this.currentLang === "en" ?
+                `Your fragrance profile reveals a ${topCategories.style.primary} presence with undertones of ${topCategories.style.secondary}. You embody the ${topCategories.emotion.primary} spirit, seeking moments of ${topCategories.emotion.secondary}. Your scent is a ${dominantFamily} essence.` :
+                `ملف عطرك يكشف عن حضور ${topCategories.style.primary} مع لمحات من ${topCategories.style.secondary}. أنت تجسد روح ${topCategories.emotion.primary}، تسعى للحظات ${topCategories.emotion.secondary}. عطرك جوهر ${dominantFamily}.`;
+
+            return { topNotes: blend.top, heartNotes: blend.heart, baseNotes: blend.base, confidence: confidence.toFixed(1), analysis };
+        },
+
+        showResult: function() {
+            const result = this.generateResult();
+            document.getElementById("resultSubtitle").textContent = translations[this.currentLang].resultSubtitle;
+            document.getElementById("personalityAnalysis").textContent = result.analysis;
+            const comp = document.getElementById("fragranceComposition");
+            comp.innerHTML = "";
+            [
+                { title: this.currentLang === "en" ? "Top Notes" : "النوتات العليا", notes: result.topNotes },
+                { title: this.currentLang === "en" ? "Heart Notes" : "النوتات الوسطى", notes: result.heartNotes },
+                { title: this.currentLang === "en" ? "Base Notes" : "النوتات القاعدية", notes: result.baseNotes }
+            ].forEach(cat => {
+                const div = document.createElement("div");
+                div.className = "note-category";
+                div.innerHTML = `<h3>${cat.title}</h3><p class="note-list">${cat.notes.join(", ")}</p>`;
+                comp.appendChild(div);
+            });
+            document.getElementById("confidenceScore").textContent = this.currentLang === "en" ?
+                `Confidence Score: ${result.confidence}%` : `درجة الثقة: ${result.confidence}%`;
+        },
+
+        shareResults: function() {
+            console.log("Sharing results...");
+            const result = this.generateResult();
+            const subject = encodeURIComponent("Al Nada Fragrance Quiz Results");
+            const body = encodeURIComponent(
+                `Personality: ${result.analysis}\n` +
+                `Top Notes: ${result.topNotes.join(", ")}\n` +
+                `Heart Notes: ${result.heartNotes.join(", ")}\n` +
+                `Base Notes: ${result.baseNotes.join(", ")}\n` +
+                `Confidence: ${result.confidence}%`
+            );
+            window.location.href = `mailto:salyafei@gmail.com?subject=${subject}&body=${body}`;
+        }
+    };
+
+    window.addEventListener("DOMContentLoaded", () => PerfumeGenerator.init());
+</script>
+</body>
+</html>
