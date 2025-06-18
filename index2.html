@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Nada • Fragrance Personality Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <img src="./al-nada-logo.png" alt="Al Nada Logo" class="logo-img" onerror="console.error('Logo failed to load. Check file name: al-nada-logo.png in the same directory as index.html'); this.src='https://via.placeholder.com/150?text=Logo+Missing';" />
+                <br><br>
+                <h1 class="brand-name">AL NADA</h1>
+                <p class="brand-tagline">THE HOUSE OF PERFUME EXPERTS</p>
+                <h2 class="main-title">Discover Your Signature Fragrance</h2>
+                <p class="intro-text" data-lang="en">This questionnaire is designed to craft a signature perfume tailored to your unique personality, emotions, and memories. By answering 20 carefully curated questions, we analyze your preferences across style, emotion, fragrance family, and memory to create a bespoke fragrance blend.</p>
+                <p class="intro-text" data-lang="ar" style="display: none;">هذا الاستبيان مصمم لصيغة عطر مميز يتناسب مع شخصيتك الفريدة، عواطفك، وذكرياتك. من خلال الإجابة على 20 سؤالًا تم اختيارها بعناية، نحلل تفضيلاتك عبر الأسلوب، العاطفة، عائلة العطر، والذاكرة لإنشاء مزيج عطري مخصص.</p>
+                <p class="intro-text" data-lang="en">Be Honest: Your responses should reflect your true feelings and experiences. Honest answers ensure the fragrance captures your essence, from the top notes to the base. Take your time to select the option that resonates most with you.</p>
+                <p class="intro-text" data-lang="ar" style="display: none;">كن صادقًا: يجب أن تعكس إجاباتك مشاعرك وتجاربك الحقيقية. الإجابات الصادقة تضمن أن يعكس العطر جوهرك، من النوتات العليا إلى القاعدة. خذ وقتك لاختيار الخيار الذي يتردد صداه معك أكثر.</p>
+                <p class="intro-text" data-lang="en">Your birth date and ingredient preference (natural, synthetic, or both) add a personalized touch, aligning the blend with your seasonal vibe and values. The result is a preliminary fragrance profile, which will be refined by a professional perfume nose to perfect the harmony of the blend.</p>
+                <p class="intro-text" data-lang="ar" style="display: none;">تاريخ ميلادك وتفضيلك للمكونات (طبيعية، صناعية، أو كلاهما) يضيفان لمسة شخصية، مواءمة المزيج مع أجواءك الموسمية وقيمك. النتيجة هي ملف عطري أولي، سيتم تهيئته بواسطة أنف عطري محترف لتحسين تناغم المزيج.</p>
+                <p class="subtitle" id="subtitle">Discover Your Signature Scent</p>
+            </div>
+            <div class="form-section">
+                <label for="birthDateInput" class="form-label">Your Birth Date:</label>
+                <input type="date" id="birthDateInput" class="form-input" required>
+                <label for="ingredientPref" class="form-label">Ingredient Preference:</label>
+                <select id="ingredientPref" class="form-input">
+                    <option value="both">Both Natural & Synthetic</option>
+                    <option value="natural">Natural Only</option>
+                    <option value="synthetic">Synthetic Only</option>
+                </select>
+                <button id="startQuizBtn" class="btn primary-btn">Start Quiz</button>
+            </div>
+        </div>
+        <div class="quiz-section" style="display: none;">
+            <div class="language-toggle">
+                <button id="langToggle" class="lang-btn">عربي</button>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <p class="progress-text">Question <span id="currentQ">1</span> of <span id="totalQ">20</span></p>
+            <h2 id="questionText" class="question-text"></h2>
+            <div id="optionsContainer" class="options-container"></div>
+            <div class="navigation-buttons">
+                <button id="prevBtn" class="btn secondary-btn" disabled>Previous</button>
+                <button id="nextBtn" class="btn primary-btn" disabled>Next</button>
+            </div>
+        </div>
+        <div class="result-section" style="display: none;">
+            <h2 class="result-title">Your Signature Fragrance Profile</h2>
+            <p class="result-subtitle" id="resultSubtitle"></p>
+            <div class="personality-analysis" id="personalityAnalysis"></div>
+            <div class="fragrance-composition" id="fragranceComposition"></div>
+            <p class="confidence-score" id="confidenceScore"></p>
+            <button id="restartBtn" class="btn primary-btn">Restart Quiz</button>
+        </div>
+    </div>
+
+  <style>
+        :root {
+            --coral-rose: #ff6f61;
+            --deep-burgundy: #4a2c40;
+            --earthy-green: #3a5f3f;
+            --soft-white: #f9f5f0;
+            --light-coral: #ff8c82;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--soft-white);
+            color: var(--deep-burgundy);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-img {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--coral-rose);
+            margin-bottom: 10px;
+        }
+
+        .brand-tagline {
+            font-size: 1.2rem;
+            color: var(--earthy-green);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--deep-burgundy);
+            margin-bottom: 20px;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            color: var(--deep-burgundy);
+            max-width: 800px;
+            margin: 10px auto;
+            text-align: justify;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--earthy-green);
+            margin-top: 30px;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .form-label {
+            font-size: 1.2rem;
+            color: var(--deep-burgundy);
+        }
+
+        .form-input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid var(--light-coral);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn {
+            background: var(--coral-rose);
+            color: #fff;
+        }
+
+        .primary-btn:hover {
+            background: var(--light-coral);
+        }
+
+        .secondary-btn {
+            background: var(--earthy-green);
+            color: #fff;
+        }
+
+        .secondary-btn:hover {
+            background: #4a7f4d;
+        }
+
+        .quiz-section {
+            text-align: center;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            color: var(--coral-rose);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--coral-rose);
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 1rem;
+            color: var(--deep-burgundy);
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--deep-burgundy);
+            margin-bottom: 30px;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .option-card {
+            background: var(--soft-white);
+            border: 2px solid var(--light-coral);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 80px;
+        }
+
+        .option-card:hover {
+            background: var(--light-coral);
+            color: #fff;
+        }
+
+        .option-card.selected {
+            background: var(--coral-rose);
+            color: #fff;
+            border-color: var(--coral-rose);
+        }
+
+        .option-text {
+            font-size: 1.1rem;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .result-section {
+            text-align: center;
+        }
+
+        .result-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--deep-burgundy);
+            margin-bottom: 20px;
+        }
+
+        .result-subtitle {
+            font-size: 1.5rem;
+            color: var(--earthy-green);
+            margin-bottom: 30px;
+        }
+
+        .personality-analysis {
+            font-size: 1.1rem;
+            color: var(--deep-burgundy);
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: justify;
+        }
+
+        .fragrance-composition {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .note-category {
+            background: var(--soft-white);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid var(--light-coral);
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .note-list {
+            color: var(--earthy-green);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .confidence-score {
+            font-size: 1.2rem;
+            color: var(--coral-rose);
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .brand-name {
+                font-size: 2.5rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.8rem;
+            }
+
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+
+            .fragrance-composition {
+                grid-template-columns: 1fr;
+            }
+
+            .note-list {
+                white-space: normal;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <script>
+        const PerfumeGenerator = {
+            currentQuestion: 0,
+            answers: new Array(20).fill(undefined),
+            responseTimes: new Array(20).fill(null),
+            score: {
+                style: {},
+                emotion: {},
+                family: {},
+                memory: {}
+            },
+            currentLang: 'en',
+            translations: {
+                en: {
+                    startQuiz: 'Start Quiz',
+                    discoverScent: 'Discover Your Signature Scent',
+                    yourScentProfile: 'Your Signature Fragrance Profile',
+                    resultSubtitle: 'A bespoke fragrance crafted for your unique essence.',
+                    restartQuiz: 'Restart Quiz',
+                    prev: 'Previous',
+                    next: 'Next',
+                    arabic: 'عربي',
+                    english: 'English'
+                },
+                ar: {
+                    startQuiz: 'بدء الاختبار',
+                    discoverScent: 'اكتشف عطرك المميز',
+                    yourScentProfile: 'ملف عطرك المميز',
+                    resultSubtitle: 'عطر مصمم خصيصًا يعكس جوهرك الفريد.',
+                    restartQuiz: 'إعادة الاختبار',
+                    prev: 'السابق',
+                    next: 'التالي',
+                    arabic: 'عربي',
+                    english: 'English'
+                }
+            },
+            categories: {
+                style: ["elegant", "bold", "mysterious", "refreshing", "playful", "sensual", "exotic", "minimalist", "adventurous", "classic", "bohemian", "modern"],
+                emotion: ["serenity", "confidence", "intrigue", "joy", "excitement", "romance", "reflection", "passion", "power", "melancholy", "nostalgia", "curiosity", "calm", "ambition", "empathy"],
+                family: ["oriental", "spicy", "woody", "citrus", "floral", "gourmand", "aquatic"],
+                memory: ["reflection", "celebration", "childhood", "nature", "travel", "romance"]
+            },
+            pyramidNotes: {
+                oriental: [
+                    ["Bergamot (N)", "Pink Pepper (N)", "Cardamom Seed (N)", "Saffron (N)", "Rose Petals (N)", "Mandarin Peel (N)", "Starfruit (N)", "Clary Sage (N)", "Bitter Almond (N)", 
+                     "Osmanthus (N)", "Lychee (N)", "Kumquat (N)", "Saffron-Croatian-Thread-(N)", "Rose-Turkish-Dew-(N)", "Cardamom-Indian-Pod-(N)", "Mandarin-Sicilian-Zest-(N)", "Osmanthus-Chinese-Blossom-(N)", 
+                     "Neroli-Egyptian-Bloom-(N)", "Juniper-Moroccan-Berry-(N)", "Bergamot-Tunisian-Rind-(N)", "Tangerine-Yemeni-Zest-(N)", "Clove-Leaf-Madagascan-(N)", "Star-Anise-Vietnamese-(N)", 
+                     "Pomegranate-Iranian-Seed-(N)", "Fig-Mediterranean-Fruit-(N)", "Cinnamon-Ceylon-Bark-(N)", "Ginger-Omani-Root-(N)", "Rose-Omani-Petal-(N)", "Saffron-Kashmiri-Stigma-(N)", 
+                     "Mandarin-Moroccan-Peel-(N)", "Pink-Pepper-Bahraini-(N)", "Lychee-Thai-Fruit-(N)", "Kumquat-Japanese-Zest-(N)", "Clary-Sage-Turkish-Leaf-(N)", "Bitter-Orange-Syrian-(N)", 
+                     "Apricot-Turkish-Fruit-(N)", "Peach-Georgian-Nectar-(N)", "Plum-Damascene-(N)", "Date-Medjool-(N)", "Coriander-Egyptian-Seed-(N)", "Fennel-Lebanese-Seed-(N)", "Caraway-Tunisian-(N)", 
+                     "Anise-Syrian-Seed-(N)", "Nutmeg-Indonesian-(N)", "Allspice-Jamaican-(N)", "Cassia-Chinese-Bark-(N)", "Galangal-Thai-Root-(N)", "Turmeric-Yemeni-Root-(N)", "Fenugreek-Indian-Seed-(N)", 
+                     "Sumac-Lebanese-(N)", "Zaatar-Jordanian-Blend-(N)", "Rosewater-Lebanese-(N)", "Orange-Blossom-Tunisian-(N)", "Jasmine-Egyptian-Dawn-(N)", "Frangipani-Indian-Coastal-(N)", 
+                     "Ylang-Ylang-Comorian-(N)", "Tuberose-Mexican-Night-(N)", "Champaca-Burmese-Flower-(N)", "Gardenia-Tahitian-(N)", "Heliotrope-Mauritian-(N)", "Lotus-Indian-Pink-(N)", 
+                     "Saffron-Moroccan-Thread-(N)", "Myrrh-Yemeni-Resin-(N)", "Oud-Malay-Wood-(N)", "Patchouli-Sumatran-(N)", "Benzoin-Sumatran-Resin-(N)", "Tonka-Venezuelan-Bean-(N)", "Vanilla-Tahitian-Orchid-(N)", 
+                     "Amber-Qatari-Resin-(B)", "Musk-Arabian-Synthetic-(B)", "Sandalwood-Indian-Mysore-(N)", "Frankincense-Somali-Tear-(N)", "Civet-Ethiopian-Synthetic-(B)", "Peru-Balsam-Salvadoran-(N)", 
+                     "Labdanum-Moroccan-Resin-(N)", "Oakmoss-Tunisian-(N)", "Vetiver-Javan-Root-(N)", "Cedar-Lebanese-Wood-(N)", "Guaiac-Paraguayan-Wood-(N)", "Teak-Burmese-Bark-(N)", "Ebony-Mauritian-Wood-(N)", 
+                     "Birch-Scandinavian-Tar-(N)", "Cypress-Mediterranean-(N)", "Juniper-Tunisian-Berry-(N)", "Pine-Moroccan-Needle-(N)", "Fir-Siberian-Balsam-(N)", "Eucalyptus-Emirati-Leaf-(N)", 
+                     "Camphor-Vietnamese-(N)", "Pine-Resin-Omani-(N)", "Hinoki-Japanese-Wood-(N)", "Spruce-Norwegian-(N)", "Elemi-Philippine-Resin-(N)", "Galbanum-Iranian-(N)", "Mandarin-Red-Italian-(N)", 
+                     "Saffron-Spanish-Thread-(N)", "Rose-Moroccan-Valley-(N)", "Cardamom-Sri-Lankan-(N)", "Osmanthus-Yunnan-Blossom-(N)", "Lychee-Malaysian-(N)", "Kumquat-Taiwanese-Zest-(N)", 
+                     "Bergamot-Ivoirian-Rind-(N)", "Pink-Pepper-Reunion-(N)", "Starfruit-Vietnamese-(N)", "Clary-Sage-Mediterranean-(N)", "Bitter-Almond-Moroccan-(N)", "Rose-Persian-Dawn-(N)", 
+                     "Saffron-Afghan-Stigma-(N)", "Mandarin-Cretan-Peel-(N)", "Cardamom-Nepalese-Pod-(N)", "Osmanthus-Japanese-Flower-(N)", "Neroli-Algerian-Blossom-(N)"],
+                    ["Tuberose Absolute (N)", "Rose Absolute (N)", "Jasmine Sambac (N)", "Ylang-Ylang (N)", "Iris Root (N)", "Damascena Rose (N)", "Orris Butter (N)", "Saffron Absolute (N)", "Myrrh (N)", 
+                     "Champaca (N)", "Gardenia Absolute (N)", "Heliotrope (N)", "Jasmine-Indian-Night-(N)", "Myrrh-Ethiopian-Resin-(N)", "Oud-Laotian-Wood-(N)", "Champaca-Indian-Flower-(N)", "Orris-Tuscan-Root-(N)", 
+                     "Rose-Taif-Petal-(N)", "Jasmine-Moroccan-Dusk-(N)", "Ylang-Ylang-Madagascan-(N)", "Tuberose-Indian-Moon-(N)", "Gardenia-Hawaiian-Bloom-(N)", "Heliotrope-Fijian-(N)", "Lotus-Egyptian-White-(N)", 
+                     "Frangipani-Maldivian-(N)", "Magnolia-Chinese-Blossom-(N)", "Iris-Florentine-Powder-(N)", "Saffron-Iranian-Absolute-(N)", "Myrrh-Sudanese-Gum-(N)", "Champaca-Thai-Golden-(N)", 
+                     "Rose-Bulgarian-Night-(N)", "Jasmine-Tunisian-Star-(N)", "Ylang-Ylang-Seychelles-(N)", "Tuberose-Mexican-Dawn-(N)", "Gardenia-Vietnamese-(N)", "Heliotrope-Tahitian-Vanilla-(N)", 
+                     "Lotus-Indian-Sacred-(N)", "Frangipani-Balinese-Dream-(N)", "Magnolia-Laotian-Petal-(N)", "Iris-Moroccan-Rhizome-(N)", "Saffron-Turkish-Absolute-(N)", "Myrrh-Omani-Frankincense-(N)", 
+                     "Champaca-Bangladeshi-(N)", "Rose-Turkish-Morning-(N)", "Jasmine-Egyptian-Night-(N)", "Ylang-Ylang-Philippine-(N)", "Tuberose-Fijian-Bloom-(N)", "Gardenia-Sri-Lankan-(N)", 
+                     "Heliotrope-Mediterranean-(N)", "Lotus-Thai-Purple-(N)", "Frangipani-Mauritian-(N)", "Magnolia-Vietnamese-White-(N)", "Iris-Italian-Orris-(N)", "Saffron-Persian-Absolute-(N)", 
+                     "Myrrh-Yemeni-Sacred-(N)", "Champaca-Nepalese-Flower-(N)", "Rose-Moroccan-Absolute-(N)", "Jasmine-Indian-Monsoon-(N)", "Ylang-Ylang-Comoros-Bloom-(N)", "Tuberose-Egyptian-Night-(N)", 
+                     "Gardenia-Tahitian-Star-(N)", "Heliotrope-Indian-Sweet-(N)", "Lotus-Vietnamese-Blue-(N)", "Frangipani-Thai-Temple-(N)", "Magnolia-Burmese-Golden-(N)", "Iris-Tunisian-Root-(N)", 
+                     "Saffron-Kashmiri-Absolute-(N)", "Myrrh-Somali-Resin-(N)", "Champaca-Sri-Lankan-(N)", "Rose-Damascene-Dusk-(N)", "Jasmine-Syrian-Bloom-(N)", "Ylang-Ylang-Mauritian-(N)", 
+                     "Tuberose-Indian-Sunset-(N)", "Gardenia-Fijian-Coastal-(N)", "Heliotrope-Vietnamese-(N)", "Lotus-Bangladeshi-Pink-(N)", "Frangipani-Seychelles-(N)", "Magnolia-Indian-Creamy-(N)", 
+                     "Iris-Spanish-Rhizome-(N)", "Saffron-Moroccan-Absolute-(N)", "Myrrh-Egyptian-Gum-(N)", "Champaca-Vietnamese-(N)", "Rose-Lebanese-Petal-(N)", "Jasmine-Algerian-Dawn-(N)", 
+                     "Ylang-Ylang-Fijian-Gold-(N)", "Tuberose-Tunisian-(N)", "Gardenia-Malaysian-(N)", "Heliotrope-Sri-Lankan-(N)", "Lotus-Myanmar-White-(N)", "Frangipani-Indian-Ocean-(N)", 
+                     "Magnolia-Thai-Bloom-(N)", "Iris-French-Orris-(N)", "Saffron-Syrian-Absolute-(N)", "Myrrh-Saudi-Resin-(N)", "Champaca-Philippine-(N)", "Rose-Persian-Absolute-(N)", "Jasmine-Omani-Star-(N)", 
+                     "Ylang-Ylang-Tahitian-(N)", "Tuberose-Moroccan-Night-(N)", "Gardenia-Bangladeshi-(N)", "Heliotrope-Malaysian-(N)", "Lotus-Nepalese-Sacred-(N)", "Frangipani-Vietnamese-(N)", 
+                     "Magnolia-Mauritian-Petal-(N)", "Iris-Lebanese-Root-(N)", "Saffron-Afghan-Absolute-(N)", "Myrrh-Tunisian-Gum-(N)"],
+                    ["Vanilla Absolute (N)", "Musk Accord (B)", "Sandalwood (N)", "Amber Accord (B)", "Patchouli (N)", "Oud Assam (N)", "Benzoin Siam (N)", "Tonka Absolute (N)", "Amber Synthetic (B)", 
+                     "Civet Accord (B)", "Frankincense (N)", "Peru Balsam (N)", "Amber-Persian-Resin-(B)", "Vanilla-Madagascar-Pod-(N)", "Frankincense-Omani-Tear-(N)", "Benzoin-Thai-Crystal-(N)", 
+                     "Musk-Oriental-Synthetic-(B)", "Oud-Cambodian-Dark-(N)", "Patchouli-Indonesian-Deep-(N)", "Sandalwood-Australian-Creamy-(N)", "Tonka-Brazilian-Roast-(N)", "Vanilla-Reunion-Orchid-(N)", 
+                     "Amber-Emirati-Glow-(B)", "Musk-Egyptian-Soft-(B)", "Frankincense-Yemeni-Sacred-(N)", "Benzoin-Laotian-Resin-(N)", "Peru-Balsam-Ecuadorian-(N)", "Civet-Indian-Synthetic-(B)", 
+                     "Oud-Thai-Aged-(N)", "Patchouli-Sri-Lankan-(N)", "Sandalwood-Tamil-Nadu-(N)", "Tonka-Venezuelan-Dark-(N)", "Vanilla-Comorian-Pod-(N)", "Amber-Omani-Resin-(B)", "Musk-Persian-Synthetic-(B)", 
+                     "Frankincense-Sudanese-(N)", "Benzoin-Vietnamese-Gum-(N)", "Peru-Balsam-Colombian-(N)", "Civet-Ethiopian-Blend-(B)", "Oud-Myanmar-Wood-(N)", "Patchouli-Javanese-(N)", 
+                     "Sandalwood-Fijian-Soft-(N)", "Tonka-Colombian-Bean-(N)", "Vanilla-Mexican-Spice-(N)", "Amber-Saudi-Golden-(B)", "Musk-Tunisian-Synthetic-(B)", "Frankincense-Ethiopian-(N)", 
+                     "Benzoin-Indonesian-Resin-(N)", "Peru-Balsam-Peruvian-(N)", "Civet-Moroccan-Synthetic-(B)", "Oud-Vietnamese-Dark-(N)", "Patchouli-Bangladeshi-(N)", "Sandalwood-Sri-Lankan-(N)", 
+                     "Tonka-Argentinian-(N)", "Vanilla-Papua-Pod-(N)", "Amber-Lebanese-Resin-(B)", "Musk-Syrian-Soft-(B)", "Frankincense-Moroccan-(N)", "Benzoin-Philippine-Resin-(N)", "Peru-Balsam-Chilean-(N)", 
+                     "Civet-Syrian-Synthetic-(B)", "Oud-Bangladeshi-Aged-(N)", "Patchouli-Nepalese-(N)", "Sandalwood-Mauritian-(N)", "Tonka-Peruvian-Bean-(N)", "Vanilla-Fijian-Orchid-(N)", 
+                     "Amber-Tunisian-Resin-(B)", "Musk-Moroccan-Soft-(B)", "Frankincense-Saudi-(N)", "Benzoin-Thai-Dark-(N)", "Peru-Balsam-Mexican-(N)", "Civet-Yemeni-Synthetic-(B)", "Oud-Indonesian-Wood-(N)", 
+                     "Patchouli-Myanmar-(N)", "Sandalwood-Malaysian-(N)", "Tonka-Ecuadorian-(N)", "Vanilla-Sri-Lankan-(N)", "Amber-Moroccan-Glow-(B)", "Musk-Omani-Synthetic-(B)", "Frankincense-Tunisian-(N)", 
+                     "Benzoin-Malaysian-Gum-(N)", "Peru-Balsam-Argentinian-(N)", "Civet-Saudi-Synthetic-(B)", "Oud-Sri-Lankan-(N)", "Patchouli-Thai-(N)", "Sandalwood-Nepalese-(N)", "Tonka-Mexican-Bean-(N)", 
+                     "Vanilla-Mauritian-Pod-(N)", "Amber-Syrian-Resin-(B)", "Musk-Moroccan-Soft-(B)", "Frankincense-Lebanese-(N)", "Benzoin-Sri-Lankan-(N)", "Peru-Balsam-Brazilian-(N)", 
+                     "Civet-Lebanese-Synthetic-(B)", "Oud-Tunisian-Dark-(N)", "Patchouli-Tunisian-(N)", "Sandalwood-Thai-Creamy-(N)", "Tonka-Chilean-Roast-(N)", "Vanilla-Tunisian-(N)", "Amber-Yemeni-Glow-(B)", 
+                     "Musk-Emirati-Synthetic-(B)"],
+                ],
+              
+                citrus: [
+                    ["Lemon Zest (N)", "Bergamot (N)", "Grapefruit (N)", "Lime (N)", "Orange Blossom (N)", "Yuzu (N)", "Blood Orange (N)", "Clementine (N)", "Pomelo (N)", "Tangerine (N)", "Verbena (N)", 
+                     "Litsea Cubeba (N)", "Lemon-Sorrento-Peel-(N)", "Grapefruit-Florida-Pink-(N)", "Bergamot-Calabrian-Rind-(N)", "Lime-Mexican-Key-(N)", "Tangerine-Moroccan-Zest-(N)", "Yuzu-Japanese-Citrus-(N)", 
+                     "Blood-Orange-Sicilian-(N)", "Clementine-Corsican-(N)", "Pomelo-Thai-Fruit-(N)", "Tangerine-Egyptian-Peel-(N)", "Verbena-Moroccan-Leaf-(N)", "Litsea-Cubeba-Vietnamese-(N)", 
+                     "Lemon-Tunisian-Zest-(N)", "Grapefruit-Bahamian-White-(N)", "Bergamot-Tunisian-(N)", "Lime-Persian-Green-(N)", "Orange-Brazilian-Sweet-(N)", "Mandarin-Spanish-Red-(N)", "Yuzu-Korean-Citrus-(N)", 
+                     "Blood-Orange-Maltese-(N)", "Clementine-Algerian-(N)", "Pomelo-Vietnamese-(N)", "Tangerine-Florida-(N)", "Verbena-Argentinian-(N)", "Litsea-Cubeba-Chinese-(N)", "Lemon-Californian-Peel-(N)", 
+                     "Grapefruit-Texas-Ruby-(N)", "Bergamot-Moroccan-Rind-(N)", "Lime-Australian-Finger-(N)", "Orange-Egyptian-Navel-(N)", "Mandarin-Japanese-Satsuma-(N)", "Yuzu-Chinese-Citrus-(N)", 
+                     "Blood-Orange-Tunisian-(N)", "Clementine-Spanish-(N)", "Pomelo-Indonesian-(N)", "Tangerine-South-African-(N)", "Verbena-Brazilian-Leaf-(N)", "Litsea-Cubeba-Thai-(N)", 
+                     "Lemon-Sicilian-Yellow-(N)", "Grapefruit-South-African-(N)", "Bergamot-Spanish-(N)", "Lime-Tahitian-Green-(N)", "Orange-Florida-Valencia-(N)", "Mandarin-Italian-Green-(N)", 
+                     "Yuzu-Taiwanese-Citrus-(N)", "Blood-Orange-Spanish-(N)", "Clementine-Moroccan-(N)", "Pomelo-Malaysian-(N)", "Tangerine-Chinese-(N)", "Verbena-Tunisian-(N)", "Litsea-Cubeba-Indonesian-(N)", 
+                     "Lemon-Mexican-Zest-(N)", "Grapefruit-Jamaican-(N)", "Bergamot-Lebanese-Rind-(N)", "Lime-Brazilian-Key-(N)", "Orange-Tunisian-Bitter-(N)", "Mandarin-Vietnamese-(N)", 
+                     "Yuzu-Vietnamese-Citrus-(N)", "Blood-Orange-Californian-(N)", "Clementine-Tunisian-(N)", "Pomelo-Filipino-(N)", "Tangerine-Argentinian-(N)", "Verbena-Chilean-Leaf-(N)", 
+                     "Litsea-Cubeba-Myanmar-(N)", "Lemon-Australian-Peel-(N)", "Grapefruit-Cuban-Pink-(N)", "Bergamot-Greek-(N)", "Lime-Filipino-Green-(N)", "Orange-Spanish-Seville-(N)", "Mandarin-Mexican-(N)", 
+                     "Yuzu-Filipino-Citrus-(N)", "Blood-Orange-Greek-(N)", "Clementine-South-African-(N)", "Pomelo-Sri-Lankan-(N)", "Tangerine-Thai-(N)", "Verbena-Mexican-(N)", "Litsea-Cubeba-Philippine-(N)", 
+                     "Lemon-Indian-Zest-(N)", "Grapefruit-Mexican-(N)", "Bergamot-Turkish-Rind-(N)", "Lime-Jamaican-(N)", "Orange-Moroccan-Sweet-(N)", "Mandarin-Australian-(N)", "Yuzu-Thai-Citrus-(N)", 
+                     "Blood-Orange-Italian-(N)", "Clementine-Filipino-(N)", "Pomelo-Bangladeshi-(N)"],
+                    ["Neroli (N)", "Petitgrain (N)", "Lavender (N)", "Rosemary (N)", "Mint (N)", "Lemongrass (N)", "Citronella (N)", "Orange Flower (N)", "Lemon Blossom (N)", "Bergamot Flower (N)", 
+                     "Kaffir Lime Leaf (N)", "Coriander Leaf (N)", "Neroli-Moroccan-Blossom-(N)", "Petitgrain-Paraguayan-Leaf-(N)", "Verbena-Moroccan-Herb-(N)", "Citron-Sicilian-Flower-(N)", 
+                     "Lime-Blossom-Tahitian-(N)", "Lavender-French-Provence-(N)", "Rosemary-Tunisian-(N)", "Mint-Moroccan-Spearmint-(N)", "Lemongrass-Thai-Stalk-(N)", "Citronella-Javanese-(N)", 
+                     "Orange-Flower-Tunisian-(N)", "Lemon-Blossom-Spanish-(N)", "Bergamot-Flower-Italian-(N)", "Kaffir-Lime-Leaf-Thai-(N)", "Coriander-Indian-Leaf-(N)", "Neroli-Tunisian-Bloom-(N)", 
+                     "Petitgrain-Spanish-Branch-(N)", "Verbena-Indian-Lemon-(N)", "Citron-Mediterranean-Flower-(N)", "Lime-Blossom-Moroccan-(N)", "Lavender-Bulgarian-(N)", "Rosemary-Spanish-(N)", 
+                     "Mint-Egyptian-Peppermint-(N)", "Lemongrass-Vietnamese-(N)", "Citronella-Sri-Lankan-(N)", "Orange-Flower-Egyptian-(N)", "Lemon-Blossom-Greek-(N)", "Bergamot-Flower-Moroccan-(N)", 
+                     "Kaffir-Lime-Leaf-Vietnamese-(N)", "Coriander-Moroccan-Leaf-(N)", "Neroli-Spanish-Blossom-(N)", "Petitgrain-Moroccan-Leaf-(N)", "Verbena-Tunisian-Herb-(N)", "Citron-Tunisian-Flower-(N)", 
+                     "Lime-Blossom-Egyptian-(N)", "Lavender-Turkish-(N)", "Rosemary-Moroccan-(N)", "Mint-Tunisian-Mint-(N)", "Lemongrass-Indian-Stalk-(N)", "Citronella-Thai-(N)", "Orange-Flower-Moroccan-(N)", 
+                     "Lemon-Blossom-Italian-(N)", "Bergamot-Flower-Tunisian-(N)", "Kaffir-Lime-Leaf-Indonesian-(N)", "Coriander-Tunisian-Leaf-(N)", "Neroli-Egyptian-Flower-(N)", "Petitgrain-Tunisian-Branch-(N)", 
+                     "Verbena-Spanish-Lemon-(N)", "Citron-Greek-Flower-(N)", "Lime-Blossom-Tunisian-(N)", "Lavender-Moroccan-(N)", "Rosemary-Greek-(N)", "Mint-Indian-Spearmint-(N)", "Lemongrass-Sri-Lankan-(N)", 
+                     "Citronella-Vietnamese-(N)", "Orange-Flower-Spanish-(N)", "Lemon-Blossom-Moroccan-(N)", "Bergamot-Flower-Spanish-(N)", "Kaffir-Lime-Leaf-Philippine-(N)", "Coriander-Egyptian-Leaf-(N)", 
+                     "Neroli-Italian-Bloom-(N)", "Petitgrain-Egyptian-Leaf-(N)", "Verbena-Moroccan-Lemon-(N)", "Citron-Spanish-Flower-(N)", "Lime-Blossom-Spanish-(N)", "Lavender-Spanish-(N)", 
+                     "Rosemary-Turkish-(N)", "Mint-Moroccan-Peppermint-(N)", "Lemongrass-Myanmar-(N)", "Citronella-Indian-(N)", "Orange-Flower-Italian-(N)", "Lemon-Blossom-Tunisian-(N)", 
+                     "Bergamot-Flower-Egyptian-(N)", "Kaffir-Lime-Leaf-Sri-Lankan-(N)", "Coriander-Spanish-Leaf-(N)", "Neroli-Greek-Blossom-(N)", "Petitgrain-Italian-Branch-(N)", "Verbena-Turkish-Herb-(N)", 
+                     "Citron-Moroccan-Flower-(N)", "Lime-Blossom-Greek-(N)", "Lavender-Greek-(N)", "Rosemary-Italian-(N)", "Mint-Turkish-Spearmint-(N)", "Lemongrass-Philippine-(N)", "Citronella-Moroccan-(N)", 
+                     "Orange-Flower-Greek-(N)", "Lemon-Blossom-Egyptian-(N)"],
+                    ["White Musk (B)", "Cedar (N)", "Vetiver (N)", "Ambergris (N)", "Tonka Bean (N)", "Citrus Musk (B)", "Ambermax (B)", "Vetiver Haiti (N)", "Cedarwood Atlas (N)", "Iso E Super (B)", 
+                     "Galbanum Resin (N)", "Lemon Cedar (N)", "Citrus-Amber-Synthetic-(B)", "Vetiver-Javanese-Root-(N)", "Cedar-Moroccan-Bark-(N)", "Ambergris-Coastal-Synthetic-(B)", "White-Musk-Egyptian-(B)", 
+                     "Cedar-Virginian-Wood-(N)", "Vetiver-Indian-Root-(N)", "Ambergris-Omani-(N)", "Tonka-Argentinian-Bean-(N)", "Citrus-Musk-Synthetic-(B)", "Ambermax-Mediterranean-(B)", "Vetiver-Sri-Lankan-(N)", 
+                     "Cedarwood-Himalayan-(N)", "Iso-E-Super-Citrus-(B)", "Galbanum-Iranian-Resin-(N)", "Lemon-Cedar-Tunisian-(N)", "Citrus-Amber-Egyptian-(B)", "Vetiver-Burmese-Root-(N)", 
+                     "Cedar-Lebanese-Base-(N)", "Ambergris-Tunisian-(B)", "White-Musk-Tunisian-(B)", "Cedar-Texas-Wood-(N)", "Vetiver-Tunisian-Root-(N)", "Ambergris-Moroccan-(N)", "Tonka-Bolivian-Bean-(N)", 
+                     "Citrus-Musk-Moroccan-(B)", "Ambermax-Tunisian-(B)", "Vetiver-Vietnamese-(N)", "Cedarwood-Moroccan-(N)", "Iso-E-Super-Lemon-(B)", "Galbanum-Moroccan-Resin-(N)", "Lemon-Cedar-Moroccan-(N)", 
+                     "Citrus-Amber-Tunisian-(B)", "Vetiver-Philippine-Root-(N)", "Cedar-Spanish-Bark-(N)", "Ambergris-Lebanese-(B)", "White-Musk-Moroccan-(B)", "Cedar-Alaskan-Wood-(N)", "Vetiver-Moroccan-Root-(N)", 
+                     "Ambergris-Egyptian-(N)", "Tonka-Chilean-Bean-(N)", "Citrus-Musk-Tunisian-(B)", "Ambermax-Egyptian-(B)", "Vetiver-Thai-Root-(N)", "Cedarwood-Tunisian-(N)", "Iso-E-Super-Orange-(B)", 
+                     "Galbanum-Tunisian-Resin-(N)", "Lemon-Cedar-Spanish-(N)", "Citrus-Amber-Moroccan-(B)", "Vetiver-Indonesian-Root-(N)", "Cedar-Greek-Base-(N)", "Ambergris-Syrian-(B)", "White-Musk-Syrian-(B)", 
+                     "Cedar-Mexican-Wood-(N)", "Vetiver-Egyptian-Root-(N)", "Ambergris-Turkish-(N)", "Tonka-Ecuadorian-Bean-(N)", "Citrus-Musk-Egyptian-(B)", "Ambermax-Moroccan-(B)", "Vetiver-Nepalese-Root-(N)", 
+                     "Cedarwood-Lebanese-(N)", "Iso-E-Super-Lime-(B)", "Galbanum-Egyptian-Resin-(N)", "Lemon-Cedar-Greek-(N)", "Citrus-Amber-Syrian-(B)", "Vetiver-Myanmar-Root-(N)", "Cedar-Turkish-Bark-(N)", 
+                     "Ambergris-Yemeni-(B)", "White-Musk-Yemeni-(B)", "Cedar-Indian-Wood-(N)", "Vetiver-Syrian-Root-(N)", "Ambergris-Saudi-(N)", "Tonka-Peruvian-Bean-(N)", "Citrus-Musk-Syrian-(B)", "Ambermax-Syrian-(B)", 
+                     "Vetiver-Bangladeshi-Root-(N)", "Cedarwood-Syrian-(N)", "Iso-E-Super-Grapefruit-(B)", "Galbanum-Syrian-Resin-(N)", "Lemon-Cedar-Turkish-(N)", "Citrus-Amber-Yemeni-(B)", "Vetiver-Fijian-Root-(N)", 
+                     "Cedar-Egyptian-Base-(N)", "Ambergris-Emirati-(B)", "White-Musk-Emirati-(B)", "Cedar-Fijian-Wood-(N)", "Vetiver-Lebanese-Root-(N)", "Ambergris-Qatari-(N)", "Tonka-Mexican-Bean-(N)", 
+                     "Citrus-Musk-Yemeni-(B)", "Ambermax-Yemeni-(B)"],
+                ],
+              
+                woody: [
+                    ["Pine Needles (N)", "Juniper (N)", "Black Pepper (N)", "Elemi (N)", "Galbanum (N)", "Hinoki Wood (N)", "Cedar Leaf (N)", "Spruce (N)", "Fir Needle (N)", "Eucalyptus Blue (N)", "Camphor (N)", 
+                     "Pine Resin (N)", "Pine-Scots-Needle-(N)", "Juniper-Himalayan-Berry-(N)", "Cedar-Lebanese-Twig-(N)", "Fir-Siberian-Balsam-(N)", "Eucalyptus-Australian-Leaf-(N)", "Pine-Moroccan-Needle-(N)", 
+                     "Juniper-Tunisian-Berry-(N)", "Black-Pepper-Madagascan-(N)", "Elemi-Philippine-Gum-(N)", "Galbanum-Iranian-Leaf-(N)", "Hinoki-Japanese-Branch-(N)", "Cedar-Moroccan-Leaf-(N)", "Spruce-Norwegian-Twig-(N)", 
+                     "Fir-Canadian-Needle-(N)", "Eucalyptus-Tasmanian-(N)", "Camphor-Chinese-(N)", "Pine-Resin-Turkish-(N)", "Pine-Tunisian-Needle-(N)", "Juniper-Moroccan-Berry-(N)", "Black-Pepper-Indian-(N)", 
+                     "Elemi-Indonesian-Resin-(N)", "Galbanum-Tunisian-(N)", "Hinoki-Korean-Wood-(N)", "Cedar-Himalayan-Leaf-(N)", "Spruce-Austrian-(N)", "Fir-Alaskan-Balsam-(N)", "Eucalyptus-Moroccan-(N)", 
+                     "Camphor-Vietnamese-(N)", "Pine-Resin-Greek-(N)", "Pine-Lebanese-Needle-(N)", "Juniper-Egyptian-Berry-(N)", "Black-Pepper-Sri-Lankan-(N)", "Elemi-Thai-Gum-(N)", "Galbanum-Moroccan-Leaf-(N)", 
+                     "Hinoki-Taiwanese-Branch-(N)", "Cedar-Tunisian-Leaf-(N)", "Spruce-Canadian-Twig-(N)", "Fir-French-Needle-(N)", "Eucalyptus-Indian-(N)", "Camphor-Indian-(N)", "Pine-Resin-Syrian-(N)", 
+                     "Pine-Syrian-Needle-(N)", "Juniper-Syrian-Berry-(N)", "Black-Pepper-Vietnamese-(N)", "Elemi-Myanmar-Resin-(N)", "Galbanum-Egyptian-(N)", "Hinoki-Chinese-Wood-(N)", "Cedar-Syrian-Leaf-(N)", 
+                     "Spruce-Swedish-(N)", "Fir-Turkish-Balsam-(N)", "Eucalyptus-South-African-(N)", "Camphor-Thai-(N)", "Pine-Resin-Lebanese-(N)", "Pine-Egyptian-Needle-(N)", "Juniper-Turkish-Berry-(N)", 
+                     "Black-Pepper-Thai-(N)", "Elemi-Sri-Lankan-Resin-(N)", "Galbanum-Turkish-(N)", "Hinoki-Moroccan-Wood-(N)", "Cedar-Turkish-Leaf-(N)", "Spruce-Russian-(N)", "Fir-Lebanese-Balsam-(N)", 
+                     "Eucalyptus-Lebanese-(N)", "Camphor-Syrian-(N)", "Pine-Resin-Moroccan-(N)", "Pine-Greek-Needle-(N)", "Juniper-Lebanese-Berry-(N)", "Black-Pepper-Moroccan-(N)", "Elemi-Moroccan-Gum-(N)", 
+                     "Galbanum-Lebanese-(N)", "Hinoki-Syrian-Branch-(N)", "Cedar-Lebanese-Leaf-(N)", "Spruce-Tunisian-(N)", "Fir-Syrian-Needle-(N)", "Eucalyptus-Syrian-(N)", "Camphor-Tunisian-(N)"],
+                    ["Cedar Heart (N)", "Sandalwood (N)", "Patchouli (N)", "Vetiver (N)", "Oakmoss (N)", "Palo Santo (N)", "Guaiac Wood (N)", "Teak (N)", "Ebony Wood (N)", "Birch Tar (N)", "Cypress (N)", "Juniper Berry (N)", 
+                     "Sandalwood-Australian-Wood-(N)", "Guaiac-Paraguayan-Heart-(N)", "Cypress-Tuscan-Branch-(N)", "Teak-Burmese-Wood-(N)", "Birch-Finnish-Bark-(N)", "Cedar-Virginian-Core-(N)", "Patchouli-Indonesian-Leaf-(N)", 
+                     "Vetiver-Haitian-Root-(N)", "Oakmoss-Icelandic-(N)", "Palo-Santo-Ecuadorian-(N)", "Guaiac-Bolivian-Wood-(N)", "Teak-Thai-Bark-(N)", "Ebony-Madagascan-(N)", "Birch-Swedish-Tar-(N)", "Cypress-Moroccan-(N)", 
+                     "Juniper-Mediterranean-Berry-(N)", "Sandalwood-Indian-Creamy-(N)", "Guaiac-Argentinian-Heart-(N)", "Cypress-Spanish-Branch-(N)", "Teak-Indonesian-Wood-(N)", "Birch-Russian-Bark-(N)", "Cedar-Texas-Core-(N)", 
+                     "Patchouli-Sri-Lankan-(N)", "Vetiver-Indian-Grass-(N)", "Oakmoss-Yugoslavian-(N)", "Palo-Santo-Peruvian-(N)", "Guaiac-Brazilian-Wood-(N)", "Teak-Vietnamese-Bark-(N)", "Ebony-African-(N)", 
+                     "Birch-Norwegian-Tar-(N)", "Cypress-Greek-(N)", "Juniper-Tunisian-Berry-(N)", "Sandalwood-Fijian-Soft-(N)", "Guaiac-Chilean-Heart-(N)", "Cypress-Lebanese-Branch-(N)", "Teak-Myanmar-Wood-(N)", 
+                     "Birch-Icelandic-Bark-(N)", "Cedar-Himalayan-Core-(N)", "Patchouli-Javanese-(N)", "Vetiver-Sri-Lankan-Root-(N)", "Oakmoss-Turkish-(N)", "Palo-Santo-Bolivian-(N)", "Guaiac-Mexican-Wood-(N)", 
+                     "Teak-Indian-Bark-(N)", "Ebony-Indonesian-(N)", "Birch-Finnish-Tar-(N)", "Cypress-Turkish-(N)", "Juniper-Moroccan-Berry-(N)", "Sandalwood-Sri-Lankan-(N)", "Guaiac-Colombian-Heart-(N)", 
+                     "Cypress-Italian-Branch-(N)", "Teak-Sri-Lankan-Wood-(N)", "Birch-Siberian-Bark-(N)", "Cedar-Moroccan-Core-(N)", "Patchouli-Vietnamese-(N)", "Vetiver-Burmese-Root-(N)", "Oakmoss-Moroccan-(N)", 
+                     "Palo-Santo-Argentinian-(N)", "Guaiac-Ecuadorian-Wood-(N)", "Teak-Philippine-Bark-(N)", "Ebony-Sri-Lankan-(N)", "Birch-Turkish-Tar-(N)", "Cypress-Egyptian-(N)", "Juniper-Lebanese-Berry-(N)", 
+                     "Sandalwood-Tamil-Nadu-(N)", "Guaiac-Peruvian-Heart-(N)", "Cypress-Mediterranean-(N)", "Teak-Malaysian-Wood-(N)", "Birch-Moroccan-Bark-(N)", "Cedar-Syrian-Core-(N)", "Patchouli-Bangladeshi-(N)", 
+                     "Vetiver-Thai-Root-(N)", "Oakmoss-Lebanese-(N)", "Palo-Santo-Chilean-(N)", "Guaiac-Venezuelan-Wood-(N)", "Teak-Nepalese-Bark-(N)", "Ebony-Vietnamese-(N)", "Birch-Lebanese-Tar-(N)", "Cypress-Syrian-(N)", 
+                     "Juniper-Egyptian-Berry-(N)", "Sandalwood-Mauritian-(N)", "Guaiac-Uruguayan-Heart-(N)", "Cypress-Tunisian-Branch-(N)", "Teak-Bangladeshi-Wood-(N)", "Birch-Syrian-Bark-(N)", "Cedar-Tunisian-Core-(N)", 
+                     "Patchouli-Nepalese-(N)", "Vetiver-Fijian-Root-(N)"],
+                    ["Musk Base (B)", "Amber (N)", "Vanilla (N)", "Benzoin (N)", "Labdanum (N)", "Agarwood (N)", "Vetiver Bourbon (N)", "Sandalwood Mysore (N)", "Cashmeran (B)", "Ambroxan (B)", "Cedarwood Virginia (N)", 
+                     "Oakwood Absolute (N)", "Oud-Cambodian-Resin-(N)", "Vetiver-Madagascan-Root-(N)", "Ambrox-Synthetic-(B)", "Cedar-Himalayan-Base-(N)", "Musk-Woody-Synthetic-(B)", "Amber-Moroccan-Resin-(N)", 
+                     "Vanilla-Tahitian-Pod-(N)", "Benzoin-Laotian-Gum-(N)", "Labdanum-Spanish-Resin-(N)", "Agarwood-Thai-(N)", "Vetiver-Tunisian-Root-(N)", "Sandalwood-Australian-Creamy-(N)", "Cashmeran-Woody-(B)", 
+                     "Ambroxan-Cedar-(B)", "Cedarwood-Moroccan-(N)", "Oakwood-French-Absolute-(N)", "Oud-Vietnamese-Resin-(N)", "Vetiver-Lebanese-Root-(N)", "Ambrox-Mediterranean-(B)", "Cedar-Tunisian-Base-(N)", 
+                     "Musk-Forest-Synthetic-(B)", "Amber-Tunisian-Resin-(N)", "Vanilla-Madagascan-Bean-(N)", "Benzoin-Vietnamese-Resin-(N)", "Labdanum-Moroccan-Gum-(N)", "Agarwood-Indonesian-(N)", "Vetiver-Syrian-Root-(N)", 
+                     "Sandalwood-Fijian-Soft-(N)", "Cashmeran-Sandalwood-(B)", "Ambroxan-Oak-(B)", "Cedarwood-Lebanese-(N)", "Oakwood-Spanish-Absolute-(N)", "Oud-Myanmar-Resin-(N)", "Vetiver-Egyptian-Root-(N)", 
+                     "Ambrox-Woody-(B)", "Cedar-Syrian-Base-(N)", "Musk-Tunisian-Synthetic-(B)", "Amber-Lebanese-Resin-(N)", "Vanilla-Comorian-Pod-(N)", "Benzoin-Thai-Gum-(N)", "Labdanum-Tunisian-Resin-(N)", 
+                     "Agarwood-Bangladeshi-(N)", "Vetiver-Moroccan-Root-(N)", "Sandalwood-Sri-Lankan-(N)", "Cashmeran-Cedar-(B)", "Ambroxan-Vetiver-(B)", "Cedarwood-Turkish-(N)", "Oakwood-Italian-Absolute-(N)", 
+                     "Oud-Sri-Lankan-Resin-(N)", "Vetiver-Vietnamese-Root-(N)", "Ambrox-Forest-(B)", "Cedar-Egyptian-Base-(N)", "Musk-Moroccan-Synthetic-(B)", "Amber-Syrian-Resin-(N)", "Vanilla-Mexican-Bean-(N)", 
+                     "Benzoin-Myanmar-Resin-(N)", "Labdanum-Egyptian-Gum-(N)", "Agarwood-Nepalese-(N)", "Vetiver-Thai-Root-(N)", "Sandalwood-Mauritian-(N)", "Cashmeran-Oak-(B)", "Ambroxan-Sandalwood-(B)", 
+                     "Cedarwood-Syrian-(N)", "Oakwood-Moroccan-Absolute-(N)", "Oud-Tunisian-Resin-(N)", "Vetiver-Fijian-Root-(N)", "Ambrox-Cedar-(B)", "Cedar-Moroccan-Base-(N)", "Musk-Syrian-Synthetic-(B)", 
+                     "Amber-Egyptian-Resin-(N)", "Vanilla-Papua-Pod-(N)", "Benzoin-Sri-Lankan-Gum-(N)", "Labdanum-Lebanese-Resin-(N)", "Agarwood-Moroccan-(N)", "Vetiver-Bangladeshi-Root-(N)", "Sandalwood-Thai-Creamy-(N)", 
+                     "Cashmeran-Vetiver-(B)", "Ambroxan-Wood-(B)", "Cedarwood-Egyptian-(N)", "Oakwood-Tunisian-Absolute-(N)", "Oud-Lebanese-Resin-(N)", "Vetiver-Indonesian-Root-(N)", "Ambrox-Oak-(B)", "Cedar-Turkish-Base-(N)", 
+                     "Musk-Lebanese-Synthetic-(B)", "Amber-Yemeni-Resin-(N)", "Vanilla-Sri-Lankan-Bean-(N)"],
+                ],
+              
+                floral: [
+                    ["Angelica Flower (N)", "Cumin (N)", "Cardamom Seed (N)", "Pink Grapefruit (N)", "Bergamot (N)", "Freesia (N)", "Hyacinth (N)", "Neroli Tunisia (N)", "Mimosa (N)", "Violet Leaf (N)", "Linden Blossom (N)", 
+                     "Apple Blossom (N)", "Violet-French-Leaf-(N)", "Mimosa-Australian-Bloom-(N)", "Hyacinth-Dutch-Flower-(N)", "Freesia-SouthAfrican-Petal-(N)", "Linden-German-Blossom-(N)", "Angelica-Moroccan-Flower-(N)", 
+                     "Cumin-Egyptian-Seed-(N)", "Cardamom-Guatemalan-(N)", "Pink-Grapefruit-Florida-(N)", "Bergamot-Italian-Rind-(N)", "Freesia-Tunisian-(N)", "Hyacinth-Greek-Bloom-(N)", "Neroli-Moroccan-Blossom-(N)", 
+                     "Mimosa-French-Riviera-(N)", "Violet-Tunisian-Leaf-(N)", "Linden-Turkish-Flower-(N)", "Apple-Blossom-English-(N)", "Violet-Italian-Leaf-(N)", "Mimosa-Moroccan-Bloom-(N)", "Hyacinth-Spanish-Flower-(N)", 
+                     "Freesia-Egyptian-Petal-(N)", "Linden-French-Blossom-(N)", "Angelica-Tunisian-Flower-(N)", "Cumin-Tunisian-Seed-(N)", "Cardamom-Sri-Lankan-(N)", "Pink-Grapefruit-Tunisian-(N)", "Bergamot-Tunisian-Rind-(N)", 
+                     "Freesia-Spanish-(N)", "Hyacinth-Italian-Bloom-(N)", "Neroli-Egyptian-Blossom-(N)", "Mimosa-Spanish-Bloom-(N)", "Violet-Moroccan-Leaf-(N)", "Linden-Spanish-Flower-(N)", "Apple-Blossom-Turkish-(N)", 
+                     "Violet-Spanish-Leaf-(N)", "Mimosa-Tunisian-Bloom-(N)", "Hyacinth-Tunisian-Flower-(N)", "Freesia-Moroccan-Petal-(N)", "Linden-Italian-Blossom-(N)", "Angelica-Spanish-Flower-(N)", "Cumin-Moroccan-Seed-(N)", 
+                     "Cardamom-Tunisian-(N)", "Pink-Grapefruit-Moroccan-(N)", "Bergamot-Moroccan-Rind-(N)", "Freesia-Italian-(N)", "Hyacinth-Moroccan-Bloom-(N)", "Neroli-Spanish-Blossom-(N)", "Mimosa-Italian-Bloom-(N)", 
+                     "Violet-Egyptian-Leaf-(N)", "Linden-Moroccan-Flower-(N)", "Apple-Blossom-Moroccan-(N)", "Violet-Turkish-Leaf-(N)", "Mimosa-Egyptian-Bloom-(N)", "Hyacinth-Egyptian-Flower-(N)", "Freesia-Turkish-Petal-(N)", 
+                     "Linden-Tunisian-Blossom-(N)", "Angelica-Egyptian-Flower-(N)", "Cumin-Syrian-Seed-(N)", "Cardamom-Moroccan-(N)", "Pink-Grapefruit-Egyptian-(N)", "Bergamot-Egyptian-Rind-(N)", "Freesia-Greek-(N)", 
+                     "Hyacinth-Syrian-Bloom-(N)", "Neroli-Turkish-Blossom-(N)", "Mimosa-Greek-Bloom-(N)", "Violet-Syrian-Leaf-(N)", "Linden-Greek-Flower-(N)", "Apple-Blossom-Syrian-(N)", "Violet-Mediterranean-Leaf-(N)", 
+                     "Mimosa-Syrian-Bloom-(N)", "Hyacinth-Lebanese-Flower-(N)", "Freesia-Syrian-Petal-(N)", "Linden-Syrian-Blossom-(N)", "Angelica-Syrian-Flower-(N)", "Cumin-Lebanese-Seed-(N)", "Cardamom-Lebanese-(N)", 
+                     "Pink-Grapefruit-Syrian-(N)", "Bergamot-Syrian-Rind-(N)", "Freesia-Lebanese-(N)", "Hyacinth-Turkish-Bloom-(N)", "Neroli-Lebanese-Blossom-(N)", "Mimosa-Lebanese-Bloom-(N)", "Violet-Lebanese-Leaf-(N)", 
+                     "Linden-Lebanese-Flower-(N)", "Apple-Blossom-Lebanese-(N)"],
+                    ["Rose Absolute (N)", "Jasmine (N)", "Peony (N)", "Lily of the Valley (N)", "Magnolia (N)", "Tiare Flower (N)", "Frangipani (N)", "Carnation (N)", "Lilac (N)", "Iris Pallida (N)", "Rose de Mai (N)", 
+                     "Jasmine Grandiflorum (N)", "Rose-Bulgarian-Oil-(N)", "Jasmine-Sambac-Indian-(N)", "Frangipani-Balinese-Flower-(N)", "Lilac-Syracuse-Bloom-(N)", "Carnation-Spanish-Petal-(N)", "Rose-Taif-Absolute-(N)", 
+                     "Jasmine-Moroccan-Night-(N)", "Peony-Chinese-Pink-(N)", "Lily-of-the-Valley-French-(N)", "Magnolia-Vietnamese-Bloom-(N)", "Tiare-Tahitian-Flower-(N)", "Frangipani-Mauritian-(N)", "Carnation-Turkish-Red-(N)", 
+                     "Lilac-French-Lavender-(N)", "Iris-Florentine-Root-(N)", "Rose-Damascene-Petal-(N)", "Jasmine-Egyptian-Star-(N)", "Peony-Japanese-White-(N)", "Lily-of-the-Valley-English-(N)", "Magnolia-Indian-Creamy-(N)", 
+                     "Tiare-Fijian-Bloom-(N)", "Frangipani-Thai-Temple-(N)", "Carnation-Italian-Spice-(N)", "Lilac-Moroccan-Purple-(N)", "Iris-Tunisian-Powder-(N)", "Rose-Moroccan-Valley-(N)", "Jasmine-Tunisian-Dawn-(N)", 
+                     "Peony-Korean-Red-(N)", "Lily-of-the-Valley-Italian-(N)", "Magnolia-Thai-White-(N)", "Tiare-Hawaiian-Flower-(N)", "Frangipani-Seychelles-(N)", "Carnation-Greek-Pink-(N)", "Lilac-Tunisian-Bloom-(N)", 
+                     "Iris-Moroccan-Rhizome-(N)", "Rose-Turkish-Dawn-(N)", "Jasmine-Syrian-Night-(N)", "Peony-French-Blush-(N)", "Lily-of-the-Valley-Spanish-(N)", "Magnolia-Burmese-Golden-(N)", "Tiare-Mauritian-(N)", 
+                     "Frangipani-Vietnamese-(N)", "Carnation-Moroccan-Red-(N)", "Lilac-Egyptian-Purple-(N)", "Iris-Italian-Orris-(N)", "Rose-Persian-Absolute-(N)", "Jasmine-Lebanese-Star-(N)", "Peony-Tunisian-Pink-(N)", 
+                     "Lily-of-the-Valley-Greek-(N)", "Magnolia-Sri-Lankan-(N)", "Tiare-Philippine-Flower-(N)", "Frangipani-Indian-Ocean-(N)", "Carnation-Syrian-Spice-(N)", "Lilac-Spanish-Bloom-(N)", "Iris-Lebanese-Root-(N)", 
+                     "Rose-Egyptian-Petal-(N)", "Jasmine-Omani-Night-(N)", "Peony-Moroccan-White-(N)", "Lily-of-the-Valley-Tunisian-(N)", "Magnolia-Malaysian-(N)", "Tiare-Sri-Lankan-(N)", "Frangipani-Tunisian-(N)", 
+                     "Carnation-Egyptian-Pink-(N)", "Lilac-Lebanese-Purple-(N)", "Iris-Spanish-Rhizome-(N)", "Rose-Syrian-Absolute-(N)", "Jasmine-Turkish-Dawn-(N)", "Peony-Syrian-Red-(N)", 
+                     "Lily-of-the-Valley-Moroccan-(N)", "Magnolia-Fijian-Bloom-(N)", "Tiare-Tunisian-Flower-(N)", "Frangipani-Lebanese-(N)", "Carnation-Tunisian-Red-(N)", "Lilac-Syrian-Bloom-(N)", 
+                     "Iris-Turkish-Powder-(N)", "Rose-Lebanese-Valley-(N)", "Jasmine-Greek-Star-(N)", "Peony-Lebanese-Pink-(N)", "Lily-of-the-Valley-Syrian-(N)", "Magnolia-Tunisian-(N)", "Tiare-Lebanese-Bloom-(N)", 
+                     "Frangipani-Sri-Lankan-(N)", "Carnation-Lebanese-Spice-(N)", "Lilac-Turkish-Purple-(N)", "Iris-Moroccan-Orris-(N)", "Rose-Tunisian-Petal-(N)", "Jasmine-Spanish-Night-(N)"],
+                    ["White Musk (B)", "Sandalwood (N)", "Amber (N)", "Vanilla (N)", "Iris (N)", "Vanilla Tahiti (N)", "Amber Floral (B)", "Musk Ketone (B)", "Orris Concrete (N)", "Sandalwood Album (N)", 
+                     "Tuberose Wax (N)", "Ylang Absolute (N)", "Iris-Florentine-Rhizome-(N)", "Vanilla-Orchid-Tahitian-(N)", "Musk-Floral-Synthetic-(B)", "Amber-Rose-Synthetic-(B)", "White-Musk-Moroccan-(B)", 
+                     "Sandalwood-Indian-Mysore-(N)", "Amber-Tunisian-Floral-(N)", "Vanilla-Madagascan-Pod-(N)", "Iris-Tunisian-Root-(N)", "Vanilla-Comorian-Orchid-(N)", "Amber-Floral-Egyptian-(B)", 
+                     "Musk-Ketone-Floral-(B)", "Orris-Moroccan-Concrete-(N)", "Sandalwood-Australian-Soft-(N)", "Tuberose-Indian-Wax-(N)", "Ylang-Madagascan-Absolute-(N)", "Iris-Moroccan-Rhizome-(N)", 
+                     "Vanilla-Mexican-Pod-(N)", "Musk-Rose-Synthetic-(B)", "Amber-Floral-Moroccan-(B)", "White-Musk-Tunisian-(B)", "Sandalwood-Fijian-Creamy-(N)", "Amber-Lebanese-Floral-(N)", "Vanilla-Papua-Orchid-(N)", 
+                     "Iris-Lebanese-Root-(N)", "Vanilla-Sri-Lankan-Pod-(N)", "Amber-Floral-Tunisian-(B)", "Musk-Ketone-Rose-(B)", "Orris-Turkish-Concrete-(N)", "Sandalwood-Sri-Lankan-(N)", "Tuberose-Moroccan-Wax-(N)", 
+                     "Ylang-Tunisian-Absolute-(N)", "Iris-Spanish-Rhizome-(N)", "Vanilla-Fijian-Orchid-(N)", "Musk-Floral-Egyptian-(B)", "Amber-Floral-Syrian-(B)", "White-Musk-Syrian-(B)", 
+                     "Sandalwood-Mauritian-Soft-(N)", "Amber-Egyptian-Floral-(N)", "Vanilla-Indonesian-Pod-(N)", "Iris-Turkish-Root-(N)", "Vanilla-Mauritian-Orchid-(N)", "Amber-Floral-Lebanese-(B)", 
+                     "Musk-Ketone-Tunisian-(B)", "Orris-Lebanese-Concrete-(N)", "Sandalwood-Thai-Creamy-(N)", "Tuberose-Tunisian-Wax-(N)", "Ylang-Moroccan-Absolute-(N)", "Iris-Egyptian-Rhizome-(N)", 
+                     "Vanilla-Tunisian-Pod-(N)", "Musk-Rose-Moroccan-(B)", "Amber-Floral-Yemeni-(B)", "White-Musk-Yemeni-(B)", "Sandalwood-Nepalese-Soft-(N)", "Amber-Syrian-Floral-(N)", "Vanilla-Bolivian-Orchid-(N)", 
+                     "Iris-Syrian-Root-(N)", "Vanilla-Lebanese-Pod-(N)", "Amber-Floral-Emirati-(B)", "Musk-Ketone-Syrian-(B)", "Orris-Syrian-Concrete-(N)", "Sandalwood-Tunisian-Creamy-(N)", "Tuberose-Egyptian-Wax-(N)", 
+                     "Ylang-Lebanese-Absolute-(N)", "Iris-Mediterranean-Rhizome-(N)", "Vanilla-Moroccan-Pod-(N)", "Musk-Floral-Tunisian-(B)", "Amber-Floral-Qatari-(B)", "White-Musk-Lebanese-(B)", 
+                     "Sandalwood-Lebanese-Soft-(N)", "Amber-Turkish-Floral-(N)", "Vanilla-Syrian-Orchid-(N)", "Iris-Moroccan-Orris-(N)", "Vanilla-Egyptian-Pod-(N)", "Amber-Floral-Saudi-(B)", "Musk-Ketone-Lebanese-(B)", 
+                     "Orris-Tunisian-Concrete-(N)", "Sandalwood-Egyptian-Creamy-(N)", "Tuberose-Syrian-Wax-(N)", "Ylang-Syrian-Absolute-(N)", "Iris-Lebanese-Orris-(N)", "Vanilla-Turkish-Pod-(N)", 
+                     "Musk-Rose-Tunisian-(B)", "Amber-Floral-Omani-(B)", "White-Musk-Emirati-(B)", "Sandalwood-Syrian-Soft-(N)", "Amber-Moroccan-Floral-(N)"],
+                ],
+                
+                spicy: [
+                    ["Black Pepper (N)", "Cinnamon (N)", "Nutmeg (N)", "Clove (N)", "Ginger (N)", "Pink Peppercorn (N)", "Allspice (N)", "Anise Seed (N)", "Caraway (N)", "Coriander Seed (N)", "Fennel Seed (N)", "Saffron Thread (N)", 
+                    "Pepper-Madagascan-Black-(N)", "Anise-Turkish-Seed-(N)", "Coriander-Russian-Seed-(N)", "Fennel-Italian-Seed-(N)", "Saffron-Iranian-Stigma-(N)", "Cinnamon-Ceylon-Bark-(N)", "Nutmeg-Indonesian-Seed-(N)", 
+                    "Clove-Madagascan-Bud-(N)", "Ginger-Indian-Root-(N)", "Pink-Pepper-Brazilian-(N)", "Allspice-Jamaican-Berry-(N)", "Caraway-Egyptian-Seed-(N)", "Coriander-Moroccan-Seed-(N)", "Fennel-Tunisian-Seed-(N)", 
+                    "Saffron-Moroccan-Thread-(N)", "Black-Pepper-Vietnamese-(N)", "Cinnamon-Vietnamese-Bark-(N)", "Nutmeg-Sri-Lankan-(N)", "Clove-Zanzibar-Bud-(N)", "Ginger-Thai-Root-(N)", "Pink-Pepper-Reunion-(N)", 
+                    "Allspice-Mexican-Berry-(N)", "Anise-Syrian-Seed-(N)", "Caraway-Tunisian-(N)", "Coriander-Egyptian-Seed-(N)", "Fennel-Moroccan-Seed-(N)", "Saffron-Turkish-Stigma-(N)", "Black-Pepper-Indian-(N)", 
+                    "Cinnamon-Indonesian-Bark-(N)", "Nutmeg-Jamaican-(N)", "Clove-Indian-Bud-(N)", "Ginger-Vietnamese-Root-(N)", "Pink-Pepper-Moroccan-(N)", "Allspice-Guatemalan-(N)", "Anise-Egyptian-Seed-(N)", "Caraway-Moroccan-(N)", 
+                    "Coriander-Tunisian-Seed-(N)", "Fennel-Egyptian-Seed-(N)", "Saffron-Spanish-Thread-(N)", "Black-Pepper-Sri-Lankan-(N)", "Cinnamon-Sri-Lankan-Bark-(N)", "Nutmeg-Moroccan-(N)", "Clove-Sri-Lankan-Bud-(N)", 
+                    "Ginger-Moroccan-Root-(N)", "Pink-Pepper-Tunisian-(N)", "Allspice-Honduran-(N)", "Anise-Moroccan-Seed-(N)", "Caraway-Syrian-(N)", "Coriander-Syrian-Seed-(N)", "Fennel-Syrian-Seed-(N)", "Saffron-Egyptian-Stigma-(N)", 
+                    "Black-Pepper-Thai-(N)", "Cinnamon-Moroccan-Bark-(N)", "Nutmeg-Tunisian-(N)", "Clove-Moroccan-Bud-(N)", "Ginger-Sri-Lankan-Root-(N)", "Pink-Pepper-Egyptian-(N)", "Allspice-Nicaraguan-(N)", 
+                    "Anise-Tunisian-Seed-(N)", "Caraway-Lebanese-(N)", "Coriander-Lebanese-Seed-(N)", "Fennel-Lebanese-Seed-(N)", "Saffron-Syrian-Thread-(N)", "Black-Pepper-Moroccan-(N)", "Cinnamon-Tunisian-Bark-(N)", 
+                    "Nutmeg-Egyptian-(N)", "Clove-Tunisian-Bud-(N)", "Ginger-Tunisian-Root-(N)", "Pink-Pepper-Syrian-(N)", "Allspice-Cuban-(N)", "Anise-Lebanese-Seed-(N)", "Caraway-Turkish-(N)", "Coriander-Turkish-Seed-(N)", 
+                    "Fennel-Turkish-Seed-(N)", "Saffron-Lebanese-Stigma-(N)", "Black-Pepper-Tunisian-(N)", "Cinnamon-Lebanese-Bark-(N)", "Nutmeg-Lebanese-(N)", "Clove-Lebanese-Bud-(N)", "Ginger-Egyptian-Root-(N)", 
+                    "Pink-Pepper-Lebanese-(N)", "Allspice-Colombian-(N)", "Anise-Spanish-Seed-(N)", "Caraway-Indian-(N)", "Coriander-Indian-Seed-(N)", "Fennel-Spanish-Seed-(N)", "Saffron-Tunisian-Thread-(N)"],
+                    ["Cardamom (N)", "Star Anise (N)", "Bay Leaves (N)", "Thyme (N)", "Rosemary (N)", "Turmeric (N)", "Cumin Seed (N)", "Fenugreek (N)", "Pimento Berry (N)", "Chili Pepper (N)", "Cardamom Green (N)", "Ginger Root (N)", 
+                    "Ginger-Zanzibar-Root-(N)", "Cardamom-Guatemalan-Pod-(N)", "Cumin-Egyptian-Seed-(N)", "Turmeric-Indian-Root-(N)", "Pimento-Jamaican-Berry-(N)", "Star-Anise-Vietnamese-(N)", "Bay-Leaf-Turkish-(N)", 
+                    "Thyme-Moroccan-Herb-(N)", "Rosemary-Tunisian-(N)", "Turmeric-Moroccan-Root-(N)", "Cumin-Tunisian-Seed-(N)", "Fenugreek-Indian-Seed-(N)", "Pimento-Mexican-Berry-(N)", "Chili-Pepper-Thai-(N)", 
+                    "Cardamom-Sri-Lankan-(N)", "Star-Anise-Chinese-(N)", "Bay-Leaf-Greek-(N)", "Thyme-Spanish-Herb-(N)", "Rosemary-Moroccan-(N)", "Turmeric-Sri-Lankan-(N)", "Cumin-Moroccan-Seed-(N)", "Fenugreek-Moroccan-(N)", 
+                    "Pimento-Honduran-Berry-(N)", "Chili-Pepper-Indian-(N)", "Cardamom-Tunisian-(N)", "Star-Anise-Moroccan-(N)", "Bay-Leaf-Indian-(N)", "Thyme-Tunisian-Herb-(N)", "Rosemary-Spanish-(N)", "Turmeric-Tunisian-Root-(N)", 
+                    "Cumin-Syrian-Seed-(N)", "Fenugreek-Tunisian-(N)", "Pimento-Cuban-Berry-(N)", "Chili-Pepper-Mexican-(N)", "Cardamom-Moroccan-(N)", "Star-Anise-Tunisian-(N)", "Bay-Leaf-Moroccan-(N)", "Thyme-Greek-Herb-(N)", 
+                    "Rosemary-Greek-(N)", "Turmeric-Egyptian-(N)", "Cumin-Lebanese-Seed-(N)", "Fenugreek-Syrian-(N)", "Pimento-Nicaraguan-Berry-(N)", "Chili-Pepper-Moroccan-(N)", "Cardamom-Lebanese-(N)", "Star-Anise-Syrian-(N)", 
+                    "Bay-Leaf-Tunisian-(N)", "Thyme-Moroccan-Wild-(N)", "Rosemary-Italian-(N)", "Turmeric-Lebanese-Root-(N)", "Cumin-Turkish-Seed-(N)", "Fenugreek-Egyptian-(N)", "Pimento-Colombian-Berry-(N)", 
+                    "Chili-Pepper-Tunisian-(N)", "Cardamom-Egyptian-(N)", "Star-Anise-Lebanese-(N)", "Bay-Leaf-Syrian-(N)", "Thyme-Turkish-Herb-(N)", "Rosemary-Turkish-(N)", "Turmeric-Syrian-(N)", "Cumin-Egyptian-Seed-(N)", 
+                    "Fenugreek-Turkish-(N)", "Pimento-Guatemalan-Berry-(N)", "Chili-Pepper-Syrian-(N)", "Cardamom-Syrian-(N)", "Star-Anise-Egyptian-(N)", "Bay-Leaf-Lebanese-(N)", "Thyme-Syrian-Herb-(N)", "Rosemary-Lebanese-(N)", 
+                    "Turmeric-Turkish-Root-(N)", "Cumin-Spanish-Seed-(N)", "Fenugreek-Lebanese-(N)", "Pimento-Moroccan-Berry-(N)", "Chili-Pepper-Lebanese-(N)", "Cardamom-Turkish-(N)", "Star-Anise-Spanish-(N)", "Bay-Leaf-Spanish-(N)", 
+                    "Thyme-Lebanese-Herb-(N)", "Rosemary-Syrian-(N)", "Turmeric-Moroccan-Wild-(N)", "Cumin-Indian-Seed-(N)", "Fenugreek-Spanish-(N)", "Pimento-Tunisian-Berry-(N)", "Chili-Pepper-Egyptian-(N)", "Cardamom-Indian-(N)", 
+                    "Star-Anise-Indian-(N)", "Bay-Leaf-Egyptian-(N)", "Thyme-Egyptian-Herb-(N)", "Rosemary-Egyptian-(N)"],
+                    ["Sandalwood (N)", "Cedar (N)", "Patchouli (N)", "Vanilla (N)", "Musk (B)", "Leather Accord (B)", "Tobacco Leaf (N)", "Clove Bud (N)", "Cinnamon Bark (N)", "Oud Synthetic (B)", "Amber Spicy (B)", 
+                    "Patchouli Dark (N)", "Clove-Zanzibar-Bud-(N)", "Tobacco-Cuban-Leaf-(N)", "Leather-Spanish-Accord-(B)", "Oud-Indian-Synthetic-(B)", "Sandalwood-Indian-Mysore-(N)", "Cedar-Moroccan-Bark-(N)", 
+                    "Patchouli-Indonesian-(N)", "Vanilla-Madagascan-Pod-(N)", "Musk-Spicy-Synthetic-(B)", "Leather-Moroccan-Accord-(B)", "Tobacco-Turkish-Leaf-(N)", "Clove-Moroccan-Bud-(N)", "Cinnamon-Vietnamese-Bark-(N)", 
+                    "Oud-Thai-Synthetic-(B)", "Amber-Spicy-Moroccan-(B)", "Patchouli-Sri-Lankan-(N)", "Clove-Sri-Lankan-Bud-(N)", "Tobacco-Virginian-Leaf-(N)", "Leather-Tunisian-Accord-(B)", "Oud-Moroccan-Synthetic-(B)", 
+                    "Sandalwood-Australian-Creamy-(N)", "Cedar-Lebanese-Base-(N)", "Patchouli-Javanese-(N)", "Vanilla-Tahitian-Pod-(N)", "Musk-Tunisian-Synthetic-(B)", "Leather-Egyptian-Accord-(B)", "Tobacco-Moroccan-Leaf-(N)", 
+                    "Clove-Tunisian-Bud-(N)", "Cinnamon-Sri-Lankan-Bark-(N)", "Oud-Vietnamese-Synthetic-(B)", "Amber-Spicy-Tunisian-(B)", "Patchouli-Vietnamese-(N)", "Clove-Indian-Bud-(N)", "Tobacco-Syrian-Leaf-(N)", 
+                    "Leather-Syrian-Accord-(B)", "Oud-Tunisian-Synthetic-(B)", "Sandalwood-Fijian-Soft-(N)", "Cedar-Tunisian-Bark-(N)", "Patchouli-Bangladeshi-(N)", "Vanilla-Comorian-Pod-(N)", "Musk-Moroccan-Synthetic-(B)", 
+                    "Leather-Lebanese-Accord-(B)", "Tobacco-Egyptian-Leaf-(N)", "Clove-Lebanese-Bud-(N)", "Cinnamon-Moroccan-Bark-(N)", "Oud-Syrian-Synthetic-(B)", "Amber-Spicy-Egyptian-(B)", "Patchouli-Nepalese-(N)", 
+                    "Clove-Egyptian-Bud-(N)", "Tobacco-Tunisian-Leaf-(N)", "Leather-Turkish-Accord-(B)", "Oud-Lebanese-Synthetic-(B)", "Sandalwood-Sri-Lankan-(N)", "Cedar-Syrian-Base-(N)", "Patchouli-Myanmar-(N)", 
+                    "Vanilla-Mexican-Pod-(N)", "Musk-Syrian-Synthetic-(B)", "Leather-Indian-Accord-(B)", "Tobacco-Lebanese-Leaf-(N)", "Clove-Syrian-Bud-(N)", "Cinnamon-Tunisian-Bark-(N)", "Oud-Egyptian-Synthetic-(B)", 
+                    "Amber-Spicy-Syrian-(B)", "Patchouli-Thai-(N)", "Clove-Turkish-Bud-(N)", "Tobacco-Indian-Leaf-(N)", "Leather-Moroccan-Dark-(B)", "Oud-Turkish-Synthetic-(B)", "Sandalwood-Mauritian-(N)", "Cedar-Egyptian-Bark-(N)", 
+                    "Patchouli-Moroccan-(N)", "Vanilla-Papua-Pod-(N)", "Musk-Lebanese-Synthetic-(B)", "Leather-Saudi-Accord-(B)", "Tobacco-Sri-Lankan-Leaf-(N)", "Clove-Mexican-Bud-(N)", "Cinnamon-Lebanese-Bark-(N)", 
+                    "Oud-Myanmar-Synthetic-(B)", "Amber-Spicy-Lebanese-(B)", "Patchouli-Tunisian-(N)", "Clove-Vietnamese-Bud-(N)", "Tobacco-Thai-Leaf-(N)", "Leather-Egyptian-Dark-(B)", "Oud-Sri-Lankan-Synthetic-(B)", 
+                    "Sandalwood-Thai-Creamy-(N)", "Cedar-Turkish-Base-(N)", "Patchouli-Lebanese-(N)", "Vanilla-Sri-Lankan-Pod-(N)", "Musk-Turkish-Synthetic-(B)"],
+                ],
+                
+                gourmand: [
+                    ["Vanilla (N)", "Caramel (B)", "Coffee (N)", "Chocolate (B)", "Honey (N)", "Candied Orange (N)", "Toffee (B)", "Maple Syrup (N)", "Roasted Hazelnut (N)", "Pear Nectar (N)", "Cherry Cordial (N)", 
+                    "Fig Fruit (N)", "Fig-Sicilian-Fruit-(N)", "Pear-Anjou-Juice-(N)", "Cherry-Tart-Michigan-(N)", "Orange-Candied-Spanish-(N)", "Hazelnut-Italian-Roasted-(N)", "Vanilla-Madagascan-Pod-(N)", 
+                    "Caramel-French-Burnt-(B)", "Coffee-Ethiopian-Bean-(N)", "Chocolate-Mexican-Dark-(B)", "Honey-Moroccan-Lavender-(N)", "Candied-Orange-Moroccan-(N)", "Toffee-English-Sticky-(B)", 
+                    "Maple-Syrup-Canadian-(N)", "Roasted-Almond-Turkish-(N)", "Pear-Tunisian-Nectar-(N)", "Cherry-Syrian-Cordial-(N)", "Fig-Turkish-Fruit-(N)", "Vanilla-Tahitian-Orchid-(N)", 
+                    "Caramel-Salted-Breton-(B)", "Coffee-Colombian-Roast-(N)", "Chocolate-Venezuelan-(B)", "Honey-Egyptian-Clover-(N)", "Candied-Orange-Tunisian-(N)", "Toffee-Scottish-Butter-(B)", 
+                    "Maple-Syrup-Vermont-(N)", "Roasted-Walnut-Georgian-(N)", "Pear-Moroccan-Juice-(N)", "Cherry-Turkish-Cordial-(N)", "Fig-Moroccan-Fruit-(N)", "Vanilla-Comorian-Pod-(N)", "Caramel-Dutch-Stroop-(B)", 
+                    "Coffee-Brazilian-Bean-(N)", "Chocolate-Peruvian-Cacao-(B)", "Honey-Tunisian-Wildflower-(N)", "Candied-Orange-Egyptian-(N)", "Toffee-Irish-Cream-(B)", "Maple-Syrup-Quebec-(N)", 
+                    "Roasted-Pistachio-Iranian-(N)", "Pear-Syrian-Nectar-(N)", "Cherry-Moroccan-Cordial-(N)", "Fig-Greek-Fruit-(N)", "Vanilla-Mexican-Spice-(N)", "Caramel-Spanish-Dulce-(B)", "Coffee-Yemeni-Roast-(N)", 
+                    "Chocolate-Ecuadorian-(B)", "Honey-Lebanese-Thyme-(N)", "Candied-Orange-Syrian-(N)", "Toffee-Welsh-Salted-(B)", "Maple-Syrup-Michigan-(N)", "Roasted-Cashew-Indian-(N)", "Pear-Egyptian-Juice-(N)", 
+                    "Cherry-Lebanese-Cordial-(N)", "Fig-Tunisian-Fruit-(N)", "Vanilla-Papua-Orchid-(N)", "Caramel-Argentinian-(B)", "Coffee-Kenyan-Bean-(N)", "Chocolate-Colombian-Cacao-(B)", "Honey-Syrian-Acacia-(N)", 
+                    "Candied-Orange-Lebanese-(N)", "Toffee-Australian-Cream-(B)", "Maple-Syrup-Maine-(N)", "Roasted-Pecan-Texan-(N)", "Pear-Lebanese-Nectar-(N)", "Cherry-Egyptian-Cordial-(N)", 
+                    "Fig-Lebanese-Fruit-(N)", "Vanilla-Sri-Lankan-Pod-(N)", "Caramel-Mexican-Cajeta-(B)", "Coffee-Rwandan-Roast-(N)", "Chocolate-Brazilian-(B)", "Honey-Moroccan-Orange-Blossom-(N)", 
+                    "Candied-Orange-Turkish-(N)", "Toffee-Swedish-Toffee-(B)", "Maple-Syrup-Ontario-(N)", "Roasted-Macadamia-Australian-(N)", "Pear-Turkish-Juice-(N)", "Cherry-Tunisian-Cordial-(N)", 
+                    "Fig-Egyptian-Fruit-(N)", "Vanilla-Fijian-Orchid-(N)", "Caramel-Italian-Butterscotch-(B)", "Coffee-Ugandan-Bean-(N)", "Chocolate-Ghanaian-Cacao-(B)", "Honey-Turkish-Pine-(N)", 
+                    "Candied-Orange-Greek-(N)", "Toffee-Danish-Caramel-(B)", "Maple-Syrup-New-York-(N)", "Roasted-Chestnut-Turkish-(N)", "Pear-Greek-Nectar-(N)", "Cherry-Spanish-Cordial-(N)", "Fig-Spanish-Fruit-(N)", 
+                    "Vanilla-Mauritian-Pod-(N)", "Caramel-Belgian-Praline-(B)", "Coffee-Tanzanian-Roast-(N)", "Chocolate-Madagascan-(B)", "Honey-Greek-Thyme-(N)", "Candied-Orange-Italian-(N)", "Toffee-German-Nougat-(B)", "Maple-Syrup-Albertan-(N)", "Roasted-Hazelnut-Spanish-(N)", "Pear-Italian-Juice-(N)", "Cherry-Italian-Cordial-(N)", "Fig-Italian-Fruit-(N)", "Vanilla-Tunisian-Orchid-(N)", "Caramel-Swiss-Toffee-(B)", "Coffee-Indonesian-Bean-(N)", "Chocolate-Ivoirian-Cacao-(B)", "Honey-Spanish-Rosemary-(N)", "Candied-Orange-Portuguese-(N)", "Toffee-French-Butter-(B)", "Maple-Syrup-Manitoba-(N)", "Roasted-Almond-Spanish-(N)", "Pear-Spanish-Nectar-(N)", "Cherry-Greek-Cordial-(N)", "Fig-Portuguese-Fruit-(N)"],
+                    ["Almond (N)", "Coconut (N)", "Praline (B)", "Cinnamon (N)", "Tonka Bean (N)", "Butterscotch (B)", "Creme Brulee (B)", "Dulce de Leche (B)", "Marzipan (N)", "Chestnut Cream (N)", "Cocoa Powder (N)", 
+                    "Honeycomb (N)", "Cocoa-Venezuelan-Bean-(N)", "Honey-French-Lavender-(N)", "Marzipan-German-Paste-(N)", "Chestnut-Tuscan-Roast-(N)", "Toffee-English-Sticky-(B)", "Almond-Moroccan-Roasted-(N)", 
+                    "Coconut-Thai-Cream-(N)", "Praline-French-Nut-(B)", "Cinnamon-Sri-Lankan-Bark-(N)", "Tonka-Brazilian-Bean-(N)", "Butterscotch-Scottish-(B)", "Creme-Brulee-Parisian-(B)", 
+                    "Dulce-de-Leche-Argentinian-(B)", "Marzipan-Spanish-(N)", "Chestnut-French-Cream-(N)", "Cocoa-Colombian-Powder-(N)", "Honeycomb-Australian-(N)", "Cocoa-Brazilian-Bean-(N)", 
+                    "Honey-Tunisian-Wild-(N)", "Marzipan-Italian-Almond-(N)", "Chestnut-Spanish-Roast-(N)", "Toffee-Irish-Caramel-(B)", "Almond-Tunisian-Roasted-(N)", "Coconut-Philippine-Milk-(N)", 
+                    "Praline-Belgian-Chocolate-(B)", "Cinnamon-Vietnamese-Bark-(N)", "Tonka-Venezuelan-Bean-(N)", "Butterscotch-American-(B)", "Creme-Brulee-Italian-(B)", "Dulce-de-Leche-Mexican-(B)", 
+                    "Marzipan-Turkish-(N)", "Chestnut-Italian-Cream-(N)", "Cocoa-Peruvian-Powder-(N)", "Honeycomb-New-Zealand-(N)", "Cocoa-Ecuadorian-Bean-(N)", "Honey-Moroccan-Citrus-(N)", "Marzipan-Moroccan-(N)", 
+                    "Chestnut-Turkish-Cream-(N)", "Toffee-Swedish-Butter-(B)", "Almond-Spanish-Roasted-(N)", "Coconut-Sri-Lankan-(N)", "Praline-Swiss-Nut-(B)", "Cinnamon-Moroccan-Bark-(N)", "Tonka-Colombian-Bean-(N)", 
+                    "Butterscotch-English-(B)", "Creme-Brulee-Spanish-(B)", "Dulce-de-Leche-Chilean-(B)", "Marzipan-Egyptian-(N)", "Chestnut-Moroccan-Roast-(N)", "Cocoa-Ghanaian-Powder-(N)", "Honeycomb-British-(N)", 
+                    "Cocoa-Ivoirian-Bean-(N)", "Honey-Turkish-Rose-(N)", "Marzipan-Syrian-(N)", "Chestnut-Syrian-Cream-(N)", "Toffee-Danish-Toffee-(B)", "Almond-Italian-Roasted-(N)", "Coconut-Fijian-Milk-(N)", 
+                    "Praline-Italian-Hazelnut-(B)", "Cinnamon-Tunisian-Bark-(N)", "Tonka-Ecuadorian-Bean-(N)", "Butterscotch-Irish-(B)", "Creme-Brulee-Moroccan-(B)", "Dulce-de-Leche-Colombian-(B)", 
+                    "Marzipan-Tunisian-(N)", "Chestnut-Lebanese-Roast-(N)", "Cocoa-Madagascan-Powder-(N)", "Honeycomb-Moroccan-(N)", "Cocoa-Mexican-Bean-(N)", "Honey-Lebanese-Clover-(N)", "Marzipan-Lebanese-(N)", 
+                    "Chestnut-Tunisian-Cream-(N)", "Toffee-Belgian-Caramel-(B)", "Almond-Turkish-Roasted-(N)", "Coconut-Vietnamese-(N)", "Praline-Moroccan-Nut-(B)", "Cinnamon-Lebanese-Bark-(N)", 
+                    "Tonka-Peruvian-Bean-(N)", "Butterscotch-Australian-(B)", "Creme-Brulee-Tunisian-(B)", "Dulce-de-Leche-Brazilian-(B)", "Marzipan-Spanish-Almond-(N)", "Chestnut-Egyptian-Roast-(N)", 
+                    "Cocoa-Tunisian-Powder-(N)", "Honeycomb-Tunisian-(N)", "Cocoa-Colombian-Bean-(N)", "Honey-Syrian-Lavender-(N)", "Marzipan-Greek-(N)", "Chestnut-Greek-Cream-(N)", "Toffee-Tunisian-Butter-(B)"],
+                    ["Musk (B)", "Amber (N)", "Sandalwood (N)", "Benzoin (N)", "Vanilla Base (N)", "Vanilla Bourbon (N)", "Tonka Bean Absolute (N)", "Benzoin Resin (N)", "Caramelized Sugar (B)", 
+                    "Chocolate Absolute (N)", "Coffee Absolute (N)", "Musk Gourmand (B)", "Vanilla-Reunion-Bean-(N)", "Tonka-Brazilian-Bean-(N)", "Caramel-French-Burnt-(B)", "Chocolate-Mexican-Dark-(N)", 
+                    "Coffee-Ethiopian-Roast-(N)", "Musk-Sweet-Synthetic-(B)", "Amber-Moroccan-Resin-(N)", "Sandalwood-Indian-Mysore-(N)", "Benzoin-Laotian-Gum-(N)", "Vanilla-Madagascan-Base-(N)", 
+                    "Vanilla-Tahitian-Bourbon-(N)", "Tonka-Venezuelan-Absolute-(N)", "Benzoin-Thai-Resin-(N)", "Caramelized-Sugar-Italian-(B)", "Chocolate-Venezuelan-(N)", "Coffee-Colombian-Roast-(N)", 
+                    "Musk-Creamy-Synthetic-(B)", "Amber-Tunisian-Resin-(N)", "Sandalwood-Australian-Creamy-(N)", "Benzoin-Vietnamese-Gum-(N)", "Vanilla-Comorian-Base-(N)", "Vanilla-Mexican-Bourbon-(N)", 
+                    "Tonka-Colombian-Absolute-(N)", "Benzoin-Myanmar-Resin-(N)", "Caramelized-Sugar-Spanish-(B)", "Chocolate-Peruvian-(N)", "Coffee-Brazilian-Roast-(N)", "Musk-Vanilla-Synthetic-(B)", 
+                    "Amber-Lebanese-Resin-(N)", "Sandalwood-Fijian-Soft-(N)", "Benzoin-Indonesian-Gum-(N)", "Vanilla-Papua-Base-(N)", "Vanilla-Sri-Lankan-Bourbon-(N)", "Tonka-Ecuadorian-Absolute-(N)", 
+                    "Benzoin-Sri-Lankan-Resin-(N)", "Caramelized-Sugar-Moroccan-(B)", "Chocolate-Ecuadorian-(N)", "Coffee-Yemeni-Roast-(N)", "Musk-Caramel-Synthetic-(B)", "Amber-Syrian-Resin-(N)", 
+                    "Sandalwood-Sri-Lankan-(N)", "Benzoin-Philippine-Gum-(N)", "Vanilla-Fijian-Base-(N)", "Vanilla-Mauritian-Bourbon-(N)", "Tonka-Peruvian-Absolute-(N)", "Benzoin-Moroccan-Resin-(N)", 
+                    "Caramelized-Sugar-Tunisian-(B)", "Chocolate-Ghanaian-(N)", "Coffee-Kenyan-Roast-(N)", "Musk-Chocolate-Synthetic-(B)", "Amber-Egyptian-Resin-(N)", "Sandalwood-Mauritian-Creamy-(N)", 
+                    "Benzoin-Tunisian-Gum-(N)", "Vanilla-Tunisian-Base-(N)", "Vanilla-Lebanese-Bourbon-(N)", "Tonka-Mexican-Absolute-(N)", "Benzoin-Egyptian-Resin-(N)", "Caramelized-Sugar-Lebanese-(B)", 
+                    "Chocolate-Ivoirian-(N)", "Coffee-Tanzanian-Roast-(N)", "Musk-Coffee-Synthetic-(B)", "Amber-Turkish-Resin-(N)", "Sandalwood-Thai-Soft-(N)", "Benzoin-Syrian-Gum-(N)", "Vanilla-Moroccan-Base-(N)", 
+                    "Vanilla-Syrian-Bourbon-(N)", "Tonka-Chilean-Absolute-(N)", "Benzoin-Lebanese-Resin-(N)", "Caramelized-Sugar-Syrian-(B)", "Chocolate-Madagascan-(N)", "Coffee-Indonesian-Roast-(N)", 
+                    "Musk-Honey-Synthetic-(B)", "Amber-Yemeni-Resin-(N)", "Sandalwood-Nepalese-Creamy-(N)", "Benzoin-Turkish-Gum-(N)", "Vanilla-Egyptian-Base-(N)", "Vanilla-Turkish-Bourbon-(N)", 
+                    "Tonka-Bolivian-Absolute-(N)", "Benzoin-Tunisian-Resin-(N)", "Caramelized-Sugar-Egyptian-(B)", "Chocolate-Colombian-(N)", "Coffee-Ugandan-Roast-(N)", "Musk-Toffee-Synthetic-(B)", 
+                    "Amber-Moroccan-Glow-(N)", "Sandalwood-Egyptian-Soft-(N)", "Benzoin-Mauritian-Gum-(N)", "Vanilla-Spanish-Base-(N)", "Vanilla-Indian-Bourbon-(N)", "Tonka-Argentinian-Absolute-(N)"],
+                ],
+                
+                aquatic: [
+                    ["Sea Salt (B)", "Marine Accord (B)", "Cucumber (N)", "Mint (N)", "Eucalyptus (N)", "Sea Breeze Accord (B)", "Watermelon (N)", "Calone (B)", "Ozonic Accord (B)", "Aloe Vera (N)", 
+                    "Cucumber Peel (N)", "Lotus Leaf (N)", "Melon-Cantaloupe-French-(N)", "Cucumber-English-Seed-(N)", "Aloe-SouthAfrican-Gel-(N)", "Lotus-Egyptian-Leaf-(N)", "Ozonic-Pacific-Breeze-(B)", 
+                    "Sea-Salt-Mediterranean-(B)", "Marine-Accord-Atlantic-(B)", "Cucumber-Moroccan-(N)", "Mint-Moroccan-Peppermint-(N)", "Eucalyptus-Australian-Blue-(N)", "Sea-Breeze-Accord-Caribbean-(B)", 
+                    "Watermelon-Tunisian-(N)", "Calone-Oceanic-(B)", "Ozonic-Accord-Arctic-(B)", "Aloe-Vera-Mexican-(N)", "Cucumber-Tunisian-Peel-(N)", "Lotus-Indian-Green-(N)", "Melon-Honeydew-Spanish-(N)", 
+                    "Cucumber-Lebanese-Seed-(N)", "Aloe-Egyptian-Gel-(N)", "Lotus-Thai-Leaf-(N)", "Ozonic-Indian-Ocean-(B)", "Sea-Salt-Atlantic-(B)", "Marine-Accord-Pacific-(B)", "Cucumber-Egyptian-(N)", 
+                    "Mint-Tunisian-Spearmint-(N)", "Eucalyptus-Tasmanian-(N)", "Sea-Breeze-Accord-Mediterranean-(B)", "Watermelon-Moroccan-(N)", "Calone-Coastal-(B)", "Ozonic-Accord-Antarctic-(B)", 
+                    "Aloe-Vera-Tunisian-(N)", "Cucumber-Syrian-Peel-(N)", "Lotus-Vietnamese-Leaf-(N)", "Melon-Galiah-Australian-(N)", "Cucumber-Turkish-Seed-(N)", "Aloe-Moroccan-Gel-(N)", "Lotus-Moroccan-Leaf-(N)", 
+                    "Ozonic-Tropical-Breeze-(B)", "Sea-Salt-Caribbean-(B)", "Marine-Accord-Indian-(B)", "Cucumber-Spanish-(N)", "Mint-Egyptian-Peppermint-(N)", "Eucalyptus-Moroccan-(N)", 
+                    "Sea-Breeze-Accord-Atlantic-(B)", "Watermelon-Egyptian-(N)", "Calone-Marine-(B)", "Ozonic-Accord-Mediterranean-(B)", "Aloe-Vera-Syrian-(N)", "Cucumber-Mediterranean-Peel-(N)", 
+                    "Lotus-Syrian-Leaf-(N)", "Melon-Water-Japanese-(N)", "Cucumber-Moroccan-Seed-(N)", "Aloe-Turkish-Gel-(N)", "Lotus-Tunisian-Leaf-(N)", "Ozonic-Caribbean-Breeze-(B)", "Sea-Salt-Moroccan-(B)", 
+                    "Marine-Accord-Arctic-(B)", "Cucumber-Tunisian-(N)", "Mint-Syrian-Spearmint-(N)", "Eucalyptus-Lebanese-(N)", "Sea-Breeze-Accord-Pacific-(B)", "Watermelon-Syrian-(N)", "Calone-Tropical-(B)", 
+                    "Ozonic-Accord-Atlantic-(B)", "Aloe-Vera-Lebanese-(N)", "Cucumber-Egyptian-Peel-(N)", "Lotus-Lebanese-Leaf-(N)", "Melon-Charentais-French-(N)", "Cucumber-Syrian-Seed-(N)", "Aloe-Spanish-Gel-(N)", 
+                    "Lotus-Egyptian-Blue-(N)", "Ozonic-Moroccan-Breeze-(B)", "Sea-Salt-Tunisian-(B)", "Marine-Accord-Tunisian-(B)", "Cucumber-Lebanese-(N)", "Mint-Lebanese-Peppermint-(N)", "Eucalyptus-Tunisian-(N)", 
+                    "Sea-Breeze-Accord-Tunisian-(B)", "Watermelon-Lebanese-(N)", "Calone-Arctic-(B)", "Ozonic-Accord-Tunisian-(B)", "Aloe-Vera-Turkish-(N)", "Cucumber-Turkish-Peel-(N)", "Lotus-Turkish-Leaf-(N)", 
+                    "Melon-Canary-Spanish-(N)", "Cucumber-Lebanese-Seed-(N)", "Aloe-Lebanese-Gel-(N)"],
+                    ["Water Lily (N)", "Lotus (N)", "Seaweed (N)", "Driftwood (N)", "Rain Accord (B)", "Sea Foam (B)", "Kelp (N)", "Water Hyacinth (N)", "Blue Lotus (N)", "Coral Accord (B)", "Aquamarine Accord (B)", 
+                    "Driftwood Salt (N)", "Hyacinth-Water-Dutch-(N)", "Kelp-Icelandic-Sea-(N)", "Coral-Caribbean-Accord-(B)", "Seafoam-Atlantic-Spray-(B)", "Lotus-Indian-Blue-(N)", "Water-Lily-Egyptian-(N)", 
+                    "Lotus-Thai-White-(N)", "Seaweed-Japanese-Nori-(N)", "Driftwood-Mediterranean-(N)", "Rain-Accord-Tropical-(B)", "Sea-Foam-Pacific-(B)", "Kelp-Moroccan-Coast-(N)", "Water-Hyacinth-Vietnamese-(N)", 
+                    "Blue-Lotus-Egyptian-(N)", "Coral-Indian-Ocean-(B)", "Aquamarine-Accord-Atlantic-(B)", "Driftwood-Tunisian-Salt-(N)", "Hyacinth-Water-Tunisian-(N)", "Kelp-Atlantic-Sea-(N)", 
+                    "Coral-Pacific-Accord-(B)", "Seafoam-Mediterranean-(B)", "Lotus-Vietnamese-Pink-(N)", "Water-Lily-Moroccan-(N)", "Lotus-Moroccan-Sacred-(N)", "Seaweed-Irish-Moss-(N)", "Driftwood-Caribbean-(N)", 
+                    "Rain-Accord-Monsoon-(B)", "Sea-Foam-Caribbean-(B)", "Kelp-Tunisian-Coast-(N)", "Water-Hyacinth-Thai-(N)", "Blue-Lotus-Thai-(N)", "Coral-Red-Sea-(B)", "Aquamarine-Accord-Pacific-(B)", 
+                    "Driftwood-Lebanese-Salt-(N)", "Hyacinth-Water-Moroccan-(N)", "Kelp-Pacific-Sea-(N)", "Coral-Tropical-Accord-(B)", "Seafoam-Indian-Ocean-(B)", "Lotus-Syrian-White-(N)", "Water-Lily-Tunisian-(N)", 
+                    "Lotus-Lebanese-Blue-(N)", "Seaweed-Scottish-Kelp-(N)", "Driftwood-Atlantic-(N)", "Rain-Accord-Mediterranean-(B)", "Sea-Foam-Tunisian-(B)", "Kelp-Lebanese-Coast-(N)", "Water-Hyacinth-Moroccan-(N)", 
+                    "Blue-Lotus-Vietnamese-(N)", "Coral-Mediterranean-(B)", "Aquamarine-Accord-Tunisian-(B)", "Driftwood-Moroccan-Salt-(N)", "Hyacinth-Water-Syrian-(N)", "Kelp-Mediterranean-Sea-(N)", 
+                    "Coral-Australian-Reef-(B)", "Seafoam-Moroccan-Spray-(B)", "Lotus-Tunisian-Pink-(N)", "Water-Lily-Syrian-(N)", "Lotus-Egyptian-Sacred-(N)", "Seaweed-Norwegian-(N)", "Driftwood-Pacific-(N)", 
+                    "Rain-Accord-Atlantic-(B)", "Sea-Foam-Lebanese-(B)", "Kelp-Syrian-Coast-(N)", "Water-Hyacinth-Tunisian-(N)", "Blue-Lotus-Moroccan-(N)", "Coral-Tunisian-(B)", "Aquamarine-Accord-Moroccan-(B)", 
+                    "Driftwood-Syrian-Salt-(N)", "Hyacinth-Water-Lebanese-(N)", "Kelp-Turkish-Sea-(N)", "Coral-Lebanese-Accord-(B)", "Seafoam-Syrian-Spray-(B)", "Lotus-Myanmar-Blue-(N)", "Water-Lily-Lebanese-(N)", 
+                    "Lotus-Sri-Lankan-White-(N)", "Seaweed-Moroccan-(N)", "Driftwood-Turkish-(N)", "Rain-Accord-Tunisian-(B)", "Sea-Foam-Moroccan-(B)", "Kelp-Egyptian-Coast-(N)", "Water-Hyacinth-Syrian-(N)", 
+                    "Blue-Lotus-Tunisian-(N)", "Coral-Syrian-(B)", "Aquamarine-Accord-Lebanese-(B)", "Driftwood-Lebanese-Salt-(N)", "Hyacinth-Water-Turkish-(N)", "Kelp-Lebanese-Sea-(N)", "Coral-Moroccan-Accord-(B)"],
+                    ["Ambergris (N)", "White Musk (B)", "Cedar (N)", "Sandalwood (N)", "Mineral Accord (B)", "Marine Musk (B)", "Ambergris Synthetic (B)", "Salty Amber (B)", "Sea Moss (N)", "Ocean Wood (N)", 
+                    "Mineral Salt (B)", "Coastal Cedar (N)", "Amber-Sea-Synthetic-(B)", "Musk-Oceanic-Synthetic-(B)", "Cedar-Driftwood-Coastal-(N)", "Moss-Irish-Sea-(N)", "Ambergris-Moroccan-(N)", 
+                    "White-Musk-Mediterranean-(B)", "Cedar-Moroccan-Base-(N)", "Sandalwood-Australian-Creamy-(N)", "Mineral-Accord-Atlantic-(B)", "Marine-Musk-Tunisian-(B)", "Ambergris-Coastal-Moroccan-(B)", 
+                    "Salty-Amber-Pacific-(B)", "Sea-Moss-Scottish-(N)", "Ocean-Wood-Pacific-(N)", "Mineral-Salt-Mediterranean-(B)", "Coastal-Cedar-Tunisian-(N)", "Amber-Ocean-Synthetic-(B)", 
+                    "Musk-Aquatic-Synthetic-(B)", "Cedar-Lebanese-Driftwood-(N)", "Moss-Norwegian-Sea-(N)", "Ambergris-Tunisian-(N)", "White-Musk-Atlantic-(B)", "Cedar-Tunisian-Base-(N)", "Sandalwood-Fijian-Soft-(N)", 
+                    "Mineral-Accord-Pacific-(B)", "Marine-Musk-Moroccan-(B)", "Ambergris-Lebanese-Coastal-(B)", "Salty-Amber-Tunisian-(B)", "Sea-Moss-Icelandic-(N)", "Ocean-Wood-Atlantic-(N)", 
+                    "Mineral-Salt-Caribbean-(B)", "Coastal-Cedar-Lebanese-(N)", "Amber-Marine-Synthetic-(B)", "Musk-Sea-Synthetic-(B)", "Cedar-Syrian-Driftwood-(N)", "Moss-Mediterranean-Sea-(N)", 
+                    "Ambergris-Lebanese-(N)", "White-Musk-Pacific-(B)", "Cedar-Syrian-Base-(N)", "Sandalwood-Sri-Lankan-(N)", "Mineral-Accord-Mediterranean-(B)", "Marine-Musk-Lebanese-(B)", 
+                    "Ambergris-Syrian-Coastal-(B)", "Salty-Amber-Moroccan-(B)", "Sea-Moss-Moroccan-(N)", "Ocean-Wood-Caribbean-(N)", "Mineral-Salt-Tunisian-(B)", "Coastal-Cedar-Syrian-(N)", 
+                    "Amber-Aquatic-Synthetic-(B)", "Musk-Ocean-Moroccan-(B)", "Cedar-Egyptian-Driftwood-(N)", "Moss-Lebanese-Sea-(N)", "Ambergris-Egyptian-(N)", "White-Musk-Caribbean-(B)", "Cedar-Egyptian-Base-(N)", 
+                    "Sandalwood-Mauritian-Creamy-(N)", "Mineral-Accord-Tunisian-(B)", "Marine-Musk-Syrian-(B)", "Ambergris-Turkish-Coastal-(B)", "Salty-Amber-Lebanese-(B)", "Sea-Moss-Tunisian-(N)", 
+                    "Ocean-Wood-Mediterranean-(N)", "Mineral-Salt-Lebanese-(B)", "Coastal-Cedar-Turkish-(N)", "Amber-Sea-Tunisian-(B)", "Musk-Aquatic-Tunisian-(B)", "Cedar-Turkish-Driftwood-(N)", "Moss-Syrian-Sea-(N)", 
+                    "Ambergris-Saudi-(N)", "White-Musk-Tunisian-(B)", "Cedar-Lebanese-Base-(N)", "Sandalwood-Thai-Soft-(N)", "Mineral-Accord-Lebanese-(B)", "Marine-Musk-Turkish-(B)", "Ambergris-Yemeni-Coastal-(B)", 
+                    "Salty-Amber-Syrian-(B)", "Sea-Moss-Lebanese-(N)", "Ocean-Wood-Tunisian-(N)", "Mineral-Salt-Syrian-(B)", "Coastal-Cedar-Moroccan-(N)", "Amber-Marine-Lebanese-(B)", "Musk-Sea-Lebanese-(B)", 
+                    "Cedar-Moroccan-Driftwood-(N)", "Moss-Turkish-Sea-(N)", "Ambergris-Emirati-(N)", "White-Musk-Lebanese-(B)", "Cedar-Tunisian-Base-(N)", "Sandalwood-Nepalese-Creamy-(N)", "Mineral-Accord-Syrian-(B)"],
+                ],
+            },
+            
+            traitToNoteMap: {
+              
+                elegant: ["Rose Absolute (N)", "Iris (N)", "Vanilla Absolute (N)", "Damascena Rose (N)", "Orris Butter (N)", "Rose-Bulgarian-Oil-(N)", "Iris-Florentine-Rhizome-(N)", "Rose-Taif-Petal-(N)", 
+                          "Jasmine-Egyptian-Dawn-(N)", "Magnolia-Chinese-Blossom-(N)", "Rose-Moroccan-Valley-(N)", "Orris-Tuscan-Root-(N)", "Ylang-Ylang-Madagascan-(N)", "Gardenia-Tahitian-(N)", 
+                          "Frangipani-Balinese-Flower-(N)", "Neroli-Egyptian-Blossom-(N)", "Rose-Persian-Absolute-(N)", "Jasmine-Sambac-Indian-(N)", "Magnolia-Vietnamese-Bloom-(N)", "Tuberose-Indian-Moon-(N)", 
+                          "Heliotrope-Fijian-(N)", "Lotus-Indian-Sacred-(N)", "Rose-Lebanese-Petal-(N)", "Iris-Moroccan-Rhizome-(N)", "Ylang-Ylang-Comorian-(N)", "Gardenia-Hawaiian-Bloom-(N)", 
+                          "Frangipani-Mauritian-(N)", "Rose-Turkish-Dawn-(N)", "Jasmine-Tunisian-Star-(N)", "Vanilla-Tahitian-Orchid-(N)"],
+              
+                bold: ["Black Pepper (N)", "Ginger (N)", "Nutmeg (N)", "Pink Peppercorn (N)", "Clove Bud (N)", "Pepper-Madagascan-Black-(N)", "Clove-Zanzibar-Bud-(N)", "Cinnamon-Ceylon-Bark-(N)", 
+                       "Ginger-Zanzibar-Root-(N)", "Chili-Pepper-Indian-(N)", "Nutmeg-Indonesian-Seed-(N)", "Pink-Pepper-Brazilian-(N)", "Clove-Madagascan-Bud-(N)", "Cinnamon-Vietnamese-Bark-(N)", 
+                       "Allspice-Jamaican-Berry-(N)", "Ginger-Indian-Root-(N)", "Pepper-Vietnamese-(N)", "Chili-Pepper-Mexican-(N)", "Nutmeg-Sri-Lankan-(N)", "Pink-Pepper-Reunion-(N)", "Clove-Sri-Lankan-Bud-(N)", 
+                       "Cinnamon-Sri-Lankan-Bark-(N)", "Ginger-Thai-Root-(N)", "Allspice-Mexican-Berry-(N)", "Pepper-Indian-(N)", "Chili-Pepper-Thai-(N)", "Nutmeg-Jamaican-(N)", "Pink-Pepper-Moroccan-(N)", 
+                       "Clove-Tunisian-Bud-(N)", "Cinnamon-Moroccan-Bark-(N)"],
+              
+                mysterious: ["Patchouli (N)", "Oakmoss (N)", "Musk Accord (B)", "Oud Assam (N)", "Myrrh (N)", "Oud-Cambodian-Dark-(N)", "Myrrh-Yemeni-Sacred-(N)", "Frankincense-Omani-Tear-(N)", 
+                             "Labdanum-Moroccan-Resin-(N)", "Oud-Malay-Wood-(N)", "Patchouli-Indonesian-Deep-(N)", "Myrrh-Ethiopian-Resin-(N)", "Frankincense-Yemeni-Sacred-(N)", "Oud-Thai-Aged-(N)", 
+                             "Oakmoss-Tunisian-(N)", "Musk-Oriental-Synthetic-(B)", "Patchouli-Sri-Lankan-(N)", "Myrrh-Somali-Resin-(N)", "Frankincense-Sudanese-(N)", "Oud-Vietnamese-Dark-(N)", 
+                             "Labdanum-Spanish-Resin-(N)", "Patchouli-Javanese-(N)", "Myrrh-Saudi-Resin-(N)", "Frankincense-Moroccan-(N)", "Oud-Bangladeshi-Aged-(N)", "Oakmoss-Lebanese-(N)", 
+                             "Musk-Persian-Synthetic-(B)", "Patchouli-Bangladeshi-(N)", "Myrrh-Tunisian-Gum-(N)", "Frankincense-Somali-Gold-(N)"],
+                refreshing: ["Lemon Zest (N)", "Mint (N)", "Sea Salt (B)", "Yuzu (N)", "Calone (B)", "Lemon-Sorrento-Peel-(N)", "Ozonic-Pacific-Breeze-(B)", "Yuzu-Japanese-Citrus-(N)", "Cucumber-Moroccan-(N)", 
+                             "Marine-Accord-Atlantic-(B)", "Lime-Mexican-Key-(N)", "Mint-Moroccan-Peppermint-(N)", "Sea-Salt-Mediterranean-(B)", "Yuzu-Korean-Citrus-(N)", "Calone-Oceanic-(B)", 
+                             "Lemon-Tunisian-Zest-(N)", "Ozonic-Indian-Ocean-(B)", "Cucumber-Tunisian-(N)", "Marine-Accord-Pacific-(B)", "Lime-Persian-Green-(N)", "Mint-Tunisian-Spearmint-(N)", 
+                             "Sea-Breeze-Accord-Caribbean-(B)", "Yuzu-Vietnamese-Citrus-(N)", "Calone-Coastal-(B)", "Lemon-Sicilian-Yellow-(N)", "Ozonic-Tropical-Breeze-(B)", "Cucumber-Egyptian-(N)", 
+                             "Marine-Accord-Indian-(B)", "Lime-Tahitian-Green-(N)", "Mint-Egyptian-Peppermint-(N)"],
+              
+                playful: ["Orange Blossom (N)", "Praline (B)", "Caramel (B)", "Candied Orange (N)", "Cherry Cordial (N)", "Cherry-Tart-Michigan-(N)", "Caramel-French-Burnt-(B)", "Maple-Syrup-Canadian-(N)", 
+                          "Honeycomb-Australian-(N)", "Fig-Sicilian-Fruit-(N)", "Candied-Orange-Moroccan-(N)", "Praline-French-Nut-(B)", "Caramel-Salted-Breton-(B)", "Cherry-Syrian-Cordial-(N)", 
+                          "Maple-Syrup-Vermont-(N)", "Fig-Turkish-Fruit-(N)", "Honeycomb-New-Zealand-(N)", "Candied-Orange-Tunisian-(N)", "Praline-Belgian-Chocolate-(B)", "Caramel-Dutch-Stroop-(B)", 
+                          "Cherry-Turkish-Cordial-(N)", "Maple-Syrup-Quebec-(N)", "Fig-Moroccan-Fruit-(N)", "Honeycomb-British-(N)", "Candied-Orange-Egyptian-(N)", "Praline-Swiss-Nut-(B)", 
+                          "Caramel-Spanish-Dulce-(B)", "Cherry-Moroccan-Cordial-(N)", "Maple-Syrup-Michigan-(N)", "Fig-Greek-Fruit-(N)"],
+              
+                sensual: ["Jasmine Sambac (N)", "Ylang-Ylang (N)", "Amber Accord (B)", "Tiare Flower (N)", "Frangipani (N)", "Jasmine-Sambac-Indian-(N)", "Frangipani-Balinese-Flower-(N)", 
+                          "Tuberose-Indian-Moon-(N)", "Ylang-Ylang-Madagascan-(N)", "Amber-Persian-Resin-(B)", "Jasmine-Moroccan-Night-(N)", "Frangipani-Mauritian-(N)", "Tuberose-Mexican-Dawn-(N)", 
+                          "Ylang-Ylang-Comorian-(N)", "Amber-Emirati-Glow-(B)", "Jasmine-Egyptian-Star-(N)", "Frangipani-Thai-Temple-(N)", "Tuberose-Fijian-Bloom-(N)", "Ylang-Ylang-Seychelles-(N)", 
+                          "Amber-Omani-Resin-(B)", "Jasmine-Tunisian-Dawn-(N)", "Frangipani-Seychelles-(N)", "Tuberose-Egyptian-Night-(N)", "Ylang-Ylang-Philippine-(N)", "Amber-Saudi-Golden-(B)", 
+                          "Jasmine-Syrian-Night-(N)", "Frangipani-Indian-Ocean-(N)", "Tuberose-Indian-Sunset-(N)", "Ylang-Ylang-Mauritian-(N)", "Amber-Lebanese-Resin-(B)"],
+              
+                exotic: ["Saffron (N)", "Cardamom Seed (N)", "Star Anise (N)", "Saffron-Iranian-Stigma-(N)", "Anise-Turkish-Seed-(N)", "Cardamom-Guatemalan-Pod-(N)", "Saffron-Kashmiri-Stigma-(N)", 
+                         "Star-Anise-Vietnamese-(N)", "Galangal-Thai-Root-(N)", "Sumac-Lebanese-(N)", "Saffron-Moroccan-Thread-(N)", "Cardamom-Sri-Lankan-(N)", "Star-Anise-Chinese-(N)", 
+                         "Saffron-Turkish-Stigma-(N)", "Anise-Syrian-Seed-(N)", "Cardamom-Tunisian-(N)", "Saffron-Spanish-Thread-(N)", "Star-Anise-Moroccan-(N)", "Galangal-Vietnamese-Root-(N)", 
+                         "Sumac-Jordanian-(N)", "Saffron-Egyptian-Stigma-(N)", "Cardamom-Moroccan-(N)", "Star-Anise-Tunisian-(N)", "Saffron-Syrian-Thread-(N)", "Anise-Egyptian-Seed-(N)", "Cardamom-Lebanese-(N)", 
+                         "Saffron-Lebanese-Stigma-(N)", "Star-Anise-Syrian-(N)", "Galangal-Indonesian-Root-(N)", "Sumac-Tunisian-(N)"],
+              
+                minimalist: ["Cedar (N)", "White Musk (B)", "Mineral Accord (B)", "Coastal Cedar (N)", "Aquamarine Accord (B)", "Cedar-Driftwood-Coastal-(N)", "Musk-Oceanic-Synthetic-(B)", 
+                             "Cedar-Moroccan-Bark-(N)", "Mineral-Salt-Mediterranean-(B)", "Amber-Sea-Synthetic-(B)", "Cedar-Lebanese-Base-(N)", "White-Musk-Mediterranean-(B)", "Mineral-Accord-Atlantic-(B)", 
+                             "Coastal-Cedar-Tunisian-(N)", "Aquamarine-Accord-Pacific-(B)", "Cedar-Tunisian-Base-(N)", "Musk-Aquatic-Synthetic-(B)", "Mineral-Salt-Caribbean-(B)", "Cedar-Syrian-Driftwood-(N)", 
+                             "Amber-Ocean-Synthetic-(B)", "Cedar-Egyptian-Base-(N)", "White-Musk-Atlantic-(B)", "Mineral-Accord-Pacific-(B)", "Coastal-Cedar-Lebanese-(N)", "Aquamarine-Accord-Tunisian-(B)", 
+                             "Cedar-Turkish-Base-(N)", "Musk-Sea-Synthetic-(B)", "Mineral-Salt-Tunisian-(B)", "Cedar-Moroccan-Driftwood-(N)", "Amber-Marine-Synthetic-(B)"],
+                adventurous: ["Juniper (N)", "Elemi (N)", "Vetiver (N)", "Hinoki Wood (N)", "Palo Santo (N)", "Juniper-Himalayan-Berry-(N)", "Vetiver-Madagascan-Root-(N)", "Elemi-Philippine-Gum-(N)", 
+                              "Pine-Moroccan-Needle-(N)", "Guaiac-Paraguayan-Wood-(N)", "Juniper-Tunisian-Berry-(N)", "Vetiver-Haitian-Root-(N)", "Hinoki-Japanese-Branch-(N)", "Palo-Santo-Ecuadorian-(N)", 
+                              "Pine-Scots-Needle-(N)", "Elemi-Indonesian-Resin-(N)", "Vetiver-Sri-Lankan-Root-(N)", "Guaiac-Bolivian-Wood-(N)", "Juniper-Moroccan-Berry-(N)", "Pine-Tunisian-Needle-(N)", 
+                              "Vetiver-Indian-Grass-(N)", "Hinoki-Korean-Wood-(N)", "Palo-Santo-Peruvian-(N)", "Elemi-Thai-Gum-(N)", "Juniper-Lebanese-Berry-(N)", "Vetiver-Burmese-Root-(N)", 
+                              "Guaiac-Argentinian-Heart-(N)", "Pine-Lebanese-Needle-(N)", "Hinoki-Taiwanese-Branch-(N)", "Palo-Santo-Bolivian-(N)"],
+              
+                classic: ["Bergamot (N)", "Sandalwood (N)", "Tonka Bean (N)", "Vanilla Tahiti (N)", "Neroli Tunisia (N)", "Bergamot-Calabrian-Rind-(N)", "Vanilla-Reunion-Bean-(N)", "Sandalwood-Indian-Mysore-(N)", 
+                          "Tonka-Brazilian-Bean-(N)", "Neroli-Egyptian-Blossom-(N)", "Bergamot-Tunisian-Rind-(N)", "Sandalwood-Australian-Creamy-(N)", "Tonka-Venezuelan-Bean-(N)", "Vanilla-Madagascan-Pod-(N)", 
+                          "Neroli-Moroccan-Blossom-(N)", "Bergamot-Moroccan-Rind-(N)", "Sandalwood-Fijian-Soft-(N)", "Tonka-Colombian-Bean-(N)", "Vanilla-Comorian-Pod-(N)", "Neroli-Spanish-Blossom-(N)", 
+                          "Bergamot-Lebanese-Rind-(N)", "Sandalwood-Sri-Lankan-(N)", "Tonka-Ecuadorian-Bean-(N)", "Vanilla-Papua-Orchid-(N)", "Neroli-Turkish-Blossom-(N)", "Bergamot-Egyptian-Rind-(N)", 
+                          "Sandalwood-Mauritian-(N)", "Tonka-Peruvian-Bean-(N)", "Vanilla-Fijian-Orchid-(N)", "Neroli-Lebanese-Blossom-(N)"],
+              
+                bohemian: ["Pink Pepper (N)", "Rose Petals (N)", "Driftwood (N)", "Mimosa (N)", "Linden Blossom (N)", "Mimosa-Australian-Bloom-(N)", "Violet-French-Leaf-(N)", "Rose-Omani-Petal-(N)", 
+                           "Linden-Tunisian-Blossom-(N)", "Driftwood-Tunisian-Salt-(N)", "Pink-Pepper-Bahraini-(N)", "Rose-Moroccan-Valley-(N)", "Mimosa-French-Riviera-(N)", "Linden-French-Blossom-(N)", 
+                           "Driftwood-Mediterranean-(N)", "Pink-Pepper-Reunion-(N)", "Rose-Lebanese-Petal-(N)", "Mimosa-Moroccan-Bloom-(N)", "Linden-Italian-Blossom-(N)", "Driftwood-Caribbean-(N)", 
+                           "Pink-Pepper-Moroccan-(N)", "Rose-Turkish-Dawn-(N)", "Mimosa-Tunisian-Bloom-(N)", "Linden-Moroccan-Flower-(N)", "Driftwood-Atlantic-(N)", "Pink-Pepper-Tunisian-(N)", 
+                           "Rose-Persian-Dawn-(N)", "Mimosa-Egyptian-Bloom-(N)", "Linden-Turkish-Flower-(N)", "Driftwood-Lebanese-Salt-(N)"],
+                modern: ["Petitgrain (N)", "Marine Accord (B)", "Ambergris (N)", "Ozonic Accord (B)", "Iso E Super (B)", "Petitgrain-Paraguayan-Leaf-(N)", "Amber-Sea-Synthetic-(B)", "Ozonic-Indian-Ocean-(B)", 
+                         "Ambergris-Moroccan-(N)", "Marine-Accord-Pacific-(B)", "Petitgrain-Spanish-Branch-(N)", "Ozonic-Tropical-Breeze-(B)", "Ambergris-Tunisian-(N)", "Marine-Accord-Atlantic-(B)", 
+                         "Iso-E-Super-Citrus-(B)", "Petitgrain-Moroccan-Leaf-(N)", "Amber-Ocean-Synthetic-(B)", "Ozonic-Pacific-Breeze-(B)", "Ambergris-Lebanese-(N)", "Marine-Accord-Indian-(B)", 
+                         "Petitgrain-Tunisian-Branch-(N)", "Ozonic-Caribbean-Breeze-(B)", "Ambergris-Egyptian-(N)", "Marine-Accord-Arctic-(B)", "Iso-E-Super-Lemon-(B)", "Petitgrain-Egyptian-Leaf-(N)", 
+                         "Amber-Marine-Synthetic-(B)", "Ozonic-Moroccan-Breeze-(B)", "Ambergris-Saudi-(N)", "Marine-Accord-Tunisian-(B)"],
+                serenity: ["Lavender (N)", "Water Lily (N)", "Vanilla (N)", "Lotus Leaf (N)", "Blue Lotus (N)", "Lotus-Indian-Blue-(N)", "Hyacinth-Water-Dutch-(N)", "Water-Lily-Egyptian-(N)", 
+                           "Lavender-French-Provence-(N)", "Lotus-Egyptian-Sacred-(N)", "Vanilla-Madagascan-Pod-(N)", "Water-Lily-Moroccan-(N)", "Lavender-Bulgarian-(N)", "Lotus-Thai-White-(N)", 
+                           "Hyacinth-Water-Tunisian-(N)", "Blue-Lotus-Egyptian-(N)", "Vanilla-Tahitian-Orchid-(N)", "Water-Lily-Tunisian-(N)", "Lavender-Turkish-(N)", "Lotus-Vietnamese-Pink-(N)", 
+                           "Hyacinth-Water-Moroccan-(N)", "Blue-Lotus-Thai-(N)", "Vanilla-Comorian-Pod-(N)", "Water-Lily-Syrian-(N)", "Lavender-Moroccan-(N)", "Lotus-Syrian-White-(N)", "Hyacinth-Water-Syrian-(N)", 
+                           "Blue-Lotus-Vietnamese-(N)", "Vanilla-Papua-Orchid-(N)", "Water-Lily-Lebanese-(N)"],
+              
+                confidence: ["Cedar Heart (N)", "Musk (B)", "Clove (N)", "Cedarwood Atlas (N)", "Tobacco Leaf (N)", "Cedar-Moroccan-Bark-(N)", "Tobacco-Cuban-Leaf-(N)", "Clove-Madagascan-Bud-(N)", 
+                             "Sandalwood-Tamil-Nadu-(N)", "Musk-Spicy-Synthetic-(B)", "Cedar-Virginian-Core-(N)", "Tobacco-Turkish-Leaf-(N)", "Clove-Zanzibar-Bud-(N)", "Sandalwood-Australian-Creamy-(N)", 
+                             "Musk-Tunisian-Synthetic-(B)", "Cedar-Texas-Core-(N)", "Tobacco-Virginian-Leaf-(N)", "Clove-Sri-Lankan-Bud-(N)", "Sandalwood-Fijian-Soft-(N)", "Musk-Moroccan-Synthetic-(B)", 
+                             "Cedar-Himalayan-Core-(N)", "Tobacco-Moroccan-Leaf-(N)", "Clove-Tunisian-Bud-(N)", "Sandalwood-Sri-Lankan-(N)", "Musk-Syrian-Synthetic-(B)", "Cedar-Moroccan-Core-(N)", 
+                             "Tobacco-Syrian-Leaf-(N)", "Clove-Lebanese-Bud-(N)", "Sandalwood-Mauritian-(N)", "Musk-Lebanese-Synthetic-(B)"],
+              
+                intrigue: ["Tuberose Absolute (N)", "Rain Accord (B)", "Labdanum (N)", "Saffron Absolute (N)", "Civet Accord (B)", "Oud-Laotian-Wood-(N)", "Champaca-Indian-Flower-(N)", 
+                           "Myrrh-Omani-Frankincense-(N)", "Tuberose-Mexican-Dawn-(N)", "Rain-Accord-Tropical-(B)", "Labdanum-Spanish-Resin-(N)", "Saffron-Iranian-Absolute-(N)", "Civet-Indian-Synthetic-(B)", 
+                           "Oud-Cambodian-Dark-(N)", "Champaca-Thai-Golden-(N)", "Myrrh-Yemeni-Sacred-(N)", "Tuberose-Fijian-Bloom-(N)", "Rain-Accord-Monsoon-(B)", "Labdanum-Moroccan-Gum-(N)", 
+                           "Saffron-Turkish-Absolute-(N)", "Civet-Ethiopian-Blend-(B)", "Oud-Vietnamese-Dark-(N)", "Champaca-Bangladeshi-(N)", "Myrrh-Somali-Resin-(N)", "Tuberose-Egyptian-Night-(N)", 
+                           "Rain-Accord-Mediterranean-(B)", "Labdanum-Tunisian-Resin-(N)", "Saffron-Persian-Absolute-(N)", "Civet-Moroccan-Synthetic-(B)", "Oud-Bangladeshi-Aged-(N)"],
+              
+                joy: ["Grapefruit (N)", "Coconut (N)", "Lime (N)", "Blood Orange (N)", "Watermelon (N)", "Grapefruit-Florida-Pink-(N)", "Melon-Cantaloupe-French-(N)", "Blood-Orange-Sicilian-(N)", 
+                      "Lime-Mexican-Key-(N)", "Coconut-Thai-Cream-(N)", "Grapefruit-Bahamian-White-(N)", "Watermelon-Tunisian-(N)", "Lime-Persian-Green-(N)", "Blood-Orange-Maltese-(N)", 
+                      "Coconut-Philippine-Milk-(N)", "Grapefruit-Texas-Ruby-(N)", "Melon-Honeydew-Spanish-(N)", "Lime-Tahitian-Green-(N)", "Blood-Orange-Tunisian-(N)", "Coconut-Sri-Lankan-(N)", 
+                      "Grapefruit-South-African-(N)", "Watermelon-Moroccan-(N)", "Lime-Australian-Finger-(N)", "Blood-Orange-Spanish-(N)", "Coconut-Fijian-Milk-(N)", "Grapefruit-Jamaican-(N)", 
+                      "Melon-Galiah-Australian-(N)", "Lime-Brazilian-Key-(N)", "Blood-Orange-Californian-(N)", "Coconut-Vietnamese-(N)"],
+              
+                excitement: ["Cinnamon (N)", "Bay Leaves (N)", "Pink Grapefruit (N)", "Allspice (N)", "Pimento Berry (N)", "Pimento-Jamaican-Berry-(N)", "Ginger-Zanzibar-Root-(N)", "Cinnamon-Vietnamese-Bark-(N)", 
+                             "Bay-Leaf-Turkish-(N)", "Pink-Grapefruit-Florida-(N)", "Allspice-Mexican-Berry-(N)", "Pimento-Mexican-Berry-(N)", "Cinnamon-Sri-Lankan-Bark-(N)", "Bay-Leaf-Greek-(N)", 
+                             "Pink-Grapefruit-Tunisian-(N)", "Allspice-Guatemalan-(N)", "Pimento-Honduran-Berry-(N)", "Cinnamon-Moroccan-Bark-(N)", "Bay-Leaf-Indian-(N)", "Pink-Grapefruit-Moroccan-(N)", 
+                             "Allspice-Honduran-(N)", "Pimento-Cuban-Berry-(N)", "Cinnamon-Tunisian-Bark-(N)", "Bay-Leaf-Moroccan-(N)", "Pink-Grapefruit-Egyptian-(N)", "Allspice-Nicaraguan-(N)", 
+                             "Pimento-Nicaraguan-Berry-(N)", "Cinnamon-Lebanese-Bark-(N)", "Bay-Leaf-Tunisian-(N)", "Pink-Grapefruit-Syrian-(N)"],
+              
+                romance: ["Rose Absolute (N)", "Magnolia (N)", "Honey (N)", "Rose de Mai (N)", "Carnation (N)", "Rose-Bulgarian-Oil-(N)", "Carnation-Spanish-Petal-(N)", "Honey-Lebanese-Thyme-(N)", 
+                          "Magnolia-Vietnamese-Bloom-(N)", "Rose-Moroccan-Valley-(N)", "Rose-Taif-Absolute-(N)", "Honey-Moroccan-Lavender-(N)", "Carnation-Turkish-Red-(N)", "Magnolia-Indian-Creamy-(N)", 
+                          "Rose-Damascene-Petal-(N)", "Honey-Egyptian-Clover-(N)", "Carnation-Italian-Spice-(N)", "Magnolia-Thai-White-(N)", "Rose-Persian-Absolute-(N)", "Honey-Tunisian-Wildflower-(N)", 
+                          "Carnation-Greek-Pink-(N)", "Magnolia-Burmese-Golden-(N)", "Rose-Egyptian-Petal-(N)", "Honey-Syrian-Acacia-(N)", "Carnation-Moroccan-Red-(N)", "Magnolia-Sri-Lankan-(N)", 
+                          "Rose-Syrian-Absolute-(N)", "Honey-Moroccan-Orange-Blossom-(N)", "Carnation-Syrian-Spice-(N)", "Magnolia-Malaysian-(N)"],
+              
+                reflection: ["Sandalwood Base (N)", "Benzoin (N)", "Iris Root (N)", "Benzoin Siam (N)", "Orris Concrete (N)", "Benzoin-Thai-Crystal-(N)", "Iris-Florentine-Rhizome-(N)", 
+                             "Sandalwood-Australian-Creamy-(N)", "Benzoin-Yemeni-Resin-(N)", "Orris-Tuscan-Root-(N)", "Sandalwood-Indian-Mysore-(N)", "Benzoin-Laotian-Gum-(N)", "Iris-Moroccan-Rhizome-(N)", 
+                             "Sandalwood-Fijian-Soft-(N)", "Benzoin-Vietnamese-Gum-(N)", "Orris-Turkish-Concrete-(N)", "Sandalwood-Sri-Lankan-(N)", "Benzoin-Indonesian-Resin-(N)", "Iris-Lebanese-Root-(N)", 
+                             "Sandalwood-Mauritian-(N)", "Benzoin-Philippine-Gum-(N)", "Orris-Syrian-Concrete-(N)", "Sandalwood-Thai-Creamy-(N)", "Benzoin-Sri-Lankan-Resin-(N)", "Iris-Tunisian-Root-(N)", 
+                             "Sandalwood-Nepalese-(N)", "Benzoin-Tunisian-Gum-(N)", "Orris-Moroccan-Orris-(N)", "Sandalwood-Egyptian-Soft-(N)", "Benzoin-Moroccan-Resin-(N)"],
+              
+                passion: ["Nutmeg (N)", "Jasmine (N)", "Amber (N)", "Chili Pepper (N)", "Cinnamon Bark (N)", "Nutmeg-Madagascan-Seed-(N)", "Jasmine-Sambac-Indian-(N)", "Amber-Moroccan-Resin-(N)", 
+                          "Chili-Pepper-Mexican-(N)", "Cinnamon-Sri-Lankan-Bark-(N)", "Nutmeg-Indonesian-Seed-(N)", "Jasmine-Moroccan-Night-(N)", "Amber-Tunisian-Resin-(N)", "Chili-Pepper-Thai-(N)", 
+                          "Cinnamon-Vietnamese-Bark-(N)", "Nutmeg-Sri-Lankan-(N)", "Jasmine-Egyptian-Star-(N)", "Amber-Lebanese-Resin-(N)", "Chili-Pepper-Indian-(N)", "Cinnamon-Moroccan-Bark-(N)", 
+                          "Nutmeg-Jamaican-(N)", "Jasmine-Tunisian-Dawn-(N)", "Amber-Syrian-Resin-(N)", "Chili-Pepper-Moroccan-(N)", "Cinnamon-Tunisian-Bark-(N)", "Nutmeg-Moroccan-(N)", 
+                          "Jasmine-Syrian-Night-(N)", "Amber-Egyptian-Resin-(N)", "Chili-Pepper-Tunisian-(N)", "Cinnamon-Lebanese-Bark-(N)"],
+              
+                power: ["Black Pepper (N)", "Sandalwood (N)", "Musk Base (B)", "Oud Synthetic (B)", "Leather Accord (B)", "Oud-Indian-Synthetic-(B)", "Leather-Spanish-Accord-(B)", "Sandalwood-Fijian-Soft-(N)", 
+                        "Musk-Tunisian-Synthetic-(B)", "Oud-Vietnamese-Synthetic-(B)", "Black-Pepper-Madagascan-(N)", "Sandalwood-Australian-Creamy-(N)", "Musk-Moroccan-Synthetic-(B)", "Oud-Thai-Synthetic-(B)", 
+                        "Leather-Moroccan-Accord-(B)", "Black-Pepper-Vietnamese-(N)", "Sandalwood-Sri-Lankan-(N)", "Musk-Syrian-Synthetic-(B)", "Oud-Moroccan-Synthetic-(B)", "Leather-Tunisian-Accord-(B)", 
+                        "Black-Pepper-Indian-(N)", "Sandalwood-Mauritian-(N)", "Musk-Lebanese-Synthetic-(B)", "Oud-Tunisian-Synthetic-(B)", "Leather-Egyptian-Accord-(B)", "Black-Pepper-Sri-Lankan-(N)", 
+                        "Sandalwood-Thai-Creamy-(N)", "Musk-Turkish-Synthetic-(B)", "Oud-Syrian-Synthetic-(B)", "Leather-Lebanese-Accord-(B)"],
+              
+                melancholy: ["Seaweed (N)", "Oakmoss (N)", "Vanilla Base (N)", "Kelp (N)", "Sea Moss (N)", "Kelp-Icelandic-Sea-(N)", "Moss-Irish-Sea-(N)", "Seaweed-Japanese-Nori-(N)", "Oakmoss-Tunisian-(N)", 
+                             "Vanilla-Comorian-Base-(N)", "Kelp-Moroccan-Coast-(N)", "Moss-Scottish-Sea-(N)", "Seaweed-Irish-Moss-(N)", "Oakmoss-Lebanese-(N)", "Vanilla-Madagascan-Base-(N)", 
+                             "Kelp-Atlantic-Sea-(N)", "Moss-Norwegian-Sea-(N)", "Seaweed-Scottish-Kelp-(N)", "Oakmoss-Moroccan-(N)", "Vanilla-Papua-Base-(N)", "Kelp-Pacific-Sea-(N)", "Moss-Mediterranean-Sea-(N)", 
+                             "Seaweed-Norwegian-(N)", "Oakmoss-Turkish-(N)", "Vanilla-Fijian-Base-(N)", "Kelp-Tunisian-Coast-(N)", "Moss-Lebanese-Sea-(N)", "Seaweed-Moroccan-(N)", "Oakmoss-Yugoslavian-(N)", 
+                             "Vanilla-Tunisian-Base-(N)"],
+              
+                nostalgia: ["Almond (N)", "Coffee (N)", "Caramel (B)", "Chestnut Cream (N)", "Cocoa Powder (N)", "Cocoa-Venezuelan-Bean-(N)", "Coffee-Ethiopian-Roast-(N)", "Almond-Moroccan-Roasted-(N)", 
+                            "Caramel-Salted-Breton-(B)", "Chestnut-Tuscan-Roast-(N)", "Cocoa-Brazilian-Bean-(N)", "Coffee-Colombian-Roast-(N)", "Caramel-French-Burnt-(B)", "Chestnut-French-Cream-(N)", 
+                            "Cocoa-Colombian-Powder-(N)", "Almond-Tunisian-Roasted-(N)", "Coffee-Brazilian-Bean-(N)", "Caramel-Dutch-Stroop-(B)", "Chestnut-Spanish-Roast-(N)", "Cocoa-Peruvian-Powder-(N)", 
+                            "Almond-Spanish-Roasted-(N)", "Coffee-Yemeni-Roast-(N)", "Caramel-Spanish-Dulce-(B)", "Chestnut-Italian-Cream-(N)", "Cocoa-Ghanaian-Powder-(N)", "Almond-Italian-Roasted-(N)", 
+                            "Coffee-Kenyan-Bean-(N)", "Caramel-Argentinian-(B)", "Chestnut-Moroccan-Roast-(N)", "Cocoa-Madagascan-Powder-(N)"],
+              
+                curiosity: ["Cumin (N)", "Star Anise (N)", "Eucalyptus (N)", "Fenugreek (N)", "Coriander Seed (N)", "Cumin-Egyptian-Seed-(N)", "Anise-Turkish-Seed-(N)", "Eucalyptus-Australian-Blue-(N)", 
+                            "Fenugreek-Indian-Seed-(N)", "Coriander-Moroccan-Seed-(N)", "Cumin-Tunisian-Seed-(N)", "Star-Anise-Vietnamese-(N)", "Eucalyptus-Tasmanian-(N)", "Fenugreek-Moroccan-(N)", 
+                            "Coriander-Egyptian-Seed-(N)", "Cumin-Moroccan-Seed-(N)", "Star-Anise-Chinese-(N)", "Eucalyptus-Moroccan-(N)", "Fenugreek-Tunisian-(N)", "Coriander-Tunisian-Seed-(N)", 
+                            "Cumin-Syrian-Seed-(N)", "Star-Anise-Moroccan-(N)", "Eucalyptus-Lebanese-(N)", "Fenugreek-Syrian-(N)", "Coriander-Syrian-Seed-(N)", "Cumin-Lebanese-Seed-(N)", 
+                            "Star-Anise-Tunisian-(N)", "Eucalyptus-Tunisian-(N)", "Fenugreek-Egyptian-(N)", "Coriander-Lebanese-Seed-(N)"],
+              
+                calm: ["Lotus (N)", "Mint (N)", "White Musk (B)", "Water Hyacinth (N)", "Aloe Vera (N)", "Hyacinth-Water-Dutch-(N)", "Aloe-SouthAfrican-Gel-(N)", "Lotus-Thai-White-(N)", 
+                       "Mint-Moroccan-Peppermint-(N)", "White-Musk-Mediterranean-(B)", "Water-Hyacinth-Vietnamese-(N)", "Aloe-Vera-Mexican-(N)", "Lotus-Indian-Blue-(N)", "Mint-Tunisian-Spearmint-(N)", 
+                       "White-Musk-Atlantic-(B)", "Water-Hyacinth-Thai-(N)", "Aloe-Egyptian-Gel-(N)", "Lotus-Vietnamese-Pink-(N)", "Mint-Egyptian-Peppermint-(N)", "White-Musk-Pacific-(B)", 
+                       "Water-Hyacinth-Moroccan-(N)", "Aloe-Vera-Tunisian-(N)", "Lotus-Syrian-White-(N)", "Mint-Syrian-Spearmint-(N)", "White-Musk-Caribbean-(B)", "Water-Hyacinth-Tunisian-(N)", 
+                       "Aloe-Moroccan-Gel-(N)", "Lotus-Tunisian-Pink-(N)", "Mint-Lebanese-Peppermint-(N)", "White-Musk-Tunisian-(B)"],
+              
+                empathy: ["Peony (N)", "Lily of the Valley (N)", "Vanilla (N)", "Lilac (N)", "Honeycomb (N)", "Lilac-Syracuse-Bloom-(N)", "Honey-French-Lavender-(N)", "Peony-Chinese-Pink-(N)", 
+                          "Lily-of-the-Valley-French-(N)", "Vanilla-Madagascan-Pod-(N)", "Peony-Japanese-White-(N)", "Lilac-French-Lavender-(N)", "Honey-Tunisian-Wild-(N)", "Lily-of-the-Valley-English-(N)", 
+                          "Vanilla-Tahitian-Orchid-(N)", "Peony-Korean-Red-(N)", "Lilac-Moroccan-Purple-(N)", "Honey-Moroccan-Citrus-(N)", "Lily-of-the-Valley-Italian-(N)", "Vanilla-Comorian-Pod-(N)", 
+                          "Peony-French-Blush-(N)", "Lilac-Tunisian-Bloom-(N)", "Honey-Turkish-Rose-(N)", "Lily-of-the-Valley-Spanish-(N)", "Vanilla-Papua-Orchid-(N)", "Peony-Tunisian-Pink-(N)", 
+                          "Lilac-Egyptian-Purple-(N)", "Honey-Lebanese-Clover-(N)", "Lily-of-the-Valley-Greek-(N)", "Vanilla-Fijian-Orchid-(N)"],
+              
+                ambition: ["Cardamom (N)", "Ginger (N)", "Cedar (N)", "Cardamom Green (N)", "Turmeric (N)", "Cardamom-Guatemalan-Pod-(N)", "Turmeric-Indian-Root-(N)", "Ginger-Indian-Root-(N)", 
+                           "Cedar-Virginian-Core-(N)", "Cardamom-Sri-Lankan-(N)", "Turmeric-Moroccan-Root-(N)", "Ginger-Zanzibar-Root-(N)", "Cedar-Moroccan-Bark-(N)", "Cardamom-Tunisian-(N)", 
+                           "Turmeric-Sri-Lankan-(N)", "Ginger-Thai-Root-(N)", "Cedar-Texas-Core-(N)", "Cardamom-Moroccan-(N)", "Turmeric-Tunisian-Root-(N)", "Ginger-Vietnamese-Root-(N)", 
+                           "Cedar-Himalayan-Core-(N)", "Cardamom-Lebanese-(N)", "Turmeric-Egyptian-(N)", "Ginger-Moroccan-Root-(N)", "Cedar-Moroccan-Core-(N)", "Cardamom-Egyptian-(N)", 
+                           "Turmeric-Lebanese-Root-(N)", "Ginger-Sri-Lankan-Root-(N)", "Cedar-Syrian-Core-(N)", "Cardamom-Syrian-(N)"],
+              
+            },
+          
+            seasonalInfluence: {
+                spring: { character: "fresh and blooming", intensity: "light" },
+                summer: { character: "vibrant and energetic", intensity: "moderate" },
+                autumn: { character: "warm and spicy", intensity: "rich" },
+                winter: { character: "cozy and intense", intensity: "deep" }
+            },
+            questions: [
+                {
+                    en: "If you could bottle one emotion, it would be...",
+                    ar: "إذا كان بإمكانك تعبئة عاطفة واحدة، فستكون...",
+                    options: [
+                        ["Serene contentment", "رضا هادئ", ["elegant", "serenity", "oriental", "reflection"]],
+                        ["Fierce confidence", "ثقة شرسة", ["bold", "confidence", "spicy", "celebration"]],
+                        ["Deep intrigue", "فضول عميق", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Pure joy", "فرح خالص", ["refreshing", "joy", "citrus", "celebration"]],
+                        ["Adventurous zeal", "حماس مغامر", ["playful", "excitement", "citrus", "travel"]],
+                        ["Romantic nostalgia", "حنين رومانسي", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your ideal evening setting is...",
+                    ar: "مكان أمسيتك المثالي هو...",
+                    options: [
+                        ["Candlelit salon with soft music", "صالون مضاء بالشموع مع موسيقى هادئة", ["elegant", "serenity", "oriental", "romance"]],
+                        ["Bold pop-art gallery with bright lights", "معرض فني بألوان زاهية وإضاءة ساطعة", ["bold", "confidence", "citrus", "celebration"]],
+                        ["Secluded reading nook by the fireplace", "ركن قراءة منعزل بجوار المدفأة", ["mysterious", "reflection", "woody", "reflection"]],
+                        ["Sunset beach bonfire", "نار شاطئ عند الغروب", ["refreshing", "joy", "aquatic", "celebration"]],
+                        ["Rooftop party with city skyline", "حفلة على السطح مع أفق المدينة", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Cozy dinner under fairy lights", "عشاء مريح تحت الأضواء الخيالية", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your favorite childhood memory involves...",
+                    ar: "ذكرى طفولتك المفضلة تتضمن...",
+                    options: [
+                        ["Riding a carousel at a fair", "ركوب دائري في معرض", ["elegant", "romance", "floral", "childhood"]],
+                        ["Building forts outdoors", "بناء الحصون في الخارج", ["bold", "excitement", "woody", "childhood"]],
+                        ["Bedtime stories by lamplight", "قصص ما قبل النوم بضوء المصباح", ["mysterious", "serenity", "oriental", "childhood"]],
+                        ["Splashing in summer puddles", "الرذاذ في برك الصيف", ["refreshing", "joy", "aquatic", "childhood"]],
+                        ["Chasing kites in a field", "مطاردة الطائرات الورقية في حقل", ["playful", "excitement", "citrus", "childhood"]],
+                        ["Baking cookies with family", "خبز الكعك مع العائلة", ["sensual", "nostalgia", "gourmand", "childhood"]]
+                    ]
+                },
+                {
+                    en: "Your dream landscape painting would feature...",
+                    ar: "لوحة المناظر الطبيعية التي تحلم بها ستحتوي على...",
+                    options: [
+                        ["Stately manor’s rose garden", "حديقة الورود في قصر فخم", ["elegant", "romance", "floral", "romance"]],
+                        ["Blazing sunset over desert dunes", "غروب مشتعل فوق كثبان الصحراء", ["bold", "passion", "spicy", "nature"]],
+                        ["Moonlit forest with silvery mist", "غابة مضاءة بالقمر مع ضباب فضي", ["mysterious", "serenity", "woody", "nature"]],
+                        ["Crashing waves on a sunny shore", "أمواج متلاطمة على شاطئ مشمس", ["refreshing", "joy", "aquatic", "nature"]],
+                        ["Vibrant meadow with wildflowers", "مرج نابض بالحياة مع الزهور البرية", ["playful", "excitement", "citrus", "nature"]],
+                        ["Twilight vineyard with rolling hills", "كرم في الغسق مع تلال متدحرجة", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your go-to creative outlet is...",
+                    ar: "منفذك الإبداعي المفضل هو...",
+                    options: [
+                        ["Calligraphy in cozy studio", "الخط في استوديو مريح", ["elegant", "serenity", "oriental", "reflection"]],
+                        ["High-intensity workout", "تمرين عالي الكثافة", ["bold", "power", "spicy", "celebration"]],
+                        ["Journaling by a window", "كتابة يوميات بجوار نافذة", ["mysterious", "reflection", "woody", "reflection"]],
+                        ["Beach volleyball at dusk", "كرة طائرة شاطئية عند الغسق", ["refreshing", "joy", "aquatic", "celebration"]],
+                        ["Street photography in a city", "تصوير الشوارع في مدينة", ["playful", "excitement", "citrus", "travel"]],
+                        ["Cooking a gourmet meal", "طهي وجبة فاخرة", ["sensual", "romance", "gourmand", "celebration"]]
+                    ]
+                },
+                {
+                    en: "The book genre you’re drawn to is...",
+                    ar: "نوع الكتاب الذي يجذبك هو...",
+                    options: [
+                        ["Classic romance", "رومانسية كلاسيكية", ["sensual", "romance", "floral", "romance"]],
+                        ["Adventure thrillers", "روايات المغامرات المثيرة", ["bold", "excitement", "spicy", "travel"]],
+                        ["Mysteries & gothic", "ألغاز وجوثيك", ["mysterious", "intrigue", "oriental", "reflection"]],
+                        ["Feel-good coming-of-age", "قصص نمو مبهجة", ["refreshing", "joy", "citrus", "childhood"]],
+                        ["Fantasy with vibrant worlds", "خيال مع عوالم نابضة", ["playful", "excitement", "citrus", "travel"]],
+                        ["Poetry & introspective essays", "شعر ومقالات تأملية", ["elegant", "reflection", "woody", "reflection"]]
+                    ]
+                },
+                {
+                    en: "Your favorite film scene vibe is...",
+                    ar: "أجواء المشهد السينمائي المفضل لديك هي...",
+                    options: [
+                        ["Intimate by candlelight", "حميم بضوء الشموع", ["sensual", "romance", "oriental", "romance"]],
+                        ["Explosive action abroad", "أكشن متفجر في الخارج", ["bold", "power", "spicy", "travel"]],
+                        ["Haunting close-ups", "لقطات مقربة مؤثرة", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Joyful dance in the rain", "رقصة مبهجة تحت المطر", ["refreshing", "joy", "aquatic", "celebration"]],
+                        ["Whimsical chase through markets", "مطاردة غريبة عبر الأسواق", ["playful", "excitement", "citrus", "travel"]],
+                        ["Tender moment in a garden", "لحظة رقيقة في حديقة", ["elegant", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your signature accessory is...",
+                    ar: "إكسسوارك المميز هو...",
+                    options: [
+                        ["Rose-gold locket", "قلادة ذهبية وردية", ["elegant", "romance", "floral", "romance"]],
+                        ["Statement cuff", "سوار مميز", ["bold", "confidence", "spicy", "celebration"]],
+                        ["Oxidized pendant", "قلادة مؤكسدة", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Bright woven bracelet", "سوار منسوج ملون", ["refreshing", "joy", "citrus", "celebration"]],
+                        ["Colorful beaded necklace", "قلادة خرز ملونة", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Velvet choker", "قلادة مخملية", ["sensual", "romance", "oriental", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your favorite lighting ambiance is...",
+                    ar: "أجواء الإضاءة المفضلة لديك هي...",
+                    options: [
+                        ["Soft candle glow", "توهج الشموع الناعم", ["sensual", "romance", "oriental", "romance"]],
+                        ["Neon club strobes", "إضاءة نيون النوادي", ["bold", "excitement", "citrus", "celebration"]],
+                        ["Moody lamps", "مصابيح ذات طابع كئيب", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Sunlit open windows", "نوافذ مفتوحة مضاءة بالشمس", ["refreshing", "joy", "aquatic", "celebration"]],
+                        ["Twinkling fairy lights", "أضواء خيالية متلألئة", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Warm chandelier glow", "توهج الثريا الدافئ", ["elegant", "serenity", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your perfect weekend escape is...",
+                    ar: "ملاذ عطلة نهاية الأسبوع المثالي لديك هو...",
+                    options: [
+                        ["Garden poetry", "شعر في الحديقة", ["sensual", "romance", "floral", "romance"]],
+                        ["All-night party", "حفلة طوال الليل", ["bold", "excitement", "citrus", "celebration"]],
+                        ["Secret lounge", "صالة سرية", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Beachside picnic", "نزهة على الشاطئ", ["refreshing", "joy", "aquatic", "celebration"]],
+                        ["Local festival", "مهرجان محلي", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Art gallery stroll", "تجول في معرض فني", ["elegant", "serenity", "oriental", "reflection"]]
+                    ]
+                },
+                {
+                    en: "The emotion you chase most is...",
+                    ar: "العاطفة التي تسعى وراءها أكثر هي...",
+                    options: [
+                        ["Serene contentment", "رضا هادئ", ["elegant", "serenity", "oriental", "reflection"]],
+                        ["Fierce confidence", "ثقة شرسة", ["bold", "confidence", "spicy", "celebration"]],
+                        ["Deep intrigue", "فضول عميق", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Pure joy", "فرح خالص", ["refreshing", "joy", "citrus", "celebration"]],
+                        ["Adventurous zeal", "حماس مغامر", ["playful", "excitement", "citrus", "travel"]],
+                        ["Romantic nostalgia", "حنين رومانسي", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your ideal meal presentation is...",
+                    ar: "تقديم وجبتك المثالي هو...",
+                    options: [
+                        ["Artful plating", "تقديم فني", ["elegant", "serenity", "oriental", "reflection"]],
+                        ["Spicy bold flavors", "نكهات جريئة حارة", ["bold", "passion", "spicy", "celebration"]],
+                        ["Rich slow-cooked stews", "يخنات مطهية ببطء غنية", ["sensual", "gourmand", "woody", "childhood"]],
+                        ["Fresh vibrant salads", "سلطات طازجة نابضة", ["refreshing", "joy", "citrus", "nature"]],
+                        ["Street food medley", "مزيج طعام الشارع", ["playful", "excitement", "citrus", "travel"]],
+                        ["Dessert-first indulgence", "تساهل بتناول الحلوى أولاً", ["sensual", "romance", "gourmand", "celebration"]]
+                    ]
+                },
+                {
+                    en: "Your approach to challenges is...",
+                    ar: "نهجك تجاه التحديات هو...",
+                    options: [
+                        ["Heartwarming & sincere", "مؤثر وصادق", ["sensual", "joy", "floral", "romance"]],
+                        ["Challenging & ambitious", "تحدي وطموح", ["bold", "confidence", "spicy", "celebration"]],
+                        ["Mysterious & speculative", "غامض وتأملي", ["mysterious", "intrigue", "oriental", "reflection"]],
+                        ["Optimistic & playful", "متفائل ومرح", ["refreshing", "excitement", "citrus", "celebration"]],
+                        ["Creative & spontaneous", "إبداعي وعفوي", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Reflective & patient", "تأملي وصبور", ["elegant", "reflection", "woody", "reflection"]]
+                    ]
+                },
+                {
+                    en: "Your favorite music to unwind is...",
+                    ar: "موسيقاك المفضلة للاسترخاء هي...",
+                    options: [
+                        ["Soft piano nocturne", "نوكتيرن بيانو ناعم", ["elegant", "serenity", "woody", "reflection"]],
+                        ["Driving rock anthem", "نشيد روك قوي", ["bold", "passion", "spicy", "celebration"]],
+                        ["Eerie ambient track", "موسيقى طيفية غريبة", ["mysterious", "intrigue", "oriental", "reflection"]],
+                        ["Upbeat pop medley", "مزيج بوب مبهج", ["refreshing", "joy", "citrus", "celebration"]],
+                        ["Funky jazz fusion", "جاز فانكي مدمج", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Soulful acoustic ballad", "بالاد أكوستيك مؤثر", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your dream home aesthetic is...",
+                    ar: "جمالية منزل أحلامك هي...",
+                    options: [
+                        ["Luxurious spa resort", "منتجع سبا فاخر", ["elegant", "romance", "oriental", "romance"]],
+                        ["Chic urban loft", "لوفت حضري أنيق", ["bold", "confidence", "citrus", "celebration"]],
+                        ["Hidden historic villa", "فيلا تاريخية مخفية", ["mysterious", "intrigue", "oriental", "reflection"]],
+                        ["Sunny coastal cottage", "كوخ ساحلي مشمس", ["refreshing", "joy", "aquatic", "nature"]],
+                        ["Colorful eclectic flat", "شقة إكليكتيكية ملونة", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Rustic countryside manor", "قصر ريفي ريفي", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your ideal hobby involves...",
+                    ar: "هوايتك المثالية تتضمن...",
+                    options: [
+                        ["Painting or sketching", "الرسم أو التخطيط", ["elegant", "reflection", "floral", "reflection"]],
+                        ["Competitive sports", "رياضات تنافسية", ["bold", "power", "spicy", "celebration"]],
+                        ["Creative writing", "كتابة إبداعية", ["mysterious", "intrigue", "oriental", "reflection"]],
+                        ["Surfing or kayaking", "ركوب الأمواج أو التجديف", ["refreshing", "joy", "aquatic", "nature"]],
+                        ["Dance or improv theater", "الرقص أو المسرح الارتجالي", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Gardening or flower arranging", "البستنة أو ترتيب الزهور", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "At a social gathering, you’re most likely...",
+                    ar: "في تجمع اجتماعي، من المرجح أن تكون...",
+                    options: [
+                        ["In a quiet corner chatting", "في ركن هادئ تتحدث", ["elegant", "reflection", "oriental", "reflection"]],
+                        ["Leading the dance floor", "تقود حلبة الرقص", ["bold", "passion", "spicy", "celebration"]],
+                        ["Observing from shadows", "تراقب من الظلال", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Telling animated stories", "تروي قصصًا مفعمة بالحيوية", ["refreshing", "joy", "citrus", "celebration"]],
+                        ["Starting a group game", "تبدأ لعبة جماعية", ["playful", "excitement", "citrus", "celebration"]],
+                        ["Hosting with warm welcomes", "تستضيف بترحيب دافئ", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your dream travel destination is...",
+                    ar: "وجهة سفر أحلامك هي...",
+                    options: [
+                        ["Historic mansion stay", "إقامة في قصر تاريخي", ["elegant", "romance", "floral", "romance"]],
+                        ["Multi-city tour", "جولة متعددة المدن", ["bold", "confidence", "citrus", "travel"]],
+                        ["Stay in ancient citadel", "إقامة في قلعة قديمة", ["mysterious", "intrigue", "oriental", "reflection"]],
+                        ["Tropical island retreat", "ملاذ جزيرة استوائية", ["refreshing", "joy", "aquatic", "nature"]],
+                        ["Vibrant cultural festival", "مهرجان ثقافي نابض", ["playful", "excitement", "citrus", "travel"]],
+                        ["Secluded vineyard escape", "ملاذ كرم منعزل", ["sensual", "romance", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "Your favorite fabric texture is...",
+                    ar: "ملمس القماش المفضل لديك هو...",
+                    options: [
+                        ["Silky satin", "ساتان حريري", ["sensual", "romance", "oriental", "romance"]],
+                        ["Embossed leather", "جلد منقوش", ["bold", "power", "spicy", "celebration"]],
+                        ["Raw velvet", "مخمل خام", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["Crisp cotton", "قطن نقي", ["refreshing", "joy", "aquatic", "nature"]],
+                        ["Soft linen", "كتان ناعم", ["playful", "excitement", "citrus", "nature"]],
+                        ["Lush cashmere", "كشمير فاخر", ["elegant", "serenity", "floral", "romance"]]
+                    ]
+                },
+                {
+                    en: "The memory you’d bottle is...",
+                    ar: "الذكرى التي ستعبئها هي...",
+                    options: [
+                        ["First meaningful conversation", "أول محادثة ذات معنى", ["elegant", "romance", "oriental", "reflection"]],
+                        ["A triumphant achievement", "إنجاز عظيم", ["bold", "confidence", "spicy", "celebration"]],
+                        ["A secret you never shared", "سر لم تشاركه أبدًا", ["mysterious", "intrigue", "woody", "reflection"]],
+                        ["A carefree summer day", "يوم صيفي خالٍ من الهموم", ["refreshing", "joy", "aquatic", "childhood"]],
+                        ["An unexpected adventure", "مغامرة غير متوقعة", ["playful", "excitement", "citrus", "travel"]],
+                        ["A tender family moment", "لحظة عائلية رقيقة", ["sensual", "nostalgia", "gourmand", "romance"]]
+                    ]
+                }
+            ],
+            questionWeights: [1.5, 1.2, 1.0, 1.1, 1.0, 1.1, 1.0, 1.0, 1.0, 1.1, 1.5, 1.0, 1.1, 1.0, 1.1, 1.0, 1.0, 1.1, 1.0, 1.2],
+            init: function() {
+                try {
+                    console.log('Initializing PerfumeGenerator...');
+                    for (let category in this.categories) {
+                        this.categories[category].forEach(item => {
+                            this.score[category][item] = 0;
+                        });
+                    }
+                    const startQuizBtn = document.getElementById('startQuizBtn');
+                    const langToggle = document.getElementById('langToggle');
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
+                    const restartBtn = document.getElementById('restartBtn');
+                    const optionsContainer = document.getElementById('optionsContainer');
+
+                    if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !restartBtn || !optionsContainer) {
+                        throw new Error('Required DOM elements not found');
+                    }
+
+                    startQuizBtn.addEventListener('click', () => this.startQuiz());
+                    langToggle.addEventListener('click', () => this.toggleLanguage());
+                    prevBtn.addEventListener('click', () => this.prevQuestion());
+                    nextBtn.addEventListener('click', () => this.nextQuestion());
+                    restartBtn.addEventListener('click', () => this.restartQuiz());
+
+                    optionsContainer.addEventListener('click', (e) => {
+                        const optionCard = e.target.closest('.option-card');
+                        if (optionCard) {
+                            this.selectOption(optionCard);
+                        }
+                    });
+
+                    optionsContainer.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            const optionCard = e.target.closest('.option-card');
+                            if (optionCard) {
+                                e.preventDefault();
+                                this.selectOption(optionCard);
+                            }
+                        }
+                    });
+
+                    document.getElementById('birthDateInput').value = '';
+                    document.getElementById('ingredientPref').value = 'both';
+                    this.updateTranslations();
+                } catch (error) {
+                    console.error('Initialization failed:', error);
+                }
+            },
+            startQuiz: function() {
+                try {
+                    console.log('Starting quiz...');
+                    const birthDateInput = document.getElementById('birthDateInput');
+                    if (!birthDateInput.value) {
+                        alert(this.currentLang === 'en' ? 'Please enter your birth date.' : 'يرجى إدخال تاريخ ميلادك.');
+                        return;
+                    }
+                    document.querySelector('.header').style.display = 'none';
+                    document.querySelector('.quiz-section').style.display = 'block';
+                    this.currentQuestion = 0;
+                    this.answers.fill(undefined);
+                    this.responseTimes.fill(null);
+                    for (let category in this.score) {
+                        for (let item in this.score[category]) {
+                            this.score[category][item] = 0;
+                        }
+                    }
+                    this.startTime = Date.now();
+                    this.displayQuestion();
+                } catch (error) {
+                    console.error('Failed to start quiz:', error);
+                }
+            },
+            toggleLanguage: function() {
+                try {
+                    console.log('Toggling language...');
+                    this.currentLang = this.currentLang === 'en' ? 'ar' : 'en';
+                    this.updateTranslations();
+                    this.displayQuestion();
+                    document.getElementById('langToggle').textContent = this.translations[this.currentLang][this.currentLang === 'en' ? 'arabic' : 'english'];
+                    const direction = this.currentLang === 'ar' ? 'rtl' : 'ltr';
+                    document.body.style.direction = direction;
+                    document.querySelector('.container').style.direction = direction;
+                    document.querySelectorAll('.intro-text').forEach(text => {
+                        text.style.display = text.getAttribute('data-lang') === this.currentLang ? 'block' : 'none';
+                    });
+                } catch (error) {
+                    console.error('Failed to toggle language:', error);
+                }
+            },
+            updateTranslations: function() {
+                try {
+                    console.log('Updating translations...');
+                    document.getElementById('startQuizBtn').textContent = this.translations[this.currentLang].startQuiz;
+                    document.getElementById('subtitle').textContent = this.translations[this.currentLang].discoverScent;
+                    document.getElementById('prevBtn').textContent = this.translations[this.currentLang].prev;
+                    document.getElementById('nextBtn').textContent = this.translations[this.currentLang].next;
+                    const restartBtn = document.getElementById('restartBtn');
+                    if (restartBtn) {
+                        restartBtn.textContent = this.translations[this.currentLang].restartQuiz;
+                    }
+                } catch (error) {
+                    console.error('Failed to update translations:', error);
+                }
+            },
+            displayQuestion: function() {
+                try {
+                    console.log(`Displaying question ${this.currentQuestion + 1}...`);
+                    const question = this.questions[this.currentQuestion];
+                    const questionText = document.getElementById('questionText');
+                    const optionsContainer = document.getElementById('optionsContainer');
+                    const currentQSpan = document.getElementById('currentQ');
+                    const totalQSpan = document.getElementById('totalQ');
+                    const progressFill = document.getElementById('progressFill');
+
+                    if (!questionText || !optionsContainer || !currentQSpan || !totalQSpan || !progressFill) {
+                        throw new Error('Question display elements not found');
+                    }
+
+                    questionText.textContent = question[this.currentLang];
+                    currentQSpan.textContent = this.currentQuestion + 1;
+                    totalQSpan.textContent = this.questions.length;
+                    const progressPercent = ((this.currentQuestion + 1) / this.questions.length) * 100;
+                    progressFill.style.width = `${progressPercent}%`;
+
+                    while (optionsContainer.firstChild) {
+                        optionsContainer.removeChild(optionsContainer.firstChild);
+                    }
+                    question.options.forEach((option, index) => {
+                        console.log(`Adding option: ${option[this.currentLang === 'en' ? 0 : 1]}`);
+                        const optionCard = document.createElement('div');
+                        optionCard.className = 'option-card';
+                        optionCard.setAttribute('role', 'option');
+                        optionCard.setAttribute('tabindex', '0');
+                        optionCard.setAttribute('aria-selected', this.answers[this.currentQuestion] === index ? 'true' : 'false');
+                        optionCard.innerHTML = `<div class="option-text">${option[this.currentLang === 'en' ? 0 : 1]}</div>`;
+                        if (this.answers[this.currentQuestion] === index) {
+                            optionCard.classList.add('selected');
+                        }
+                        optionsContainer.appendChild(optionCard);
+                    });
+
+                    this.updateNavigationButtons();
+                } catch (error) {
+                    console.error('Failed to display question:', error);
+                }
+            },
+            updateNavigationButtons: function() {
+                try {
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
+                    prevBtn.disabled = this.currentQuestion === 0;
+                    nextBtn.disabled = this.answers[this.currentQuestion] === undefined;
+                } catch (error) {
+                    console.error('Failed to update navigation buttons:', error);
+                }
+            },
+            selectOption: function(optionCard) {
+                try {
+                    console.log('Selecting option...');
+                    const options = Array.from(optionCard.parentElement.children);
+                    const index = options.indexOf(optionCard);
+                    if (this.responseTimes[this.currentQuestion] === null) {
+                        this.responseTimes[this.currentQuestion] = { start: this.startTime, duration: Date.now() - this.startTime };
+                    }
+                    this.answers[this.currentQuestion] = index;
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.setAttribute('aria-selected', 'false');
+                    });
+                    optionCard.classList.add('selected');
+                    optionCard.setAttribute('aria-selected', 'true');
+                    this.updateNavigationButtons();
+                } catch (error) {
+                    console.error('Failed to select option:', error);
+                }
+            },
+            prevQuestion: function() {
+                try {
+                    console.log('Going to previous question...');
+                    if (this.currentQuestion > 0) {
+                        this.currentQuestion--;
+                        this.startTime = Date.now();
+                        this.displayQuestion();
+                    }
+                } catch (error) {
+                    console.error('Failed to go to previous question:', error);
+                }
+            },
+            nextQuestion: function() {
+                try {
+                    console.log('Going to next question...');
+                    if (this.answers[this.currentQuestion] !== undefined) {
+                        this.calculateEnhancedScore();
+                        this.currentQuestion++;
+                        if (this.currentQuestion < this.questions.length) {
+                            this.startTime = Date.now();
+                            this.displayQuestion();
+                        } else {
+                            document.querySelector('.quiz-section').style.display = 'none';
+                            document.querySelector('.result-section').style.display = 'block';
+                            this.showResult();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to go to next question:', error);
+                }
+            },
+            calculateEnhancedScore: function() {
+                try {
+                    console.log('Calculating enhanced score...');
+                    const questionIndex = this.currentQuestion;
+                    const answerIndex = this.answers[questionIndex];
+                    if (answerIndex !== undefined) {
+                        const weights = this.questionWeights[questionIndex];
+                        const option = this.questions[questionIndex].options[answerIndex];
+                        const categories = option[2];
+                        categories.forEach((category, idx) => {
+                            const catType = ['style', 'emotion', 'family', 'memory'][idx];
+                            this.score[catType][category] = (this.score[catType][category] || 0) + weights;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Failed to calculate enhanced score:', error);
+                }
+            },
+            getTopCategories: function() {
+                try {
+                    console.log('Getting top categories...');
+                    const topCategories = {};
+                    for (let category in this.score) {
+                        const scores = this.score[category];
+                        const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+                        topCategories[category] = {
+                            primary: sorted[0] ? sorted[0][0] : null,
+                            secondary: sorted[1] ? sorted[1][0] : null,
+                            tertiary: sorted[2] ? sorted[2][0] : null
+                        };
+                    }
+                    return topCategories;
+                } catch (error) {
+                    console.error('Failed to get top categories:', error);
+                    return {};
+                }
+            },
+            getSeasonalInfluence: function(birthDate) {
+                try {
+                    console.log('Getting seasonal influence...');
+                    if (!birthDate) return this.seasonalInfluence.winter;
+                    const date = new Date(birthDate);
+                    const month = date.getMonth();
+                    if (month >= 2 && month <= 4) return this.seasonalInfluence.spring;
+                    if (month >= 5 && month <= 7) return this.seasonalInfluence.summer;
+                    if (month >= 8 && month <= 10) return this.seasonalInfluence.autumn;
+                    return this.seasonalInfluence.winter;
+                } catch (error) {
+                    console.error('Failed to get seasonal influence:', error);
+                    return this.seasonalInfluence.winter;
+                }
+            },
+            calculateConfidence: function() {
+                try {
+                    console.log('Calculating confidence score...');
+                    const totalResponses = this.answers.filter(a => a !== undefined).length;
+                    let consistencyScore = 0;
+                    let coherenceScore = 0;
+                    let responseTimeScore = 0;
+
+                    for (let category in this.score) {
+                        const scores = Object.values(this.score[category]);
+                        const maxScore = Math.max(...scores);
+                        const secondMaxScore = scores.sort((a, b) => b - a)[1] || 0;
+                        if (maxScore > 0) {
+                            consistencyScore += (maxScore - secondMaxScore) / maxScore;
+                        }
+                    }
+                    consistencyScore /= Object.keys(this.score).length;
+
+                    const style = this.getTopCategories().style.primary;
+                    const family = this.getTopCategories().family.primary;
+                    const validPairs = {
+                        elegant: ['oriental', 'floral'], bold: ['spicy', 'citrus'], mysterious: ['woody', 'oriental'],
+                        refreshing: ['citrus', 'aquatic'], playful: ['citrus', 'gourmand'], sensual: ['floral', 'oriental'],
+                        exotic: ['spicy', 'oriental'], minimalist: ['aquatic', 'woody'], adventurous: ['spicy', 'woody'],
+                        classic: ['floral', 'oriental'], bohemian: ['floral', 'gourmand'], modern: ['citrus', 'aquatic']
+                    };
+                    coherenceScore = validPairs[style].includes(family) ? 1 : 0.5;
+
+                    const durations = this.responseTimes.map(t => t?.duration || 0).filter(d => d > 0);
+                    const avgDuration = durations.length ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+                    responseTimeScore = durations.every(d => d >= 1000 && d <= 30000) ? 1 : 0.8;
+
+                    const baseConfidence = consistencyScore * 0.6 + coherenceScore * 0.2 + responseTimeScore * 0.2;
+                    const responseCompleteness = (totalResponses / this.questions.length);
+                    return Math.min(99, (baseConfidence * 0.8 + responseCompleteness * 0.2) * 100);
+                } catch (error) {
+                    console.error('Failed to calculate confidence:', error);
+                    return 50;
+                }
+            },
+            getPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
+                try {
+                    console.log(`Generating perfume blend for family: ${dominantFamily}, pref: ${ingredientPref}`);
+                    let blend = { top: [], heart: [], base: [] };
+                    const familyNotes = this.pyramidNotes[dominantFamily];
+
+                    if (!familyNotes || !familyNotes[0] || !familyNotes[1] || !familyNotes[2]) {
+                        throw new Error('Invalid family notes structure');
+                    }
+
+                    const filterNotes = (notesArray) => {
+                        if (ingredientPref === 'natural') {
+                            return notesArray.filter(note => note.endsWith('(N)'));
+                        } else if (ingredientPref === 'synthetic') {
+                            return notesArray.filter(note => note.endsWith('(B)') || note.endsWith('(S)'));
+                        }
+                        return notesArray;
+                    };
+
+                    const selectNotes = (notes, count, layer) => {
+                        let availableNotes = filterNotes(notes);
+                        if (availableNotes.length < count) {
+                            console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
+                            availableNotes = availableNotes.concat(notes);
+                        }
+                        let selectedNotes = [];
+                        const primaryStyle = topCategories.style.primary;
+                        const primaryEmotion = topCategories.emotion.primary;
+                        const secondaryStyle = topCategories.style.secondary;
+                        const secondaryEmotion = topCategories.emotion.secondary;
+
+                        const traitNotes = [
+                            ...(this.traitToNoteMap[primaryStyle] || []),
+                            ...(this.traitToNoteMap[primaryEmotion] || []),
+                            ...(this.traitToNoteMap[secondaryStyle] || []),
+                            ...(this.traitToNoteMap[secondaryEmotion] || [])
+                        ].filter(note => availableNotes.includes(note));
+
+                        for (let i = traitNotes.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
+                        }
+
+                        for (let i = 0; i < count && traitNotes.length > 0; i++) {
+                            selectedNotes.push(traitNotes.shift());
+                            availableNotes = availableNotes.filter(note => !selectedNotes.includes(note));
+                        }
+
+                        while (selectedNotes.length < count && availableNotes.length > 0) {
+                            const noteIndex = Math.floor(Math.random() * availableNotes.length);
+                            selectedNotes.push(availableNotes[noteIndex]);
+                            availableNotes.splice(noteIndex, 1);
+                        }
+
+                        if (selectedNotes.length < count) {
+                            console.warn(`Only selected ${selectedNotes.length} notes for ${layer}`);
+                        }
+                        return selectedNotes;
+                    };
+
+                    const topTraits = ['bold', 'joy', 'excitement', 'playful', 'refreshing', 'curiosity'];
+                    const heartTraits = ['elegant', 'romance', 'serenity', 'sensual', 'empathy', 'intrigue'];
+                    const baseTraits = ['mysterious', 'reflection', 'melancholy', 'power', 'nostalgia', 'confidence', 'ambition'];
+
+                    let topScore = topTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
+                    let heartScore = heartTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
+                    let baseScore = baseTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
+                    const totalScore = topScore + heartScore + baseScore || 1;
+
+                    const topWeight = topScore / totalScore;
+                    const heartWeight = heartScore / totalScore;
+                    const baseWeight = baseScore / totalScore;
+
+                    const styleScores = Object.values(this.score.style).filter(score => score !== undefined);
+                    const emotionScores = Object.values(this.score.emotion).filter(score => score !== undefined);
+                    const variance = (arr) => {
+                        if (!arr.length) return 0;
+                        const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+                        return Math.sqrt(arr.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / arr.length);
+                    };
+                    const totalNotes = variance([...styleScores, ...emotionScores]) > 2 ? 12 : 9;
+
+                    let topCount = Math.max(2, Math.min(5, Math.round(topWeight * totalNotes)));
+                    let heartCount = Math.max(2, Math.min(5, Math.round(heartWeight * totalNotes)));
+                    let baseCount = Math.max(2, Math.min(5, Math.round(baseWeight * totalNotes)));
+
+                    let currentTotal = topCount + heartCount + baseCount;
+                    while (currentTotal !== totalNotes) {
+                        if (currentTotal < totalNotes) {
+                            const maxLayer = Math.max(topCount, heartCount, baseCount);
+                            if (topCount === maxLayer && topCount < 5) topCount++;
+                            else if (heartCount === maxLayer && heartCount < 5) heartCount++;
+                            else if (baseCount < 5) baseCount++;
+                        } else {
+                            const minLayer = Math.min(topCount, heartCount, baseCount);
+                            if (topCount === minLayer && topCount > 2) topCount--;
+                            else if (heartCount === minLayer && heartCount > 2) heartCount--;
+                            else if (baseCount > 2) baseCount--;
+                        }
+                        currentTotal = topCount + heartCount + baseCount;
+                    }
+
+                    blend.top = selectNotes(familyNotes[0], topCount, 'top');
+                    blend.heart = selectNotes(familyNotes[1], heartCount, 'heart');
+                    blend.base = selectNotes(familyNotes[2], baseCount, 'base');
+
+                    console.log(`Blend allocation: ${topCount} top, ${heartCount} heart, ${baseCount} base`);
+                    console.log('Generated blend:', blend);
+                    return blend;
+                } catch (error) {
+                    console.error('Failed to generate perfume blend:', error);
+                    return { top: [], heart: [], base: [] };
+                }
+            },
+            generateResult: function() {
+                try {
+                    console.log('Generating result...');
+                    const topCategories = this.getTopCategories();
+                    const dominantFamily = topCategories.family.primary;
+                    const ingredientPref = document.getElementById('ingredientPref').value;
+                    const birthDateInput = document.getElementById('birthDateInput').value;
+                    const blend = this.getPerfumeBlend(dominantFamily, topCategories, ingredientPref);
+                    const confidence = this.calculateConfidence();
+                    const seasonalInfluence = this.getSeasonalInfluence(birthDateInput);
+                    const personalityAnalysis = this.getPersonalityAnalysis(topCategories);
+
+                    return {
+                        topNotes: blend.top,
+                        heartNotes: blend.heart,
+                        baseNotes: blend.base,
+                        confidence: confidence.toFixed(1),
+                        dominantFamily: dominantFamily,
+                        primaryStyle: topCategories.style.primary,
+                        secondaryStyle: topCategories.style.secondary,
+                        primaryEmotion: topCategories.emotion.primary,
+                        secondaryEmotion: topCategories.emotion.secondary,
+                        primaryMemory: topCategories.memory.primary,
+                        seasonalInfluence: seasonalInfluence,
+                        personalityAnalysis: personalityAnalysis
+                    };
+                } catch (error) {
+                    console.error('Failed to generate result:', error);
+                    return null;
+                }
+            },
+            getPersonalityAnalysis: function(topCategories) {
+                try {
+                    console.log('Generating personality analysis...');
+                    const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+                    const styleDesc = {
+                        elegant: this.currentLang === 'en' ? 'a refined and graceful presence' : 'حضور راقٍ وأنيق',
+                        bold: this.currentLang === 'en' ? 'a daring and vibrant energy' : 'طاقة جريئة ونابضة',
+                        mysterious: this.currentLang === 'en' ? 'an enigmatic and introspective aura' : 'هالة غامضة وتأملية',
+                        refreshing: this.currentLang === 'en' ? 'a lively and invigorating spirit' : 'روح مفعمة بالحيوية ومنعشة',
+                        playful: this.currentLang === 'en' ? 'a whimsical and joyful demeanor' : 'سلوك مرح ومبهج',
+                        sensual: this.currentLang === 'en' ? 'a passionate and alluring charm' : 'سحر عاطفي وجذاب',
+                        exotic: this.currentLang === 'en' ? 'an adventurous and unique flair' : 'ذوق مغامر وفريد',
+                        minimalist: this.currentLang === 'en' ? 'a clean and understated elegance' : 'أناقة بسيطة ومتواضعة',
+                        adventurous: this.currentLang === 'en' ? 'a spirited and exploratory nature' : 'طباع مفعمة بالروح المستكشفة',
+                        classic: this.currentLang === 'en' ? 'a timeless and sophisticated essence' : 'جوهر خالد ومتطور',
+                        bohemian: this.currentLang === 'en' ? 'a free-spirited and artistic soul' : 'روح حرة وفنية',
+                        modern: this.currentLang === 'en' ? 'a contemporary and dynamic vibe' : 'أجواء عصرية وديناميكية'
+                    };
+                    const emotionDesc = {
+                        serenity: this.currentLang === 'en' ? 'calm and peaceful' : 'هادئ وسلمي',
+                        confidence: this.currentLang === 'en' ? 'assured and empowered' : 'واثق وممكن',
+                        intrigue: this.currentLang === 'en' ? 'curious and enigmatic' : 'فضولي وغامض',
+                        joy: this.currentLang === 'en' ? 'vibrant and uplifting' : 'نابض بالحياة ومبهج',
+                        excitement: this.currentLang === 'en' ? 'energetic and thrilling' : 'مفعم بالطاقة ومثير',
+                        romance: this.currentLang === 'en' ? 'romantic and tender' : 'رومانسي ورقيق',
+                        reflection: this.currentLang === 'en' ? 'thoughtful and introspective' : 'تأملي وبصير',
+                        passion: this.currentLang === 'en' ? 'fiery and intense' : 'ملتهب وشديد',
+                        power: this.currentLang === 'en' ? 'commanding and strong' : 'مسيطر وقوي',
+                        melancholy: this.currentLang === 'en' ? 'poignant and wistful' : 'مؤثر وحنين',
+                        nostalgia: this.currentLang === 'en' ? 'sentimental and warm' : 'عاطفي ودافئ',
+                        curiosity: this.currentLang === 'en' ? 'inquisitive and open-minded' : 'فضولي ومنفتح',
+                        calm: this.currentLang === 'en' ? 'tranquil and balanced' : 'هادئ ومتوازن',
+                        ambition: this.currentLang === 'en' ? 'driven and determined' : 'طموح وحازم',
+                        empathy: this.currentLang === 'en' ? 'compassionate and understanding' : 'متعاطف ومتفهم'
+                    };
+                    const familyDesc = {
+                        oriental: this.currentLang === 'en' ? 'rich and opulent' : 'غني وفاخر',
+                        spicy: this.currentLang === 'en' ? 'warm and bold' : 'دافئ وجريء',
+                        woody: this.currentLang === 'en' ? 'earthy and deep' : 'ترابي وعمق',
+                        citrus: this.currentLang === 'en' ? 'bright and zesty' : 'مشرق وحيوي',
+                        floral: this.currentLang === 'en' ? 'romantic and delicate' : 'رومانسي وناعم',
+                        gourmand: this.currentLang === 'en' ? 'sweet and indulgent' : 'حلو ومتساهل',
+                        aquatic: this.currentLang === 'en' ? 'fresh and clean' : 'منعش ونظيف'
+                    };
+                    const analysis = this.currentLang === 'en' ?
+                        `Your fragrance profile reveals ${styleDesc[topCategories.style.primary]} with undertones of ${styleDesc[topCategories.style.secondary]}. You embody a ${emotionDesc[topCategories.emotion.primary]} spirit, often seeking moments of ${emotionDesc[topCategories.emotion.secondary]}. Your scent leans toward a ${familyDesc[topCategories.family.primary]} essence, capturing your unique personality.` :
+                        `ملف عطرك يكشف عن ${styleDesc[topCategories.style.primary]} مع لمحات من ${styleDesc[topCategories.style.secondary]}. أنت تجسد روح ${emotionDesc[topCategories.emotion.primary]}، غالبًا ما تسعى للحظات من ${emotionDesc[topCategories.emotion.secondary]}. عطرك يميل نحو جوهر ${familyDesc[topCategories.family.primary]}، يعكس شخصيتك الفريدة.`;
+                    return analysis;
+                } catch (error) {
+                    console.error('Failed to generate personality analysis:', error);
+                    return this.currentLang === 'en' ? 'Unable to generate personality analysis.' : 'غير قادر على إنشاء تحليل الشخصية.';
+                }
+            },
+            showResult: function() {
+                try {
+                    console.log('Showing result...');
+                    const result = this.generateResult();
+                    if (!result) {
+                        throw new Error('Result generation failed');
+                    }
+                    const resultSubtitle = document.getElementById('resultSubtitle');
+                    const personalityAnalysis = document.getElementById('personalityAnalysis');
+                    const fragranceComposition = document.getElementById('fragranceComposition');
+                    const confidenceScore = document.getElementById('confidenceScore');
+
+                    if (!resultSubtitle || !personalityAnalysis || !fragranceComposition || !confidenceScore) {
+                        throw new Error('Result display elements not found');
+                    }
+
+                    resultSubtitle.textContent = this.translations[this.currentLang].resultSubtitle;
+                    personalityAnalysis.textContent = result.personalityAnalysis;
+
+                    fragranceComposition.innerHTML = '';
+                    const noteCategories = [
+                        { title: this.currentLang === 'en' ? 'Top Notes' : 'النوتات العليا', notes: result.topNotes },
+                        { title: this.currentLang === 'en' ? 'Heart Notes' : 'النوتات الوسطى', notes: result.heartNotes },
+                        { title: this.currentLang === 'en' ? 'Base Notes' : 'النوتات القاعدية', notes: result.baseNotes }
+                    ];
+
+                    noteCategories.forEach(category => {
+                        const noteCategory = document.createElement('div');
+                        noteCategory.className = 'note-category';
+                        noteCategory.innerHTML = `<h3>${category.title}</h3><p class="note-list">${category.notes.join(', ')}</p>`;
+                        fragranceComposition.appendChild(noteCategory);
+                    });
+
+                    confidenceScore.textContent = this.currentLang === 'en' ?
+                        `Confidence Score: ${result.confidence}%` :
+                        `درجة الثقة: ${result.confidence}%`;
+                } catch (error) {
+                    console.error('Failed to show result:', error);
+                }
+            },
+            restartQuiz: function() {
+                try {
+                    console.log('Restarting quiz...');
+                    document.querySelector('.result-section').style.display = 'none';
+                    document.querySelector('.header').style.display = 'block';
+                    this.currentQuestion = 0;
+                    this.answers.fill(undefined);
+                    this.responseTimes.fill(null);
+                    for (let category in this.score) {
+                        for (let item in this.score[category]) {
+                            this.score[category][item] = 0;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to restart quiz:', error);
+                }
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            PerfumeGenerator.init();
+        });
+    </script>
+</body>
+</html>
