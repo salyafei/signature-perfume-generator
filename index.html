@@ -55,6 +55,7 @@
             <div class="fragrance-composition" id="fragranceComposition"></div>
             <p class="confidence-score" id="confidenceScore"></p>
             <p class="disclaimer">Disclaimer: While the quiz is designed to obtain the fragrance notes closest your personality, your answer were the main driver to trigger the blend. Therefore, it is considered only an initial blend and it is not 100% match. Should you wish to fine tune it further with Perfume Nose Expert, you may share results by clicking the button below. Please note that a consultation fee of 50 AED will be incurred prior to having the consultation session.</p>
+            <button id="shareResultsBtn">Share Results</button>       
         </div>
     </div>
 
@@ -95,7 +96,7 @@
             margin: auto;
         }
 
-      .disclaimer {
+ .disclaimer {
     font-size: 0.9rem;
     color: var(--earthy-green);
     margin-top: 20px;
@@ -103,6 +104,22 @@
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+}
+#shareResultsBtn {
+    background-color: var(--earthy-green);
+    color: var(--ivory);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+#shareResultsBtn:hover {
+    background-color: var(--dark-green);
 }
 
         .header {
@@ -1169,53 +1186,54 @@
             ],
             questionWeights: [1.5, 1.2, 1.0, 1.1, 1.0, 1.1, 1.0, 1.0, 1.0, 1.1, 1.5, 1.0, 1.1, 1.0, 1.1, 1.0, 1.0, 1.1, 1.0, 1.2],
             init: function() {
-                try {
-                    console.log('Initializing PerfumeGenerator...');
-                    for (let category in this.categories) {
-                        this.categories[category].forEach(item => {
-                            this.score[category][item] = 0;
-                        });
-                    }
-                    const startQuizBtn = document.getElementById('startQuizBtn');
-                    const langToggle = document.getElementById('langToggle');
-                    const prevBtn = document.getElementById('prevBtn');
-                    const nextBtn = document.getElementById('nextBtn');
-                    const restartBtn = document.getElementById('restartBtn');
-                    const optionsContainer = document.getElementById('optionsContainer');
+    try {
+        console.log('Initializing PerfumeGenerator...');
+        for (let category in this.categories) {
+            this.categories[category].forEach(item => {
+                this.score[category][item] = 0;
+            });
+        }
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const langToggle = document.getElementById('langToggle');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const shareResultsBtn = document.getElementById('shareResultsBtn');
 
-                    if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !restartBtn || !optionsContainer) {
-                        throw new Error('Required DOM elements not found');
-                    }
+        if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer || !shareResultsBtn) {
+            throw new Error('Required DOM elements not found');
+        }
 
-                    startQuizBtn.addEventListener('click', () => this.startQuiz());
-                    langToggle.addEventListener('click', () => this.toggleLanguage());
-                    prevBtn.addEventListener('click', () => this.prevQuestion());
-                    nextBtn.addEventListener('click', () => this.nextQuestion());
-                    
-                    optionsContainer.addEventListener('click', (e) => {
-                        const optionCard = e.target.closest('.option-card');
-                        if (optionCard) {
-                            this.selectOption(optionCard);
-                        }
-                    });
+        startQuizBtn.addEventListener('click', () => this.startQuiz());
+        langToggle.addEventListener('click', () => this.toggleLanguage());
+        prevBtn.addEventListener('click', () => this.prevQuestion());
+        nextBtn.addEventListener('click', () => this.nextQuestion());
+        shareResultsBtn.addEventListener('click', () => this.shareResults());
 
-                    optionsContainer.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            const optionCard = e.target.closest('.option-card');
-                            if (optionCard) {
-                                e.preventDefault();
-                                this.selectOption(optionCard);
-                            }
-                        }
-                    });
+        optionsContainer.addEventListener('click', (e) => {
+            const optionCard = e.target.closest('.option-card');
+            if (optionCard) {
+                this.selectOption(optionCard);
+            }
+        });
 
-                    document.getElementById('birthDateInput').value = '';
-                    document.getElementById('ingredientPref').value = 'both';
-                    this.updateTranslations();
-                } catch (error) {
-                    console.error('Initialization failed:', error);
+        optionsContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const optionCard = e.target.closest('.option-card');
+                if (optionCard) {
+                    e.preventDefault();
+                    this.selectOption(optionCard);
                 }
-            },
+            }
+        });
+
+        document.getElementById('birthDateInput').value = '';
+        document.getElementById('ingredientPref').value = 'both';
+        this.updateTranslations();
+    } catch (error) {
+        console.error('Initialization failed:', error);
+    }
+},
             startQuiz: function() {
                 try {
                     console.log('Starting quiz...');
