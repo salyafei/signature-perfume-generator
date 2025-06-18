@@ -1480,46 +1480,59 @@
                     };
 
                     const selectNotes = (notes, count, layer) => {
-                        let availableNotes = filterNotes(notes);
-                        if (availableNotes.length < count) {
-                            console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
-                            availableNotes = availableNotes.concat(notes);
-                        }
-                        let selectedNotes = [];
-                        const primaryStyle = topCategories.style.primary;
-                        const primaryEmotion = topCategories.emotion.primary;
-                        const secondaryStyle = topCategories.style.secondary;
-                        const secondaryEmotion = topCategories.emotion.secondary;
+    let availableNotes = filterNotes(notes);
+    if (availableNotes.length < count) {
+        console.warn(`Insufficient notes for ${layer}, available: ${availableNotes.length}`);
+        availableNotes = availableNotes.concat(notes);
+    }
+    let selectedNotes = [];
+    const selectedFamilies = new Set();
+    const getNoteFamily = (note) => note.split('-')[0]; // e.g., "Clove-Tunisian-Bud-(N)" -> "Clove"
+    const primaryStyle = topCategories.style.primary;
+    const primaryEmotion = topCategories.emotion.primary;
+    const secondaryStyle = topCategories.style.secondary;
+    const secondaryEmotion = topCategories.emotion.secondary;
 
-                        const traitNotes = [
-                            ...(this.traitToNoteMap[primaryStyle] || []),
-                            ...(this.traitToNoteMap[primaryEmotion] || []),
-                            ...(this.traitToNoteMap[secondaryStyle] || []),
-                            ...(this.traitToNoteMap[secondaryEmotion] || [])
-                        ].filter(note => availableNotes.includes(note));
+    const traitNotes = [
+        ...(this.traitToNoteMap[primaryStyle] || []),
+        ...(this.traitToNoteMap[primaryEmotion] || []),
+        ...(this.traitToNoteMap[secondaryStyle] || []),
+        ...(this.traitToNoteMap[secondaryEmotion] || [])
+    ].filter(note => availableNotes.includes(note));
 
-                        for (let i = traitNotes.length - 1; i > 0; i--) {
-                            const j = Math.floor(Math.random() * (i + 1));
-                            [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
-                        }
+    for (let i = traitNotes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [traitNotes[i], traitNotes[j]] = [traitNotes[j], traitNotes[i]];
+    }
 
-                        for (let i = 0; i < count && traitNotes.length > 0; i++) {
-                            selectedNotes.push(traitNotes.shift());
-                            availableNotes = availableNotes.filter(note => !selectedNotes.includes(note));
-                        }
+    for (let i = 0; i < count && traitNotes.length > 0; i++) {
+        const note = traitNotes.shift();
+        const noteFamily = getNoteFamily(note);
+        if (!selectedFamilies.has(noteFamily)) {
+            selectedNotes.push(note);
+            selectedFamilies.add(noteFamily);
+            availableNotes = availableNotes.filter(n => n !== note);
+        }
+    }
 
-                        while (selectedNotes.length < count && availableNotes.length > 0) {
-                            const noteIndex = Math.floor(Math.random() * availableNotes.length);
-                            selectedNotes.push(availableNotes[noteIndex]);
-                            availableNotes.splice(noteIndex, 1);
-                        }
+    while (selectedNotes.length < count && availableNotes.length > 0) {
+        const noteIndex = Math.floor(Math.random() * availableNotes.length);
+        const note = availableNotes[noteIndex];
+        const noteFamily = getNoteFamily(note);
+        if (!selectedFamilies.has(noteFamily)) {
+            selectedNotes.push(note);
+            selectedFamilies.add(noteFamily);
+            availableNotes.splice(noteIndex, 1);
+        } else {
+            availableNotes.splice(noteIndex, 1);
+        }
+    }
 
-                        if (selectedNotes.length < count) {
-                            console.warn(`Only selected ${selectedNotes.length} notes for ${layer}`);
-                        }
-                        return selectedNotes;
-                    };
-
+    if (selectedNotes.length < count) {
+        console.warn(`Only selected ${selectedNotes.length} notes for ${layer}`);
+    }
+    return selectedNotes;
+};
                     const topTraits = ['bold', 'joy', 'excitement', 'playful', 'refreshing', 'curiosity'];
                     const heartTraits = ['elegant', 'romance', 'serenity', 'sensual', 'empathy', 'intrigue'];
                     const baseTraits = ['mysterious', 'reflection', 'melancholy', 'power', 'nostalgia', 'confidence', 'ambition'];
