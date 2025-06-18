@@ -9,32 +9,40 @@
 
     <style>
     :root {
-        --primary-green: #6B8E23; /* Olive green */
-        --cream-bg: #FFF8E7; /* Warm cream */
-        --accent-dark: #8B4513; /* Rich brown */
-        --neutral-light: #F5DEB3; /* Wheat */
-        --gold-highlight: #DAA520; /* Goldenrod */
-    }
+            --coral-rose: #ff6f61;
+            --deep-burgundy: #4a2c40;
+            --earthy-green: #3a5f3f;
+            --soft-white: #f9f5f0;
+            --light-coral: #ff8c82;
+        }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-        background-color: var(--cream-bg);
-        color: var(--primary-green);
-        line-height: 1.6;
-        direction: ltr;
-    }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--soft-white);
+            color: var(--deep-burgundy);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin: auto;
+        }
 
     .header {
         text-align: center;
