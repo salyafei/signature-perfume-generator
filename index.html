@@ -1489,6 +1489,7 @@
             const getNoteFamily = (note) => {
                 const base = note.split('-')[0].toLowerCase();
                 if (base.includes('allspice')) return 'allspice';
+                if (base.includes('clove')) return 'clove';
                 return base;
             };
             const primaryStyle = topCategories.style.primary;
