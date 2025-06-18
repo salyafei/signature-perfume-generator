@@ -54,7 +54,15 @@
             <div class="personality-analysis" id="personalityAnalysis"></div>
             <div class="fragrance-composition" id="fragranceComposition"></div>
             <p class="confidence-score" id="confidenceScore"></p>
-            <p class="disclaimer">Disclaimer: While the quiz is designed to obtain the fragrance notes closest your personality, your answer were the main driver to trigger the blend. Therefore, it is considered only an initial blend and it is not 100% match. Should you wish to fine tune it further with Perfume Nose Expert, you may share results by clicking the button below. Please note that a consultation fee of 50 AED will be incurred prior to having the consultation session.</p>
+            <p class="disclaimer">The fragrance quiz is designed to propose fragrance notes that may correspond to your personality, based exclusively on the responses you provide. The suggested blend is a preliminary recommendation only and does not guarantee an exact match to your personality, preferences, or expectations. To achieve a more precise and personalized fragrance, further refinement by a certified Perfume Nose Expert from Al Nada House of Perfume is required.
+
+No warranties, whether express or implied, are provided regarding the accuracy, appropriateness, or completeness of the quiz results. The quiz is offered solely for entertainment purposes, and any decisions or actions based on the results are undertaken at your own risk and discretion.
+
+If you opt to engage Al Nada House of Perfume Experts for a consultation to refine your fragrance blend and receive a detailed formulation, you may share your quiz results by sending a screenshot to alnadaperfumes@gmail.com. A non-refundable consultation fee of 50 AED is mandatory and must be paid in full prior to scheduling or conducting the fine-tuning session. Payment of the consultation fee does not guarantee a final fragrance blend, satisfaction with the results, or any specific outcome, as results depend on individual preferences, expert recommendations, and your subjective experience. All consultations are undertaken at your own risk.
+
+All fees, services, and outcomes are governed by the terms and conditions of Al Nada House of Perfume, which you are responsible for reviewing and understanding prior to engaging in any consultation. We bear no liability for any dissatisfaction, costs, damages, or consequences arising from the quiz results, consultations, or any related services.
+
+No personal data or quiz responses are stored, retained, or shared with third parties under any circumstances, except as explicitly required to facilitate your consultation with Al Nada House of Perfume upon your request. Any data shared with Al Nada House of Perfume is subject to their privacy policies, which you are responsible for reviewing.</p>
             <button id="shareResultsBtn">Share Results</button>       
         </div>
     </div>
@@ -100,26 +108,10 @@
     font-size: 0.9rem;
     color: var(--earthy-green);
     margin-top: 20px;
-    text-align: center;
+    text-align: justify;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-}
-#shareResultsBtn {
-    background-color: var(--earthy-green);
-    color: var(--ivory);
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-#shareResultsBtn:hover {
-    background-color: var(--dark-green);
 }
 
         .header {
@@ -1198,9 +1190,8 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const optionsContainer = document.getElementById('optionsContainer');
-        const shareResultsBtn = document.getElementById('shareResultsBtn');
-
-        if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer || !shareResultsBtn) {
+        
+        if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer || {
             throw new Error('Required DOM elements not found');
         }
 
@@ -1208,7 +1199,6 @@
         langToggle.addEventListener('click', () => this.toggleLanguage());
         prevBtn.addEventListener('click', () => this.prevQuestion());
         nextBtn.addEventListener('click', () => this.nextQuestion());
-        shareResultsBtn.addEventListener('click', () => this.shareResults());
 
         optionsContainer.addEventListener('click', (e) => {
             const optionCard = e.target.closest('.option-card');
