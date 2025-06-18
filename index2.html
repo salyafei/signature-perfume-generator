@@ -1205,53 +1205,140 @@ No personal data or quiz responses are stored, retained, or shared with third pa
         },
 
         init: function() {
-            console.log("Initializing...");
-            Object.keys(this.categories).forEach(cat => {
-                this.categories[cat].forEach(item => { this.score[cat][item] = 0; });
+    try {
+        console.log("Initializing PerfumeGenerator...");
+        // Initialize score object
+        Object.keys(this.categories).forEach(cat => {
+            this.categories[cat].forEach(item => {
+                this.score[cat][item] = 0;
             });
-            const els = {
-                startQuizBtn: document.getElementById("startQuizBtn"),
-                langToggle: document.getElementById("langToggle"),
-                prevBtn: document.getElementById("prevBtn"),
-                nextBtn: document.getElementById("nextBtn"),
-                optionsContainer: document.getElementById("optionsContainer"),
-                shareResultsBtn: document.getElementById("shareResultsBtn")
-            };
-            Object.entries(els).forEach(([key, el]) => {
-                if (!el && key !== "shareResultsBtn") console.error(`${key} not found`);
-            });
-            if (!els.startQuizBtn || !els.langToggle || !els.prevBtn || !els.nextBtn || !els.optionsContainer) {
-                throw new Error("Required DOM elements missing");
+        });
+        console.log("Score initialized:", this.score);
+
+        // Get DOM elements
+        const els = {
+            startQuizBtn: document.getElementById("startQuizBtn"),
+            langToggle: document.getElementById("langToggle"),
+            prevBtn: document.getElementById("prevBtn"),
+            nextBtn: document.getElementById("nextBtn"),
+            optionsContainer: document.getElementById("optionsContainer"),
+            shareResultsBtn: document.getElementById("shareResultsBtn"),
+            birthDateInput: document.getElementById("birthDateInput"),
+            ingredientPref: document.getElementById("ingredientPref")
+        };
+        console.log("DOM elements retrieved:", els);
+
+        // Log missing elements
+        Object.entries(els).forEach(([key, el]) => {
+            if (!el && key !== "shareResultsBtn") {
+                console.error(`${key} not found in DOM`);
             }
-            els.startQuizBtn.addEventListener("click", () => {
-                console.log("Start Quiz clicked");
+        });
+
+        // Validate required elements
+        if (!els.startQuizBtn || !els.langToggle || !els.prevBtn || !els.nextBtn || !els.optionsContainer) {
+            throw new Error("Required DOM elements missing");
+        }
+
+        // Attach event listeners
+        els.startQuizBtn.addEventListener("click", () => {
+            console.log("Start Quiz button clicked");
+            try {
                 this.startQuiz();
-            });
-            els.langToggle.addEventListener("click", () => this.toggleLanguage());
-            els.prevBtn.addEventListener("click", () => this.prevQuestion());
-            els.nextBtn.addEventListener("click", () => this.nextQuestion());
-            if (els.shareResultsBtn) {
-                els.shareResultsBtn.addEventListener("click", () => this.shareResults());
+            } catch (error) {
+                console.error("Error in startQuiz:", error);
             }
-            els.optionsContainer.addEventListener("click", e => {
-                const card = e.target.closest(".option-card");
-                if (card) this.selectOption(card);
-            });
-            els.optionsContainer.addEventListener("keydown", e => {
-                if (e.key === "Enter" || e.key === " ") {
-                    const card = e.target.closest(".option-card");
-                    if (card) {
-                        e.preventDefault();
-                        this.selectOption(card);
-                    }
+        });
+        console.log("startQuizBtn event listener attached");
+
+        els.langToggle.addEventListener("click", () => {
+            console.log("Language toggle clicked");
+            try {
+                this.toggleLanguage();
+            } catch (error) {
+                console.error("Error in toggleLanguage:", error);
+            }
+        });
+
+        els.prevBtn.addEventListener("click", () => {
+            console.log("Previous button clicked");
+            try {
+                this.prevQuestion();
+            } catch (error) {
+                console.error("Error in prevQuestion:", error);
+            }
+        });
+
+        els.nextBtn.addEventListener("click", () => {
+            console.log("Next button clicked");
+            try {
+                this.nextQuestion();
+            } catch (error) {
+                console.error("Error in nextQuestion:", error);
+            }
+        });
+
+        if (els.shareResultsBtn) {
+            els.shareResultsBtn.addEventListener("click", () => {
+                console.log("Share Results button clicked");
+                try {
+                    this.shareResults();
+                } catch (error) {
+                    console.error("Error in shareResults:", error);
                 }
             });
-            document.getElementById("birthDateInput").value = "";
-            document.getElementById("ingredientPref").value = "both";
-            this.updateTranslations();
-            console.log("Initialization complete");
-        },
+        }
 
+        els.optionsContainer.addEventListener("click", e => {
+            const card = e.target.closest(".option-card");
+            if (card) {
+                console.log("Option card clicked");
+                try {
+                    this.selectOption(card);
+                } catch (error) {
+                    console.error("Error in selectOption:", error);
+                }
+            }
+        });
+
+        els.optionsContainer.addEventListener("keydown", e => {
+            if (e.key === "Enter" || e.key === " ") {
+                const card = e.target.closest(".option-card");
+                if (card) {
+                    e.preventDefault();
+                    console.log("Option card selected via keyboard");
+                    try {
+                        this.selectOption(card);
+                    } catch (error) {
+                        console.error("Error in selectOption (keyboard):", error);
+                    }
+                }
+            }
+        });
+
+        // Reset form inputs
+        if (els.birthDateInput) {
+            els.birthDateInput.value = "";
+            console.log("Birth date input reset");
+        }
+        if (els.ingredientPref) {
+            els.ingredientPref.value = "both";
+            console.log("Ingredient preference reset");
+        }
+
+        // Update translations
+        try {
+            this.updateTranslations();
+            console.log("Translations updated");
+        } catch (error) {
+            console.error("Error in updateTranslations:", error);
+        }
+
+        console.log("Initialization complete");
+    } catch (error) {
+        console.error("Initialization failed:", error);
+    }
+},
         startQuiz: function() {
             if (!document.getElementById("birthDateInput").value) {
                 alert(this.currentLang === "en" ? "Please enter your birth date." : "يرجى إدخال تاريخ ميلادك.");
