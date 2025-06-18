@@ -1516,7 +1516,7 @@ aquatic: [
                 }
             },
 
-            getPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
+            ggetPerfumeBlend: function(dominantFamily, topCategories, ingredientPref) {
     try {
         console.log(`Generating perfume blend for family: ${dominantFamily}, pref: ${ingredientPref}`);
         let blend = { top: [], heart: [], base: [] };
@@ -1576,37 +1576,38 @@ aquatic: [
             return selectedNotes;
         };
 
-        // Dynamic note allocation based on personality
+        // Dynamic note allocation
         const topTraits = ['bold', 'joy', 'excitement', 'playful', 'refreshing', 'curiosity'];
         const heartTraits = ['elegant', 'romance', 'serenity', 'sensual', 'empathy', 'intrigue'];
         const baseTraits = ['mysterious', 'reflection', 'melancholy', 'power', 'nostalgia', 'confidence', 'ambition'];
 
-        // Sum scores for each layer
+        // Sum scores with fallback
         let topScore = topTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
         let heartScore = heartTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
         let baseScore = baseTraits.reduce((sum, trait) => sum + (this.score.style[trait] || 0) + (this.score.emotion[trait] || 0), 0);
-        const totalScore = topScore + heartScore + baseScore;
+        const totalScore = topScore + heartScore + baseScore || 1; // Avoid division by zero
 
-        // Normalize to weights
-        const topWeight = totalScore ? topScore / totalScore : 0.33;
-        const heartWeight = totalScore ? heartScore / totalScore : 0.33;
-        const baseWeight = totalScore ? baseScore / totalScore : 0.33;
+        // Normalize weights
+        const topWeight = topScore / totalScore;
+        const heartWeight = heartScore / totalScore;
+        const baseWeight = baseScore / totalScore;
 
-        // Determine total notes (9–12) based on trait variance
-        const styleScores = Object.values(this.score.style);
-        const emotionScores = Object.values(this.score.emotion);
+        // Calculate variance
+        const styleScores = Object.values(this.score.style).filter(score => score !== undefined);
+        const emotionScores = Object.values(this.score.emotion).filter(score => score !== undefined);
         const variance = (arr) => {
+            if (!arr.length) return 0;
             const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
             return Math.sqrt(arr.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0) / arr.length);
         };
-        const totalNotes = variance([...styleScores, ...emotionScores]) > 2 ? 12 : 9; // High variance → more notes
+        const totalNotes = variance([...styleScores, ...emotionScores]) > 2 ? 12 : 9;
 
-        // Allocate notes (min 2, max 5)
+        // Allocate notes
         let topCount = Math.max(2, Math.min(5, Math.round(topWeight * totalNotes)));
         let heartCount = Math.max(2, Math.min(5, Math.round(heartWeight * totalNotes)));
         let baseCount = Math.max(2, Math.min(5, Math.round(baseWeight * totalNotes)));
 
-        // Adjust to match totalNotes
+        // Adjust total
         let currentTotal = topCount + heartCount + baseCount;
         while (currentTotal !== totalNotes) {
             if (currentTotal < totalNotes) {
