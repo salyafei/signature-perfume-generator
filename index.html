@@ -1191,11 +1191,21 @@ No personal data or quiz responses are stored, retained, or shared with third pa
         const nextBtn = document.getElementById('nextBtn');
         const optionsContainer = document.getElementById('optionsContainer');
         
+        // Detailed logging for missing elements
+        if (!startQuizBtn) console.error('startQuizBtn not found');
+        if (!langToggle) console.error('langToggle not found');
+        if (!prevBtn) console.error('prevBtn not found');
+        if (!nextBtn) console.error('nextBtn not found');
+        if (!optionsContainer) console.error('optionsContainer not found');
+        
         if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer) {
             throw new Error('Required DOM elements not found');
         }
 
-        startQuizBtn.addEventListener('click', () => this.startQuiz());
+        startQuizBtn.addEventListener('click', () => {
+            console.log('Start Quiz button clicked');
+            this.startQuiz();
+        });
         langToggle.addEventListener('click', () => this.toggleLanguage());
         prevBtn.addEventListener('click', () => this.prevQuestion());
         nextBtn.addEventListener('click', () => this.nextQuestion());
@@ -1220,6 +1230,7 @@ No personal data or quiz responses are stored, retained, or shared with third pa
         document.getElementById('birthDateInput').value = '';
         document.getElementById('ingredientPref').value = 'both';
         this.updateTranslations();
+        console.log('Initialization complete');
     } catch (error) {
         console.error('Initialization failed:', error);
     }
