@@ -1206,137 +1206,85 @@ No personal data or quiz responses are stored, retained, or shared with third pa
 
         init: function() {
     try {
-        console.log("Initializing PerfumeGenerator...");
+        console.log('Initializing PerfumeGenerator...');
         // Initialize score object
-        Object.keys(this.categories).forEach(cat => {
-            this.categories[cat].forEach(item => {
-                this.score[cat][item] = 0;
+        for (let category in this.categories) {
+            this.categories[category].forEach(item => {
+                this.score[category][item] = 0;
             });
-        });
-        console.log("Score initialized:", this.score);
-
+        }
         // Get DOM elements
-        const els = {
-            startQuizBtn: document.getElementById("startQuizBtn"),
-            langToggle: document.getElementById("langToggle"),
-            prevBtn: document.getElementById("prevBtn"),
-            nextBtn: document.getElementById("nextBtn"),
-            optionsContainer: document.getElementById("optionsContainer"),
-            shareResultsBtn: document.getElementById("shareResultsBtn"),
-            birthDateInput: document.getElementById("birthDateInput"),
-            ingredientPref: document.getElementById("ingredientPref")
-        };
-        console.log("DOM elements retrieved:", els);
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const langToggle = document.getElementById('langToggle');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const shareResultsBtn = document.getElementById('shareResultsBtn'); // Optional
 
         // Log missing elements
-        Object.entries(els).forEach(([key, el]) => {
-            if (!el && key !== "shareResultsBtn") {
-                console.error(`${key} not found in DOM`);
-            }
-        });
+        if (!startQuizBtn) console.error('startQuizBtn not found');
+        if (!langToggle) console.error('langToggle not found');
+        if (!prevBtn) console.error('prevBtn not found');
+        if (!nextBtn) console.error('nextBtn not found');
+        if (!optionsContainer) console.error('optionsContainer not found');
+        if (!shareResultsBtn) console.warn('shareResultsBtn not found, assuming optional');
 
-        // Validate required elements
-        if (!els.startQuizBtn || !els.langToggle || !els.prevBtn || !els.nextBtn || !els.optionsContainer) {
-            throw new Error("Required DOM elements missing");
+        // Check required elements
+        if (!startQuizBtn || !langToggle || !prevBtn || !nextBtn || !optionsContainer) {
+            throw new Error('Required DOM elements not found');
         }
 
         // Attach event listeners
-        els.startQuizBtn.addEventListener("click", () => {
-            console.log("Start Quiz button clicked");
-            try {
-                this.startQuiz();
-            } catch (error) {
-                console.error("Error in startQuiz:", error);
-            }
+        startQuizBtn.addEventListener('click', () => {
+            console.log('Start Quiz button clicked');
+            this.startQuiz();
         });
-        console.log("startQuizBtn event listener attached");
+        console.log('startQuizBtn event listener attached');
 
-        els.langToggle.addEventListener("click", () => {
-            console.log("Language toggle clicked");
-            try {
-                this.toggleLanguage();
-            } catch (error) {
-                console.error("Error in toggleLanguage:", error);
-            }
+        langToggle.addEventListener('click', () => {
+            console.log('Language toggle clicked');
+            this.toggleLanguage();
         });
+        prevBtn.addEventListener('click', () => this.prevQuestion());
+        nextBtn.addEventListener('click', () => this.nextQuestion());
 
-        els.prevBtn.addEventListener("click", () => {
-            console.log("Previous button clicked");
-            try {
-                this.prevQuestion();
-            } catch (error) {
-                console.error("Error in prevQuestion:", error);
+        optionsContainer.addEventListener('click', (e) => {
+            const optionCard = e.target.closest('.option-card');
+            if (optionCard) {
+                this.selectOption(optionCard);
             }
         });
 
-        els.nextBtn.addEventListener("click", () => {
-            console.log("Next button clicked");
-            try {
-                this.nextQuestion();
-            } catch (error) {
-                console.error("Error in nextQuestion:", error);
-            }
-        });
-
-        if (els.shareResultsBtn) {
-            els.shareResultsBtn.addEventListener("click", () => {
-                console.log("Share Results button clicked");
-                try {
-                    this.shareResults();
-                } catch (error) {
-                    console.error("Error in shareResults:", error);
-                }
-            });
-        }
-
-        els.optionsContainer.addEventListener("click", e => {
-            const card = e.target.closest(".option-card");
-            if (card) {
-                console.log("Option card clicked");
-                try {
-                    this.selectOption(card);
-                } catch (error) {
-                    console.error("Error in selectOption:", error);
-                }
-            }
-        });
-
-        els.optionsContainer.addEventListener("keydown", e => {
-            if (e.key === "Enter" || e.key === " ") {
-                const card = e.target.closest(".option-card");
-                if (card) {
+        optionsContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const optionCard = e.target.closest('.option-card');
+                if (optionCard) {
                     e.preventDefault();
-                    console.log("Option card selected via keyboard");
-                    try {
-                        this.selectOption(card);
-                    } catch (error) {
-                        console.error("Error in selectOption (keyboard):", error);
-                    }
+                    this.selectOption(optionCard);
                 }
             }
         });
+
+        // Attach shareResultsBtn listener if present
+        if (shareResultsBtn) {
+            shareResultsBtn.addEventListener('click', () => {
+                console.log('Share Results button clicked');
+                this.shareResults();
+            });
+            console.log('shareResultsBtn event listener attached');
+        }
 
         // Reset form inputs
-        if (els.birthDateInput) {
-            els.birthDateInput.value = "";
-            console.log("Birth date input reset");
-        }
-        if (els.ingredientPref) {
-            els.ingredientPref.value = "both";
-            console.log("Ingredient preference reset");
-        }
+        const birthDateInput = document.getElementById('birthDateInput');
+        const ingredientPref = document.getElementById('ingredientPref');
+        if (birthDateInput) birthDateInput.value = '';
+        if (ingredientPref) ingredientPref.value = 'both';
+        else console.warn('ingredientPref not found');
 
-        // Update translations
-        try {
-            this.updateTranslations();
-            console.log("Translations updated");
-        } catch (error) {
-            console.error("Error in updateTranslations:", error);
-        }
-
-        console.log("Initialization complete");
+        this.updateTranslations();
+        console.log('Initialization complete');
     } catch (error) {
-        console.error("Initialization failed:", error);
+        console.error('Initialization failed:', error);
     }
 },
         startQuiz: function() {
